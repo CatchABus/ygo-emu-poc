@@ -5,8 +5,8 @@
   "scripts": {
     "build": "tsc",
     "postbuild": "cp ./.env dist && cp ./package.json dist && cp -r ./static dist",
-    "start": "dotenvx run --env-file=.env -- nodemon --exec node index.js",
-    "dev": "dotenvx run --env-file=.env.local --env-file=.env -- nodemon --exec ts-node src/index.ts",
+    "start": "node index.js  --env-file .env",
+    "dev": "nodemon --exec ts-node src/index.ts --env-file .env --env-file .env.local",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
   },
@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/CatchABus/ygo-emu-poc#readme",
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.0.0",
     "loglevel": "^1.9.1",
     "socket.io": "^4.7.5"
   }
