@@ -8,7 +8,6 @@ export default {
   ignore: [
     '/cards{m}/images/.gitkeep'
   ],
-  cache: false,
   plugins: {
     audio: audio({
       outputs: [
