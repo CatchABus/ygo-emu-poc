@@ -1,0 +1,48 @@
+{
+  "name": "client",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "assets:build": "assetpack -c .assetpack.js",
+    "assets:watch": "assetpack -w .assetpack.js",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CatchABus/ygo-emu-poc.git"
+  },
+  "author": "CatchABus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CatchABus/ygo-emu-poc/issues"
+  },
+  "homepage": "https://github.com/CatchABus/ygo-emu-poc#readme",
+  "devDependencies": {
+    "@assetpack/cli": "^0.8.0",
+    "@assetpack/core": "^0.8.0",
+    "@assetpack/plugin-compress": "^0.8.0",
+    "@assetpack/plugin-ffmpeg": "^0.8.0",
+    "@assetpack/plugin-manifest": "^0.8.0",
+    "@assetpack/plugin-texture-packer": "^0.8.0",
+    "sass": "^1.77.4",
+    "vite": "^5.2.13"
+  },
+  "dependencies": {
+    "@pixi/sound": "^6.0.0",
+    "@pixi/ui": "^2.1.1",
+    "i18next": "^23.11.5",
+    "jsdom": "^24.1.0",
+    "jsdom-global": "^3.0.2",
+    "loglevel": "^1.9.1",
+    "pixi-filters": "^6.0.4",
+    "pixi.js": "^8.1.6",
+    "popmotion": "^11.0.5",
+    "socket.io-client": "^4.7.5",
+    "typed-signals": "^3.0.0"
+  }
+}

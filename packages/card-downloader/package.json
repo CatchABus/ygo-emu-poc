@@ -1,0 +1,23 @@
+{
+  "name": "card-downloader",
+  "version": "1.1.0",
+  "description": "Downloads card images from YGOPRODeck and saves them to game raw assets",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CatchABus/ygo-emu-poc.git"
+  },
+  "author": "CatchABus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CatchABus/ygo-emu-poc/issues"
+  },
+  "homepage": "https://github.com/CatchABus/ygo-emu-poc#readme",
+  "dependencies": {
+    "sharp": "^0.33.4"
+  }
+}

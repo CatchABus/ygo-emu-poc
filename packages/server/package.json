@@ -1,0 +1,28 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "description": "An application server for handling client functionality",
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "cp ./.env dist && cp ./package.json dist && cp -r ./static dist",
+    "start": "dotenvx run --env-file=.env -- nodemon --exec node index.js",
+    "dev": "dotenvx run --env-file=.env.local --env-file=.env -- nodemon --exec ts-node src/index.ts",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CatchABus/ygo-emu-poc.git"
+  },
+  "author": "CatchABus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CatchABus/ygo-emu-poc/issues"
+  },
+  "homepage": "https://github.com/CatchABus/ygo-emu-poc#readme",
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.0.0",
+    "loglevel": "^1.9.1",
+    "socket.io": "^4.7.5"
+  }
+}

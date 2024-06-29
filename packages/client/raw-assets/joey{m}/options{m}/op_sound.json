@@ -1,0 +1,67 @@
+{
+    "frames": {
+        "item-1.png": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 21,
+                "h": 23
+            },
+            "sourceSize": {
+                "w": 21,
+                "h": 23
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 21,
+                "h": 23
+            }
+        },
+        "item-2.png": {
+            "frame": {
+                "x": 22,
+                "y": 0,
+                "w": 19,
+                "h": 23
+            },
+            "sourceSize": {
+                "w": 19,
+                "h": 23
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 19,
+                "h": 23
+            }
+        },
+        "item-3.png": {
+            "frame": {
+                "x": 43,
+                "y": 0,
+                "w": 23,
+                "h": 23
+            },
+            "sourceSize": {
+                "w": 23,
+                "h": 23
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 23,
+                "h": 23
+            }
+        }
+    },
+    "meta": {
+        "image": "op_sound.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 67,
+            "h": 23
+        },
+        "scale": 1
+    }
+}

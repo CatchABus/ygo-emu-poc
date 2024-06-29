@@ -1,0 +1,13 @@
+html, body {
+    background-color: #000;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#app {
+    aspect-ratio: 4 / 3;
+    margin: auto;
+    max-height: 100%;
+    overflow: hidden;
+}

@@ -1,0 +1,2049 @@
+{
+    "cardRace": {
+        "WARRIOR": "Warrior",
+        "SPELLCASTER": "Spellcaster",
+        "FAIRY": "Fairy",
+        "FIEND": "Fiend",
+        "ZOMBIE": "Zombie",
+        "MACHINE": "Machine",
+        "AQUA": "Aqua",
+        "PYRO": "Pyro",
+        "ROCK": "Rock",
+        "WINGED_BEAST": "Winged Beast",
+        "PLANT": "Plant",
+        "INSECT": "Insect",
+        "THUNDER": "Thunder",
+        "DRAGON": "Dragon",
+        "BEAST": "Beast",
+        "BEAST_WARRIOR": "Beast-Warrior",
+        "DINOSAUR": "Dinosaur",
+        "FISH": "Fish",
+        "REPTILE": "Reptile"
+    },
+    "cardType": {
+        "SPELL": "Spell",
+        "TRAP": "Trap",
+        "MONSTER": "Normal",
+        "EFFECT_MONSTER": "Effect",
+        "FUSION_MONSTER": "Fusion",
+        "RITUAL_MONSTER": "Ritual",
+        "FLIP_EFFECT_MONSTER": "Flip",
+        "TOON_MONSTER": "Toon"
+    },
+    "cards": {
+        "126218": {
+            "name": "Skull Dice",
+            "desc": "Roll a six-sided die. All monsters your opponent currently controls lose ATK/DEF equal to the result x 100, until the end of this turn.",
+            "strings": []
+        },
+        "296499": {
+            "name": "The Regulation of Tribe",
+            "desc": "Activate this card by declaring 1 Monster Type. Monsters with the declared Type cannot declare an attack. Once per turn, during your Standby Phase, Tribute 1 monster or destroy this card.\r\n\r\n* The above text is unofficial and describes the card's functionality in the OCG.",
+            "strings": [
+                "Tribute 1 monster for the effect of \"The Regulation of Tribe\"?"
+            ]
+        },
+        "423705": {
+            "name": "Gearfried the Iron Knight",
+            "desc": "If either player equips an Equip Card(s) to this card: Destroy that Equip Card(s).",
+            "strings": [
+                "Destroy equipped card"
+            ]
+        },
+        "473469": {
+            "name": "Driving Snow",
+            "desc": "You can activate this card when 1 or more of your Trap Cards are destroyed and sent from the field to the Graveyard by a card effect your opponent controls. Destroy 1 Spell or Trap Card on the field.",
+            "strings": []
+        },
+        "1248895": {
+            "name": "Chain Destruction",
+            "desc": "When a monster(s) with 2000 or less ATK is Summoned: Target 1 of them; destroy all cards with that name in its controller's hand and Main Deck.",
+            "strings": []
+        },
+        "1918087": {
+            "name": "Minor Goblin Official",
+            "desc": "You can only activate this card when your opponent's Life Points are 3000 or less. Inflict 500 points of damage to your opponent's Life Points during each of his/her Standby Phases.",
+            "strings": [
+                "Inflict 500 damage"
+            ]
+        },
+        "2130625": {
+            "name": "Numinous Healer",
+            "desc": "You can only activate this card when you take damage to your Life Points. Increase your Life Points by 1000 points. Also, increase your Life Points by 500 points for each \"Numinous Healer\" card in your Graveyard.",
+            "strings": []
+        },
+        "2311603": {
+            "name": "Overdrive",
+            "desc": "An all-terrain armored vehicle armed with a heavy-duty machine gun.",
+            "strings": []
+        },
+        "2370081": {
+            "name": "Steel Shell",
+            "desc": "A WATER monster equipped with this card increases its ATK by 400 points and decreases its DEF by 200 points.",
+            "strings": []
+        },
+        "3134241": {
+            "name": "Flying Kamakiri #2",
+            "desc": "A flying mantis that feeds primarily on insects.",
+            "strings": []
+        },
+        "3366982": {
+            "name": "Alligator's Sword Dragon",
+            "desc": "\"Baby Dragon\" + \"Alligator's Sword\"\nThis card can attack your opponent directly if the only face-up monsters they control are EARTH, WATER, or FIRE.",
+            "strings": []
+        },
+        "3573512": {
+            "name": "Swordsman of Landstar",
+            "desc": "An amateur with a sword, this fairy warrior relies on its mysterious powers.",
+            "strings": []
+        },
+        "3643300": {
+            "name": "The Legendary Fisherman",
+            "desc": "While \"Umi\" is on the field, this card is unaffected by Spell effects and cannot be targeted for attacks, but does not prevent your opponent from attacking you directly.",
+            "strings": []
+        },
+        "3797883": {
+            "name": "Slot Machine",
+            "desc": "The machine's ability is said to vary according to its slot results.",
+            "strings": []
+        },
+        "4031928": {
+            "name": "Change of Heart",
+            "desc": "Target 1 monster your opponent controls; take control of it until the End Phase.",
+            "strings": []
+        },
+        "4042268": {
+            "name": "Island Turtle",
+            "desc": "A huge turtle that is often mistaken for an island.",
+            "strings": []
+        },
+        "4266839": {
+            "name": "Kiseitai",
+            "desc": "When your opponent's monster attacks this card in face-down Defense Position, this card becomes an Equip Spell Card equipped to the attacking monster (No damage calculation is conducted). During each of your opponent's Standby Phases, increase your Life Points by half of the ATK of the monster equipped with this card.",
+            "strings": [
+                "Equip this card",
+                "LP Recovery"
+            ]
+        },
+        "4796100": {
+            "name": "Chimera the Flying Mythical Beast",
+            "desc": "\"Gazelle the King of Mythical Beasts\" + \"Berfomet\"\n(This card is always treated as a \"Phantom Beast\" card.)\nWhen this card is destroyed: You can target 1 \"Berfomet\" or 1 \"Gazelle the King of Mythical Beasts\" in your GY; Special Summon that target.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "4920010": {
+            "name": "Souls of the Forgotten",
+            "desc": "A wicked spirit created by the hateful souls of those who fell in battle. It grows by assimilating the souls of its enemies.",
+            "strings": []
+        },
+        "5265750": {
+            "name": "Skull Mariner",
+            "desc": "A pirate ship that appears out of the mist and sinks any seagoing vessels.",
+            "strings": []
+        },
+        "5318639": {
+            "name": "Mystical Space Typhoon",
+            "desc": "Target 1 Spell/Trap on the field; destroy that target.",
+            "strings": []
+        },
+        "5388481": {
+            "name": "Darkfire Soldier #1",
+            "desc": "An explosive expert from a special elite force.",
+            "strings": []
+        },
+        "5434080": {
+            "name": "Headless Knight",
+            "desc": "A haunted spirit of a falsely accused knight who wanders in search of truth and justice.",
+            "strings": []
+        },
+        "5494820": {
+            "name": "Cyclon Laser",
+            "desc": "You can only equip this card to \"Gradius\". Increase the ATK of \"Gradius\" by 300 points. When the equipped \"Gradius\" attacks with an ATK that is higher than the DEF of a Defense Position monster, inflict the difference as Battle Damage to your opponent's Life Points.",
+            "strings": []
+        },
+        "5600127": {
+            "name": "Humanoid Worm Drake",
+            "desc": "\"Worm Drake\" + \"Humanoid Slime\"",
+            "strings": []
+        },
+        "5616412": {
+            "name": "Destruction Punch",
+            "desc": "If the ATK of an attacking monster your opponent controls is lower than the DEF of the attacked Defense Position monster you control, destroy the attacking monster at the end of the Damage Step. (Damage calculation is applied normally.)",
+            "strings": []
+        },
+        "5758500": {
+            "name": "Soul Release",
+            "desc": "Target up to 5 cards in any GY(s); banish them.",
+            "strings": []
+        },
+        "5818798": {
+            "name": "Gazelle the King of Mythical Beasts",
+            "desc": "This monster moves so fast that it looks like an illusion to mortal eyes.\n\n(This card is always treated as a \"Phantom Beast\" card.)",
+            "strings": []
+        },
+        "6104968": {
+            "name": "Bubonic Vermin",
+            "desc": "FLIP: You can Special Summon 1 \"Bubonic Vermin\" from your Deck in face-down Defense Position. Then shuffle your Deck.",
+            "strings": [
+                "Special Summon",
+                "Special Summon 1 \"Bubonic Vermin\" from your Deck?"
+            ]
+        },
+        "6285791": {
+            "name": "The Wicked Worm Beast",
+            "desc": "This face-up card on the field is returned to the owner's hand during the End Phase of your turn.",
+            "strings": [
+                "Return to hand"
+            ]
+        },
+        "6343408": {
+            "name": "Miracle Dig",
+            "desc": "If at least 5 of your monsters are banished: Target 3 of them; return them to the GY.",
+            "strings": [
+                "Return to Graveyard"
+            ]
+        },
+        "6733059": {
+            "name": "Skull Lair",
+            "desc": "Remove from play any number of Monster Cards in your Graveyard to destroy 1 face-up monster on the field whose Level is equal to the number of the cards you removed from play.",
+            "strings": [
+                "Activate the effect of \"Skull Lair\"?",
+                "Destroy",
+                "Please select the number of monsters to banish"
+            ]
+        },
+        "7019529": {
+            "name": "Insect Soldiers of the Sky",
+            "desc": "The ATK of this card increases by 1000 points whenever it attacks a WIND monster.",
+            "strings": []
+        },
+        "7165085": {
+            "name": "Bait Doll",
+            "desc": "Target 1 Set card in the Spell & Trap Card Zone; reveal that target, force its activation if it is a Trap Card, then negate its effect if the activation timing is incorrect, and if you do, destroy it. (If it is not a Trap Card, return it face-down.) When this card resolves, shuffle it into the Deck instead of sending it to the Graveyard.",
+            "strings": []
+        },
+        "7565547": {
+            "name": "Collected Power",
+            "desc": "Target 1 face-up monster on the field; equip it with all Equip Cards on the field. If any of those Equip Cards is now equipped to an incorrect target, destroy that Equip Card.",
+            "strings": []
+        },
+        "7892180": {
+            "name": "Psychic Kappa",
+            "desc": "An amphibian with a myriad of powers to shield it from enemy attacks.",
+            "strings": []
+        },
+        "7914843": {
+            "name": "Electromagnetic Bagworm",
+            "desc": "FLIP: Target 1 Machine-Type monster your opponent controls; take control of that target until your next End Phase.\nIf this card is destroyed by battle: The monster that destroyed it loses 500 ATK and DEF.",
+            "strings": [
+                "Take control",
+                "Loses ATK and DEF"
+            ]
+        },
+        "8131171": {
+            "name": "Sinister Serpent",
+            "desc": "During your Standby Phase, if this card is in your GY: You can return it to your hand, also banish 1 \"Sinister Serpent\" from your GY during your opponent's next End Phase. You can only use this effect of \"Sinister Serpent\" once per turn.",
+            "strings": [
+                "Return to hand"
+            ]
+        },
+        "8687195": {
+            "name": "Dreamsprite",
+            "desc": "When attacked by your opponent's monster, select another 1 of your Monster Cards and designate it as the attack's target, then calculate damage.",
+            "strings": [
+                "Switch attack target"
+            ]
+        },
+        "8951260": {
+            "name": "Respect Play",
+            "desc": "During their respective turns, each player must show their opponent their hand.",
+            "strings": []
+        },
+        "9074847": {
+            "name": "Major Riot",
+            "desc": "If a monster(s) you control returns to your hand by an opponent's card effect: Return as many monsters on the field to the hand as possible, then each player Special Summons monsters from their hand, in face-down Defense Position, equal to the number of Monster Cards that were returned to their hand.",
+            "strings": []
+        },
+        "9653271": {
+            "name": "Kaminari Attack",
+            "desc": "\"Ocubeam\" + \"Mega Thunderball\"",
+            "strings": []
+        },
+        "10262698": {
+            "name": "The Statue of Easter Island",
+            "desc": "A stone monument from Easter Island that launches laser blasts from its rock-hewn lips.",
+            "strings": []
+        },
+        "10352095": {
+            "name": "Scroll of Bewitchment",
+            "desc": "Activate this card by declaring 1 Attribute; the equipped monster becomes that Attribute.",
+            "strings": []
+        },
+        "10538007": {
+            "name": "Leogun",
+            "desc": "Huge monster with a lion's mane similar to the King of Beasts.",
+            "strings": []
+        },
+        "10992251": {
+            "name": "Gradius",
+            "desc": "A high-performance jet fighter with power capsules for variable attack capabilities.",
+            "strings": []
+        },
+        "11549357": {
+            "name": "Gamma The Magnet Warrior",
+            "desc": "Alpha, Beta, and Gamma meld as one to form a powerful monster.",
+            "strings": []
+        },
+        "11901678": {
+            "name": "Black Skull Dragon",
+            "desc": "\"Summoned Skull\" + \"Red-Eyes Black Dragon\"\r\n(This card is always treated as an \"Archfiend\" card.)",
+            "strings": []
+        },
+        "12253117": {
+            "name": "World Suppression",
+            "desc": "You can activate this card when a Field Spell Card is activated. Negate the Field Spell Card during the turn this card is activated.",
+            "strings": []
+        },
+        "12493482": {
+            "name": "Dunames Dark Witch",
+            "desc": "Even when all odds are against this brave fairy, she will press onwards in battle and never retreat.",
+            "strings": []
+        },
+        "12800777": {
+            "name": "Garuda the Wind Spirit",
+            "desc": "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by banishing 1 WIND monster from your GY. Once per turn, during your opponent's End Phase: You can target 1 face-up monster your opponent controls; change that target's battle position.",
+            "strings": [
+                "Change battle position"
+            ]
+        },
+        "12883044": {
+            "name": "Flame Dancer",
+            "desc": "This monster moves while swinging its burning rope.",
+            "strings": []
+        },
+        "12953226": {
+            "name": "Nuvia the Wicked",
+            "desc": "If this monster is Normal Summoned, destroy this card. If your opponent controls any monster, decrease the ATK of this card by 200 points for each monster on your opponents side of the field.",
+            "strings": []
+        },
+        "13522325": {
+            "name": "Spirit of Flames",
+            "desc": "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by banishing 1 FIRE monster from your GY. Gains 300 ATK during your Battle Phase only.",
+            "strings": []
+        },
+        "13676474": {
+            "name": "Grand Tiki Elder",
+            "desc": "A masked monster that wields the most deadly of curses.",
+            "strings": []
+        },
+        "14644902": {
+            "name": "Summoner of Illusions",
+            "desc": "FLIP: Tribute 1 other monster, and if you do, Special Summon 1 Fusion Monster from your Extra Deck, but destroy it during the End Phase of this turn.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "15023985": {
+            "name": "Stone Ogre Grotto",
+            "desc": "A behemoth shaped by giant boulders.",
+            "strings": []
+        },
+        "15259703": {
+            "name": "Toon World",
+            "desc": "Activate this card by paying 1000 LP.",
+            "strings": []
+        },
+        "15866454": {
+            "name": "Spiritualism",
+            "desc": "Target 1 Spell/Trap your opponent controls; return it to the hand. This card's activation and effect cannot be negated.\r\n\r\n* The above text is unofficial and describes the card's functionality in the OCG.",
+            "strings": []
+        },
+        "16227556": {
+            "name": "Inspection",
+            "desc": "During your opponent's Standby Phase, you can randomly select 1 card in your opponent's hand and look at it at the cost of 500 Life Points.",
+            "strings": [
+                "Reveal card in the Hand"
+            ]
+        },
+        "17449108": {
+            "name": "Nobleman of Extermination",
+            "desc": "Target 1 face-down Spell/Trap on the field; destroy that target, and if you do, banish it, then, if it was a Trap, each player reveals their Main Deck, then banishes all cards from it with that card's name.",
+            "strings": []
+        },
+        "17985575": {
+            "name": "Lord of D.",
+            "desc": "Neither player can target Dragon monsters on the field with card effects.",
+            "strings": []
+        },
+        "18144507": {
+            "name": "Harpie's Feather Duster",
+            "desc": "Destroy all Spells and Traps your opponent controls.",
+            "strings": [
+                "Destroy all Spells/Traps your opponent controls"
+            ]
+        },
+        "18605135": {
+            "name": "Tornado Wall",
+            "desc": "Activate only if \"Umi\" is on the field. While \"Umi\" is on the field, you take no battle damage. If \"Umi\" is not on the field, destroy this card.",
+            "strings": []
+        },
+        "18937875": {
+            "name": "Burning Spear",
+            "desc": "A FIRE monster equipped with this card increases its ATK by 400 points and decreases its DEF by 200 points.",
+            "strings": []
+        },
+        "19230408": {
+            "name": "Offerings to the Doomed",
+            "desc": "Target 1 face-up monster on the field; destroy that target, also skip your next Draw Phase.",
+            "strings": []
+        },
+        "19406822": {
+            "name": "Kotodama",
+            "desc": "If there are face-up monsters with the same name on the field, destroy those monsters. (If a monster is Summoned or flipped-face up that has the same name as a monster that is already face-up on the field, the new face-up monster is destroyed. If they are Summoned or flipped face-up at the same time, they are all destroyed.)",
+            "strings": []
+        },
+        "19827717": {
+            "name": "Return of the Doomed",
+            "desc": "Discard 1 Monster Card from your hand to the Graveyard. Return 1 of your monsters destroyed and sent to your Graveyard as a result of battle during this turn to your hand at the end of this turn.",
+            "strings": [
+                "Return to hand"
+            ]
+        },
+        "20228463": {
+            "name": "Ceremonial Bell",
+            "desc": "Both players must keep their hands revealed.",
+            "strings": []
+        },
+        "20765952": {
+            "name": "Mask of Dispel",
+            "desc": "Select 1 face-up Spell Card on the field. The controller of the Spell Card takes 500 points of damage during each of your Standby Phases. When the selected card is removed from the field, destroy this card.",
+            "strings": [
+                "Inflict damage"
+            ]
+        },
+        "20871001": {
+            "name": "Blue Medicine",
+            "desc": "Gain 400 Life Points.",
+            "strings": []
+        },
+        "21015833": {
+            "name": "Hayabusa Knight",
+            "desc": "This card can make a second attack during each Battle Phase.",
+            "strings": []
+        },
+        "21175632": {
+            "name": "St. Joan",
+            "desc": "\"The Forgiving Maiden\" + \"Darklord Marie\"",
+            "strings": []
+        },
+        "21237481": {
+            "name": "Type Zero Magic Crusher",
+            "desc": "Discard 1 Spell Card from your hand to inflict 500 points of damage to your opponent's Life Points.",
+            "strings": [
+                "Inflict damage",
+                "Activate the effect of \"Type Zero Magic Crusher\"?"
+            ]
+        },
+        "21297224": {
+            "name": "Hysteric Fairy",
+            "desc": "Offer 2 monsters on your side of the field as a Tribute to increase your Life Points by 1000 points.",
+            "strings": [
+                "Gain LP"
+            ]
+        },
+        "21340051": {
+            "name": "Boar Soldier",
+            "desc": "This card can only be summoned by a Flip Summon. If summoned by a Normal Summon, the card is destroyed. If your opponent has 1 or more monsters under his/her control, the ATK of this card is decreased by 1000 points.",
+            "strings": []
+        },
+        "21558682": {
+            "name": "Jam Defender",
+            "desc": "When an opponent's monster declares an attack on a monster you control: You can target 1 \"Revival Jam\" you control; switch the attack target to that target.",
+            "strings": [
+                "Change attack target"
+            ]
+        },
+        "21598948": {
+            "name": "Fairy Box",
+            "desc": "When your opponent's monster declares an attack: Toss a coin and call it. If you call it right, the attacking monster's ATK becomes 0 until the end of the Battle Phase. During each of your Standby Phases, pay 500 Life Points or destroy this card.",
+            "strings": [
+                "Change ATK",
+                "Pay 500 LP for the maintenance cost of \"Fairy Box\"?"
+            ]
+        },
+        "21770260": {
+            "name": "Jam Breeding Machine",
+            "desc": "Once per turn, during your Standby Phase: Special Summon 1 \"Slime Token\" (Aqua/WATER/Level 1/ATK 500/DEF 500) in Attack Position. You cannot Summon any monsters, except \"Slime Tokens\" (but you can Set).",
+            "strings": [
+                "Create token"
+            ]
+        },
+        "21817254": {
+            "name": "Mega Thunderball",
+            "desc": "Rolls along the ground releasing bolts of electricity to attack its enemies.",
+            "strings": []
+        },
+        "21888494": {
+            "name": "Chosen One",
+            "desc": "Select 1 Monster Card and 2 non-Monster Cards from your hand. Your opponent randomly selects 1 card among them. If it is a Monster Card, it is Special Summoned and send the remaining 2 cards to the Graveyard. If not, send all the cards to the Graveyard.",
+            "strings": [
+                "Please select 1 Monster Card",
+                "Please select 2 non-Monster Cards"
+            ]
+        },
+        "22359980": {
+            "name": "Mirror Wall",
+            "desc": "Halve the ATK of your opponent's attacking monsters. Once per turn, during your Standby Phase, pay 2000 LP or destroy this card.",
+            "strings": [
+                "Pay 2000 LP to keep \"Mirror Wall\"?"
+            ]
+        },
+        "22419772": {
+            "name": "Fairy Guardian",
+            "desc": "Offer this face-up card as a Tribute to return 1 Spell Card sent to your Graveyard by your opponent during this turn to the bottom of your Deck.",
+            "strings": [
+                "Return to deck"
+            ]
+        },
+        "22537443": {
+            "name": "Sebek's Blessing",
+            "desc": "If your monster inflicts battle damage to your opponent by a direct attack: Gain the same amount of LP.",
+            "strings": []
+        },
+        "22567609": {
+            "name": "Nimble Momonga",
+            "desc": "If this card is destroyed by battle and sent to the GY: Gain 1000 LP, then you can Special Summon any number of \"Nimble Momonga\" from your Deck in face-down Defense Position.",
+            "strings": [
+                "Recover",
+                "Special Summon another \"Nimble Momonga\" from your Deck?"
+            ]
+        },
+        "22702055": {
+            "name": "Umi",
+            "desc": "All Fish, Sea Serpent, Thunder, and Aqua monsters on the field gain 200 ATK/DEF, also all Machine and Pyro monsters on the field lose 200 ATK/DEF.",
+            "strings": []
+        },
+        "22959079": {
+            "name": "Dimensionhole",
+            "desc": "Select 1 monster on your side of the field and remove it from play until your next Standby Phase. While the monster is removed from play, the Monster Card Zone of the selected monster cannot be used.",
+            "strings": []
+        },
+        "23171610": {
+            "name": "Limiter Removal",
+            "desc": "Double the ATK of all Machine monsters you currently control, until the end of this turn. During the End Phase of this turn, destroy those monsters.",
+            "strings": [
+                "Double the ATK of all Machine monsters you control",
+                "Affected by \"Limiter Removal\""
+            ]
+        },
+        "23289281": {
+            "name": "Karate Man",
+            "desc": "You can double the original ATK of this card once per turn. If you used this effect, destroy this card during the End Phase.",
+            "strings": [
+                "Destroy",
+                "Destroy"
+            ]
+        },
+        "23424603": {
+            "name": "Wasteland",
+            "desc": "All Dinosaur, Zombie, and Rock monsters on the field gain 200 ATK/DEF.",
+            "strings": []
+        },
+        "23471572": {
+            "name": "Solomon's Lawbook",
+            "desc": "Skip your own Standby Phase.",
+            "strings": []
+        },
+        "23615409": {
+            "name": "Insect Barrier",
+            "desc": "Insect-Type monsters your opponent controls cannot declare an attack.",
+            "strings": []
+        },
+        "24094653": {
+            "name": "Polymerization",
+            "desc": "Fusion Summon 1 Fusion Monster from your Extra Deck, using monsters from your hand or field as Fusion Material.",
+            "strings": [
+                "Fusion Summon 1 Fusion Monster from your Extra Deck"
+            ]
+        },
+        "24128274": {
+            "name": "Deepsea Warrior",
+            "desc": "As long as \"Umi\" is face-up on the field, this card is unaffected by any Spell Cards.",
+            "strings": []
+        },
+        "24294108": {
+            "name": "Burning Land",
+            "desc": "When this card is activated: If there are any Field Spell Cards on the field, destroy them. During each player's Standby Phase: The turn player takes 500 damage.",
+            "strings": [
+                "Inflict damage"
+            ]
+        },
+        "25774450": {
+            "name": "Mystic Box",
+            "desc": "Target 1 monster your opponent controls and 1 monster you control; destroy the first target, then give control of the second target to your opponent.",
+            "strings": []
+        },
+        "26202165": {
+            "name": "Sangan",
+            "desc": "If this card is sent from the field to the GY: Add 1 monster with 1500 or less ATK from your Deck to your hand, but you cannot activate cards, or the effects of cards, with that name for the rest of this turn. You can only use this effect of \"Sangan\" once per turn.",
+            "strings": [
+                "Search"
+            ]
+        },
+        "26302522": {
+            "name": "Blast Sphere",
+            "desc": "If this face-down Defense Position card was attacked by an opponent's monster, before damage calculation: Equip this card to the attacking monster. Then, during your opponent's next Standby Phase: Destroy the monster this card is equipped to, and if you do, inflict damage to your opponent equal to the ATK the destroyed monster had on the field.",
+            "strings": [
+                "Equip",
+                "Destroy"
+            ]
+        },
+        "26376390": {
+            "name": "Copycat",
+            "desc": "If this card is Summoned: Target 1 face-up monster your opponent controls; this card's ATK/DEF become equal to that monster's original ATK/DEF.",
+            "strings": [
+                "Change ATK and DEF"
+            ]
+        },
+        "26902560": {
+            "name": "Fusion Sage",
+            "desc": "Add 1 \"Polymerization\" from your Deck to your hand.",
+            "strings": []
+        },
+        "27132350": {
+            "name": "Fire Sorcerer",
+            "desc": "FLIP: Randomly select 2 cards from your hand and remove them from play to inflict 800 points of Direct Damage to your opponent's Life Points.",
+            "strings": [
+                "Inflict damage"
+            ]
+        },
+        "27671321": {
+            "name": "Lightning Conger",
+            "desc": "This massive eel generates huge charges of electricity and unleashes them as thunderbolts.",
+            "strings": []
+        },
+        "27827272": {
+            "name": "Makiu, the Magical Mist",
+            "desc": "Target 1 \"Summoned Skull\", or 1 Thunder monster, in your Monster Zone; destroy all monsters your opponent controls with DEF less than or equal to the ATK of that monster. You cannot conduct your Battle Phase the turn you activate this card.",
+            "strings": []
+        },
+        "27911550": {
+            "name": "Parasite Paracide",
+            "desc": "FLIP: Shuffle this card face-up into your opponent's Deck.\r\nIf you draw this card after it was added to your Deck by its effect: Special Summon it in Defense Position, and if you do, take 1000 damage. All monsters controlled by the player that Summoned this card by its effect become Insect monsters.",
+            "strings": [
+                "Shuffle",
+                "Special Summon"
+            ]
+        },
+        "28358902": {
+            "name": "Crimson Sentry",
+            "desc": "Offer this face-up card as a Tribute to return 1 of your monsters destroyed in battle during this turn to the bottom of your Deck.",
+            "strings": [
+                "Return to deck"
+            ]
+        },
+        "29549364": {
+            "name": "Mask of Restrict",
+            "desc": "Neither player can Tribute cards.",
+            "strings": []
+        },
+        "30208479": {
+            "name": "Magician of Black Chaos",
+            "desc": "You can Ritual Summon this card with \"Black Magic Ritual\".",
+            "strings": []
+        },
+        "30325729": {
+            "name": "Dokuroyaiba",
+            "desc": "A boomerang with brains that will pursue a target to the ends of the earth.",
+            "strings": []
+        },
+        "30532390": {
+            "name": "Sky Scout",
+            "desc": "With eyes like a hawk and a flying speed exceeding Mach 5, this monster is a master of the sky.",
+            "strings": []
+        },
+        "30606547": {
+            "name": "The Dark Door",
+            "desc": "Only 1 monster can attack during each Battle Phase.",
+            "strings": []
+        },
+        "30655537": {
+            "name": "Cyber Falcon",
+            "desc": "A jet-powered hawk that travels at the speed of sound.\r\n\r\n(This card is not treated as a \"Cyber\" card.)",
+            "strings": []
+        },
+        "30860696": {
+            "name": "Rocket Warrior",
+            "desc": "During your Battle Phase, this card cannot be destroyed by battle, also you take no damage from battles involving this card. If this card attacks a monster, after damage calculation: That attack target loses 500 ATK until the end of this turn.",
+            "strings": []
+        },
+        "31447217": {
+            "name": "Wingweaver",
+            "desc": "A six-winged fairy who prays for peace and hope.",
+            "strings": []
+        },
+        "31477025": {
+            "name": "Mr. Volcano",
+            "desc": "This seemingly mild-mannered creature has an extremely volatile temper.",
+            "strings": []
+        },
+        "31709826": {
+            "name": "Revival Jam",
+            "desc": "When this card is destroyed by battle and sent to the GY: You can pay 1000 LP; Special Summon it in Defense Position during your next Standby Phase.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "31829185": {
+            "name": "Dark Necrofear",
+            "desc": "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by banishing 3 Fiend monsters from your GY. During the End Phase, if this card is in your GY because it was destroyed in your Monster Zone by an opponent's card and sent there this turn: Target 1 face-up monster your opponent controls; equip this card to that target. While this card is equipped to a monster by this effect, take control of that monster.",
+            "strings": [
+                "Take control"
+            ]
+        },
+        "31987274": {
+            "name": "Flying Fish",
+            "desc": "Three wishes are granted to those fortunate enough to see this monster in flight.",
+            "strings": []
+        },
+        "32015116": {
+            "name": "Blind Destruction",
+            "desc": "Once per turn, during your Standby Phase: Roll a six-sided die. If the result is 1-5, destroy all monsters on the field with the same Level as the number rolled. If it is 6, destroy all Level 6 and higher monsters on the field.",
+            "strings": [
+                "Destroy"
+            ]
+        },
+        "32268901": {
+            "name": "Salamandra",
+            "desc": "Equip only to a FIRE monster. It gains 700 ATK.",
+            "strings": []
+        },
+        "32269855": {
+            "name": "The All-Seeing White Tiger",
+            "desc": "A proud ruler of the jungle that some fear and others respect.",
+            "strings": []
+        },
+        "32437102": {
+            "name": "Dragonic Attack",
+            "desc": "This card can only be used to equip Warrior-Type monsters. The equipped monster is treated as Dragon-Type and increases the ATK and DEF of the equipped monster by 500 points.",
+            "strings": []
+        },
+        "32541773": {
+            "name": "The Portrait's Secret",
+            "desc": "A portrait cursed by the artist, it is said to bring ill fortune to anyone who owns it.",
+            "strings": []
+        },
+        "33550694": {
+            "name": "Fusion Gate",
+            "desc": "During the Main Phase: The turn player can Fusion Summon 1 Fusion Monster from their Extra Deck, by banishing Fusion Materials mentioned on it from their hand or field.",
+            "strings": [
+                "Fusion Summon"
+            ]
+        },
+        "33737664": {
+            "name": "Graverobber's Retribution",
+            "desc": "During each of your Standby Phases, inflict 100 points of damage to your opponent's Life Points for each of your opponent's monsters that have been removed from play.",
+            "strings": [
+                "Inflict damage"
+            ]
+        },
+        "33950246": {
+            "name": "Royal Command",
+            "desc": "Flip monsters' effects cannot be activated, also their effects are negated.",
+            "strings": []
+        },
+        "34016756": {
+            "name": "Riryoku",
+            "desc": "Target 2 face-up monsters on the field; halve the ATK of 1 monster, and if you do, add that lost ATK to the other monster. These effects last until the end of this turn.",
+            "strings": [
+                "Select monster to halve the ATK",
+                "Select the monster to gain ATK"
+            ]
+        },
+        "34694160": {
+            "name": "The Eye of Truth",
+            "desc": "Your opponent must keep their hand revealed. Once per turn, during your opponent's Standby Phase, if they have a Spell(s) in their hand: They gain 1000 LP if they have a Spell(s) in their hand at resolution.",
+            "strings": [
+                "Recover"
+            ]
+        },
+        "35316708": {
+            "name": "Time Seal",
+            "desc": "Skip the Draw Phase of your opponent's next turn.",
+            "strings": []
+        },
+        "35346968": {
+            "name": "Solemn Wishes",
+            "desc": "Increase your Life Points by 500 points each time you draw a card (or cards).",
+            "strings": []
+        },
+        "36280194": {
+            "name": "Backup Soldier",
+            "desc": "While there are 5 or more monsters in your Graveyard: Target up to 3 non-Effect Monsters with 1500 or less ATK in your Graveyard; add them to your hand.",
+            "strings": []
+        },
+        "36468556": {
+            "name": "Ceasefire",
+            "desc": "If a face-down Defense Position monster or an Effect Monster is on the field: Change all face-down Defense Position monsters on the field to face-up Defense Position (Flip monsters' effects are not activated at this time), also inflict 500 damage to your opponent for each Effect Monster on the field.",
+            "strings": []
+        },
+        "36868108": {
+            "name": "Armored Glass",
+            "desc": "You can activate this card when a monster is equipped with an Equip Card. Negate the effects of all Equip Cards on the field during the turn this card is activated.",
+            "strings": []
+        },
+        "37043180": {
+            "name": "D.D. Warrior",
+            "desc": "After damage calculation, when this card battles a monster: Banish that monster, also banish this card.",
+            "strings": [
+                "Banish"
+            ]
+        },
+        "37313786": {
+            "name": "Gamble",
+            "desc": "You can only activate this card when your opponent's hand is 6 or more cards and your hand is 2 or less. Toss a coin and call heads or tails. If you call it right, draw until your hand has 5 cards. If you call it wrong, skip your next turn.",
+            "strings": [
+                "Please select Head or Tails",
+                "Head",
+                "Tails",
+                "Affected by \"Gamble\""
+            ]
+        },
+        "37390589": {
+            "name": "Kunai with Chain",
+            "desc": "Activate 1 or both of these effects (simultaneously);\r\n● When an opponent's monster declares an attack: Target the attacking monster; change that target to Defense Position.\r\n● Target 1 face-up monster you control; equip this card to that target. It gains 500 ATK.",
+            "strings": [
+                "Activate 1 or both of these effects",
+                "Change the attacking monster to Defense Position",
+                "Equip this card to a face-up monster you control",
+                "Activate both of these effects"
+            ]
+        },
+        "37580756": {
+            "name": "Michizure",
+            "desc": "When a monster is sent from the field to your GY, even during the Damage Step: Target 1 monster on the field; destroy it.",
+            "strings": []
+        },
+        "38033121": {
+            "name": "Dark Magician Girl",
+            "desc": "Gains 300 ATK for every \"Dark Magician\" or \"Magician of Black Chaos\" in the GYs.",
+            "strings": []
+        },
+        "38247752": {
+            "name": "Dark-Eyes Illusionist",
+            "desc": "FLIP: Target 1 monster on the field; it cannot attack while this card is face-up on the field.",
+            "strings": [
+                "Cannot attack.\r\n"
+            ]
+        },
+        "38369349": {
+            "name": "Manga Ryu-Ran",
+            "desc": "(This card is always treated as a \"Toon\" card.)\r\nCannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by Tributing 2 monsters, while you control \"Toon World\". Cannot attack the turn it is Special Summoned. You must pay 500 LP to declare an attack with this monster. If \"Toon World\" on the field is destroyed, destroy this card. Can attack your opponent directly, unless they control a Toon monster, in which case this card must target a Toon monster for its attacks.",
+            "strings": []
+        },
+        "38480590": {
+            "name": "Lady Panther",
+            "desc": "Offer this face-up card as a Tribute to return 1 of your monsters destroyed in battle during this turn to the top of your Deck.",
+            "strings": [
+                "Return to deck"
+            ]
+        },
+        "39180960": {
+            "name": "Rigorous Reaver",
+            "desc": "FLIP: Each player discards 1 card.\nIf this card is destroyed by battle: The monster that destroyed it loses 500 ATK and DEF.",
+            "strings": [
+                "Discard hand",
+                "Loses ATK and DEF"
+            ]
+        },
+        "39256679": {
+            "name": "Beta The Magnet Warrior",
+            "desc": "Alpha, Beta, and Gamma meld as one to form a powerful monster.",
+            "strings": []
+        },
+        "39897277": {
+            "name": "Elf's Light",
+            "desc": "A LIGHT monster equipped with this card increases its ATK by 400 points and decreases its DEF by 200 points.",
+            "strings": []
+        },
+        "40133511": {
+            "name": "Bazoo the Soul-Eater",
+            "desc": "Once per turn: You can banish up to 3 monsters from your GY; this card gains 300 ATK for each, until the end of your opponent's turn.",
+            "strings": [
+                "Gain ATK"
+            ]
+        },
+        "40703222": {
+            "name": "Multiply",
+            "desc": "Tribute 1 face-up \"Kuriboh\"; Special Summon as many \"Kuriboh Tokens\" (Fiend/DARK/Level 1/ATK 300/DEF 200) as possible, in Defense Position. They cannot be Tributed for a Tribute Summon.",
+            "strings": []
+        },
+        "40916023": {
+            "name": "Aqua Spirit",
+            "desc": "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by banishing 1 WATER monster from your GY. Once per turn, during your opponent's Standby Phase: You can target 1 face-up monster your opponent controls; change that target's battle position, and if you do, it cannot change its battle position for the rest of this turn.",
+            "strings": [
+                "Change battle position"
+            ]
+        },
+        "41462083": {
+            "name": "Thousand Dragon",
+            "desc": "\"Time Wizard\" + \"Baby Dragon\"",
+            "strings": []
+        },
+        "41855169": {
+            "name": "Jowgen the Spiritualist",
+            "desc": "You can discard 1 random card from your hand to the GY; destroy all Special Summoned monsters on the field. Neither player can Special Summon monsters.",
+            "strings": [
+                "Destroy all Special Summoned monsters on the field. "
+            ]
+        },
+        "42035044": {
+            "name": "Panther Warrior",
+            "desc": "This card cannot declare an attack unless you Tribute 1 monster.",
+            "strings": []
+        },
+        "42431843": {
+            "name": "Ancient Brain",
+            "desc": "A fallen fairy that is powerful in the dark.",
+            "strings": []
+        },
+        "42599677": {
+            "name": "Flame Champion",
+            "desc": "A warrior protected by a flaming shield that nullifies any attack.",
+            "strings": []
+        },
+        "42703248": {
+            "name": "Giant Trunade",
+            "desc": "Return all Spell and Trap Cards on the field to the hand.",
+            "strings": []
+        },
+        "43434803": {
+            "name": "The Shallow Grave",
+            "desc": "Each player targets 1 monster in their own GY; each player Special Summons the target from their GY in face-down Defense Position.",
+            "strings": []
+        },
+        "43711255": {
+            "name": "Prohibition",
+            "desc": "Activate this card by declaring 1 card name. Apply these effects to all cards whose original name is the card name you declared. (This does not apply to card(s) that are already on the field before this effect started applying.)\r\n● They cannot be placed on the field.\r\n● They cannot be activated, nor can their effects be activated or applied.\r\n● They cannot be Summoned or Set.\r\n● They cannot attack, nor can they change their battle positions.\r\n● They cannot be used as material for a Special Summon that requires materials.\r\n\r\n* The above text is unofficial and describes the card's functionality in the OCG.",
+            "strings": []
+        },
+        "43973174": {
+            "name": "The Flute of Summoning Dragon",
+            "desc": "Special Summon up to 2 Dragon monsters from your hand. \"Lord of D.\" must be on the field to activate and to resolve this effect.",
+            "strings": []
+        },
+        "44072894": {
+            "name": "Supply",
+            "desc": "FLIP: Return 2 Fusion-Material monsters that were sent to the Graveyard as a result of a Fusion Summon to your hand.",
+            "strings": [
+                "Add card"
+            ]
+        },
+        "44656491": {
+            "name": "Messenger of Peace",
+            "desc": "Monsters with 1500 or more ATK cannot declare an attack. Once per turn, during your Standby Phase, pay 100 LP or destroy this card.",
+            "strings": [
+                "Pay 100LP?"
+            ]
+        },
+        "44763025": {
+            "name": "Delinquent Duo",
+            "desc": "Pay 1000 LP; your opponent discards 1 random card, and if they have any other cards in their hand, discard 1 more card of their choice.",
+            "strings": []
+        },
+        "45231177": {
+            "name": "Flame Swordsman",
+            "desc": "\"Flame Manipulator\" + \"Masaki the Legendary Swordsman\"",
+            "strings": []
+        },
+        "45894482": {
+            "name": "Gilasaurus",
+            "desc": "You can Special Summon this card (from your hand). If Summoned this way: Activate this effect; your opponent can Special Summon 1 monster from their GY.",
+            "strings": [
+                "Special Summon",
+                "Would you like to Special Summon from graveyard?"
+            ]
+        },
+        "45986603": {
+            "name": "Snatch Steal",
+            "desc": "Equip only to a monster your opponent controls. Take control of the equipped monster. During each of your opponent's Standby Phases: They gain 1000 Life Points.",
+            "strings": [
+                "Increase your opponent's Life Points by 1000 points during each of their Standby Phases.\r\n"
+            ]
+        },
+        "46657337": {
+            "name": "Muka Muka",
+            "desc": "This card gains 300 ATK and DEF for each card in your hand.",
+            "strings": []
+        },
+        "46700124": {
+            "name": "Machine King",
+            "desc": "This card gains 100 ATK for each Machine-Type monster on the field.",
+            "strings": []
+        },
+        "46821314": {
+            "name": "Humanoid Slime",
+            "desc": "This slime apparently has some human genes in its genetic makeup.",
+            "strings": []
+        },
+        "48305365": {
+            "name": "Axe Raider",
+            "desc": "An axe-wielding monster of tremendous strength and agility.",
+            "strings": []
+        },
+        "48539234": {
+            "name": "Appropriate",
+            "desc": "Activate only when your opponent draws a card(s) outside of either Draw Phase. After that, each time your opponent draws a card(s) outside of either Draw Phase, immediately draw 2 cards.",
+            "strings": []
+        },
+        "48579379": {
+            "name": "Perfectly Ultimate Great Moth",
+            "desc": "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by Tributing 1 \"Petit Moth\" on your 6th turn or later after it was equipped with \"Cocoon of Evolution\".",
+            "strings": []
+        },
+        "48766543": {
+            "name": "Cyber-Tech Alligator",
+            "desc": "Originally a pterodactyl, he was viciously attacked by a dragon. Using the newest technologies, his keeper saved him from near-fatal wounds and brought him back as a powerful Cyborg.\r\n\r\n(This card is not treated as a \"Cyber\" card.)",
+            "strings": []
+        },
+        "49064413": {
+            "name": "The Masked Beast",
+            "desc": "You can Ritual Summon this card with \"Curse of the Masked Beast\".",
+            "strings": []
+        },
+        "49251811": {
+            "name": "Mystic Probe",
+            "desc": "You can activate this card when a Continuous Spell Card is activated. Negate all Continuous Spell Cards during the turn this card is activated.",
+            "strings": []
+        },
+        "49587034": {
+            "name": "Lightforce Sword",
+            "desc": "Banish 1 random card from your opponent's hand, face-down. During the Standby Phase of your opponent's 4th turn after this card's activation, return that card to their hand.\r\n\r\n* The above text is unofficial and describes the card's functionality in the OCG.",
+            "strings": []
+        },
+        "49791927": {
+            "name": "Tiger Axe",
+            "desc": "A fast and powerful axe-wielding beast-warrior.",
+            "strings": []
+        },
+        "49888191": {
+            "name": "Garnecia Elefantis",
+            "desc": "A monster so heavy that each step rocks the earth.",
+            "strings": []
+        },
+        "50122883": {
+            "name": "Bite Shoes",
+            "desc": "FLIP: Change the Attack or Defense Position of 1 face-up monster on the field. The card must remain face-up.",
+            "strings": [
+                "Change battle position"
+            ]
+        },
+        "50287060": {
+            "name": "Archfiend of Gilfer",
+            "desc": "When this card is sent to the GY: You can target 1 face-up monster on the field; equip this card to that target. That monster loses 500 ATK while equipped with this card.",
+            "strings": []
+        },
+        "50913601": {
+            "name": "Mountain",
+            "desc": "All Dragon, Winged Beast, and Thunder monsters on the field gain 200 ATK/DEF.",
+            "strings": []
+        },
+        "51345461": {
+            "name": "Sword Hunter",
+            "desc": "At the end of the Battle Phase, if this card destroyed a monster(s) by battle and sent it to the Graveyard this Battle Phase: Equip all those monsters from the Graveyard to this card as an Equip Spell Card(s) with this effect.\n●The equipped monster gains 200 ATK.",
+            "strings": [
+                "Equip"
+            ]
+        },
+        "52040216": {
+            "name": "Harpie's Pet Dragon",
+            "desc": "Gains 300 ATK/DEF for each \"Harpie Lady\" on the field.",
+            "strings": []
+        },
+        "52097679": {
+            "name": "Shield & Sword",
+            "desc": "Switch the original ATK and DEF of all face-up monsters currently on the field, until the end of this turn.",
+            "strings": []
+        },
+        "52121290": {
+            "name": "Spherous Lady",
+            "desc": "Many have been deceived by the beauty of this vampire.",
+            "strings": []
+        },
+        "53119267": {
+            "name": "Magical Thorn",
+            "desc": "When your opponent's card(s) in their hand are discarded to the Graveyard, inflict 500 points of damage to their Life Points for each card that was discarded.",
+            "strings": []
+        },
+        "53183600": {
+            "name": "Blue-Eyes Toon Dragon",
+            "desc": "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by Tributing 2 monsters, while you control \"Toon World\". Cannot attack the turn it is Special Summoned. You must pay 500 LP to declare an attack with this monster. If \"Toon World\" on the field is destroyed, destroy this card. Can attack your opponent directly, unless they control a Toon monster, in which case this card must target a Toon monster for its attacks.",
+            "strings": []
+        },
+        "53530069": {
+            "name": "Spirit of the Breeze",
+            "desc": "As long as this card remains in face-up Attack Position on your side of the field, increase your Life Points by 1000 points during each of your Standby Phases.",
+            "strings": [
+                "Gain LP"
+            ]
+        },
+        "53582587": {
+            "name": "Torrential Tribute",
+            "desc": "When a monster(s) is Summoned: Destroy all monsters on the field.",
+            "strings": []
+        },
+        "54098121": {
+            "name": "Mysterious Puppeteer",
+            "desc": "(This card is not treated as a \"Puppet\" card.)\r\nIf another monster is Normal or Flip Summoned: Gain 500 LP.",
+            "strings": [
+                "Gain 500 LP"
+            ]
+        },
+        "54109233": {
+            "name": "Infinite Dismissal",
+            "desc": "Level 3 or lower monsters are destroyed during the End Phase of the turn that they are Normal Summoned or Flip Summoned.",
+            "strings": [
+                "Destroy"
+            ]
+        },
+        "55226821": {
+            "name": "Lightning Blade",
+            "desc": "Equip only to a Warrior monster. It gains 800 ATK. All WATER monsters on the field lose 500 ATK.",
+            "strings": []
+        },
+        "55321970": {
+            "name": "Gust Fan",
+            "desc": "A WIND monster equipped with this card increases its ATK by 400 points and decreases its DEF by 200 points.",
+            "strings": []
+        },
+        "55550921": {
+            "name": "Battle Warrior",
+            "desc": "A warrior that fights with his bare hands!!!",
+            "strings": []
+        },
+        "55608151": {
+            "name": "Gryphon Wing",
+            "desc": "When your opponent activates \"Harpie's Feather Duster\": Negate its effect, and if you do, destroy all Spell and Trap Cards your opponent controls.",
+            "strings": []
+        },
+        "55784832": {
+            "name": "Morinphen",
+            "desc": "A strange fiend with long arms and razor-sharp talons.",
+            "strings": []
+        },
+        "56260110": {
+            "name": "Raimei",
+            "desc": "Decrease your opponent's Life Points by 300 points.",
+            "strings": []
+        },
+        "56387350": {
+            "name": "Vampire Baby",
+            "desc": "At the end of the Battle Phase, if this card destroyed a monster by battle and sent it to the GY this turn: You can Special Summon that monster to your field.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "56747793": {
+            "name": "United We Stand",
+            "desc": "The equipped monster gains 800 ATK/DEF for each face-up monster you control.",
+            "strings": []
+        },
+        "56948373": {
+            "name": "Mask of the Accursed",
+            "desc": "The equipped monster cannot attack. Once per turn, during your Standby Phase: Inflict 500 damage to the controller of the equipped monster.",
+            "strings": [
+                "Inflict damage"
+            ]
+        },
+        "57409948": {
+            "name": "Bombardment Beetle",
+            "desc": "FLIP: Pick up and see 1 face-down Defense Position Monster Card on your opponent's side of the field. If it is an Effect Monster, destroy it (its Flip Effect is not activated), and if the card is not, return it to its original position.",
+            "strings": [
+                "Reveal 1 Set card"
+            ]
+        },
+        "57579381": {
+            "name": "Darklord Marie",
+            "desc": "Once per turn, during your Standby Phase: You gain 200 LP. This card must be in the Graveyard to activate and to resolve this effect.",
+            "strings": [
+                "Gain LP"
+            ]
+        },
+        "57617178": {
+            "name": "Sonic Bird",
+            "desc": "When this card is Normal or Flip Summoned: You can add 1 Ritual Spell from your Deck to your hand.",
+            "strings": [
+                "Select 1 Ritual Spell Card from your Deck"
+            ]
+        },
+        "57839750": {
+            "name": "Mother Grizzly",
+            "desc": "When this card is destroyed by battle and sent to the GY: You can Special Summon 1 WATER monster with 1500 or less ATK from your Deck, in Attack Position.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "57882509": {
+            "name": "Mask of Weakness",
+            "desc": "Target 1 attacking monster; that target loses 700 ATK until the end of this turn.",
+            "strings": []
+        },
+        "57953380": {
+            "name": "Card of Safe Return",
+            "desc": "When a monster is Special Summoned from your Graveyard, you can draw 1 card.",
+            "strings": [
+                "Draw card"
+            ]
+        },
+        "58314394": {
+            "name": "Ground Attacker Bugroth",
+            "desc": "A surface battle robot that was once used for sea warfare.",
+            "strings": []
+        },
+        "58551308": {
+            "name": "Spear Cretin",
+            "desc": "FLIP: When this card is sent to the Graveyard after being flipped, each player selects 1 monster from their Graveyard, and Special Summons it in face-up Attack Position or face-down Defense Position.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "58621589": {
+            "name": "Shadow of Eyes",
+            "desc": "When a monster(s) is Set on your opponent's field: Target 1 of those Set monsters; change that Set monster to face-up Attack Position. (Flip Effects are not activated.)",
+            "strings": []
+        },
+        "58696829": {
+            "name": "Bio-Mage",
+            "desc": "A mysterious priest created as a result of the latest advances in biotechnology.",
+            "strings": []
+        },
+        "58775978": {
+            "name": "Nightmare's Steelcage",
+            "desc": "This card remains on the field for 2 of your opponent's turns. While this card is face-up on the field, no monsters can attack.",
+            "strings": []
+        },
+        "58818411": {
+            "name": "Empress Mantis",
+            "desc": "Queen of an army of giant mantises whose command moves legions.",
+            "strings": []
+        },
+        "58921041": {
+            "name": "Anti-Spell Fragrance",
+            "desc": "Both players must Set Spell Cards before activating them. If either player Sets a Spell Card, that Spell Card cannot be activated until their next turn.\r\n\r\n* The above text is unofficial and describes the card's functionality in the OCG.",
+            "strings": []
+        },
+        "59197169": {
+            "name": "Yami",
+            "desc": "All Fiend and Spellcaster monsters on the field gain 200 ATK/DEF, also all Fairy monsters on the field lose 200 ATK/DEF.",
+            "strings": []
+        },
+        "59344077": {
+            "name": "Magic Drain",
+            "desc": "When your opponent activates a Spell Card: They can discard 1 Spell to negate this card's effect, otherwise negate the activation of their Spell Card, and if you do, destroy it.",
+            "strings": [
+                "Discard 1 Spell Card?"
+            ]
+        },
+        "59560625": {
+            "name": "Shift",
+            "desc": "When your opponent targets exactly 1 monster you control (and no other cards) for an attack, or with a Spell/Trap effect: Target another monster you control that would be an appropriate target; that attack/Spell/Trap now targets the new target.",
+            "strings": [
+                "Switch effect target",
+                "Switch attack target"
+            ]
+        },
+        "59744639": {
+            "name": "Windstorm of Etaqua",
+            "desc": "Change the battle positions of all face-up monsters your opponent controls.",
+            "strings": []
+        },
+        "59784896": {
+            "name": "Dark Zebra",
+            "desc": "If this is the only Monster Card in your control during your Standby Phase, it is changed to Defense Position. You cannot change the position of this card during the same turn.",
+            "strings": [
+                "Change to defense position"
+            ]
+        },
+        "60082869": {
+            "name": "Dust Tornado",
+            "desc": "Target 1 Spell/Trap your opponent controls; destroy that target, then you can Set 1 Spell/Trap from your hand.",
+            "strings": [
+                "Set 1 Card?"
+            ]
+        },
+        "60682203": {
+            "name": "Cold Wave",
+            "desc": "This card can only be activated at the start of Main Phase 1. Until your next turn, you and your opponent cannot play or Set any Spell or Trap Cards.",
+            "strings": [
+                "Affected by \"Cold Wave\": cannot activate or Set any Spell/Trap Cards"
+            ]
+        },
+        "60694662": {
+            "name": "Skelengel",
+            "desc": "FLIP: Draw 1 card.",
+            "strings": [
+                "Draw card"
+            ]
+        },
+        "60806437": {
+            "name": "UFO Turtle",
+            "desc": "When this card is destroyed by battle and sent to the GY: You can Special Summon 1 FIRE monster with 1500 or less ATK from your Deck, in Attack Position.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "60862676": {
+            "name": "Flame Cerebrus",
+            "desc": "Known to many as the \"Burning Executioner\", this monster is capable of burning enemies to cinders.",
+            "strings": []
+        },
+        "60866277": {
+            "name": "Earthshaker",
+            "desc": "Select 2 Monster Card Attributes. Your opponent then selects 1 of the 2 Attributes and destroys all face-up monsters with that Attribute on the field.",
+            "strings": []
+        },
+        "61405855": {
+            "name": "Sword of Dragon's Soul",
+            "desc": "Equip only to a Warrior monster. It gains 700 ATK. After damage calculation, if the equipped monster battled a Dragon monster: Destroy that monster at the end of that Battle Phase.",
+            "strings": []
+        },
+        "61528025": {
+            "name": "Banisher of the Light",
+            "desc": "Any card sent to the GY is banished instead.",
+            "strings": []
+        },
+        "61705417": {
+            "name": "Graverobber",
+            "desc": "Select 1 Spell Card from your opponent's Graveyard. You can use it as your hand until the end of the turn. If you use it, you take 2000 points of damage.",
+            "strings": []
+        },
+        "61740673": {
+            "name": "Imperial Order",
+            "desc": "Negate all Spell effects on the field. Once per turn, during the Standby Phase, you must pay 700 LP (this is not optional), or this card is destroyed.",
+            "strings": [
+                "Pay 700LP?"
+            ]
+        },
+        "61831093": {
+            "name": "Greenkappa",
+            "desc": "FLIP: Target 2 Set Spell/Trap Cards on the field; destroy those targets.",
+            "strings": []
+        },
+        "62279055": {
+            "name": "Magic Cylinder",
+            "desc": "When an opponent's monster declares an attack: Target the attacking monster; negate the attack, and if you do, inflict damage to your opponent equal to its ATK.",
+            "strings": []
+        },
+        "62867251": {
+            "name": "Light of Intervention",
+            "desc": "Monster Cards cannot be changed to face-down Defense Position. If a monster would be Normal Set or Special Summoned face-down, it must be Summoned in face-up Defense Position instead.\r\n\r\n* The above text is unofficial and describes the card's functionality in the OCG.",
+            "strings": []
+        },
+        "63162310": {
+            "name": "Wall Shadow",
+            "desc": "Cannot be Normal Summoned/Set. Must first be Special Summoned with \"Magical Labyrinth\".",
+            "strings": []
+        },
+        "63391643": {
+            "name": "Thousand Knives",
+            "desc": "If you control \"Dark Magician\": Target 1 monster your opponent controls; destroy that target.",
+            "strings": []
+        },
+        "63689843": {
+            "name": "Attack and Receive",
+            "desc": "You can only activate this card when you take damage to your Life Points. Inflict 700 points of damage to your opponent's Life Points. Also, inflict 300 points of damage to your opponent's Life Points for each \"Attack and Receive\" card in your Graveyard.",
+            "strings": []
+        },
+        "64335804": {
+            "name": "Red-Eyes Black Metal Dragon",
+            "desc": "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your Deck) by Tributing \"Red-Eyes B. Dragon\" equipped with \"Metalmorph\".",
+            "strings": []
+        },
+        "64389297": {
+            "name": "Magical Labyrinth",
+            "desc": "Equip only to \"Labyrinth Wall\". You can Tribute the equipped monster; Special Summon \"Wall Shadow\" from your Deck.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "64428736": {
+            "name": "Alligator's Sword",
+            "desc": "ey, dis mighty lissard man can swing his sword so fast, dat it's more dan da speed a sound!",
+            "strings": []
+        },
+        "64752646": {
+            "name": "Fire Princess",
+            "desc": "Each time you gain Life Points, inflict 500 damage to your opponent.",
+            "strings": [
+                "Inflict damage when you gain Life Points"
+            ]
+        },
+        "65240384": {
+            "name": "Big Shield Gardna",
+            "desc": "When a Spell Card is activated that targets this face-down card (and no other cards) (Quick Effect): Change this card to face-up Defense Position, and if you do, negate the activation. If this card is attacked, change it to Attack Position at the end of the Damage Step.",
+            "strings": []
+        },
+        "65458948": {
+            "name": "Toon Mermaid",
+            "desc": "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand), while you control \"Toon World\". Cannot attack the turn it is Special Summoned. You must pay 500 LP to declare an attack with this monster. If \"Toon World\" on the field is destroyed, destroy this card. Can attack your opponent directly, unless they control a Toon monster, in which case this card must target a Toon monster for its attacks.",
+            "strings": []
+        },
+        "65475294": {
+            "name": "The Unfriendly Amazon",
+            "desc": "Offer 1 of your monsters on the field as a Tribute (excluding this monster) during each of your Standby Phases. If you cannot, this card is destroyed. Monsters used for a Tribute Summon or that are offered as Tributes due to other cards' effects are excluded.",
+            "strings": [
+                "Tribute 1 monster for the effect of \"The Unfriendly Amazon\"?"
+            ]
+        },
+        "65570596": {
+            "name": "Red Archery Girl",
+            "desc": "A mermaid archer that hides in a protective shell, waiting for the right moment to strike.",
+            "strings": []
+        },
+        "66719324": {
+            "name": "Rain of Mercy",
+            "desc": "Increase the Life Points of both players by 1000 points.",
+            "strings": []
+        },
+        "66927994": {
+            "name": "Oni Tank T-34",
+            "desc": "An armored tank possessed by a fiend that will pursue enemies until they're crushed.",
+            "strings": []
+        },
+        "66989694": {
+            "name": "The Earl of Demise",
+            "desc": "This gentlemanly creature is extremely wicked, feared by man and fiend alike.",
+            "strings": []
+        },
+        "67049542": {
+            "name": "Dark Bat",
+            "desc": "Bats from the netherworld that use their hyper senses to detect their enemies.",
+            "strings": []
+        },
+        "67105242": {
+            "name": "Earthbound Spirit",
+            "desc": "A vengeful creature formed by the spirits of fallen warriors, it drags any who dare approach it into the deepest bowels of the earth.",
+            "strings": []
+        },
+        "67371383": {
+            "name": "Amphibian Beast",
+            "desc": "On land or in the sea, the speed of this monster is unmatchable.",
+            "strings": []
+        },
+        "67532912": {
+            "name": "Science Soldier",
+            "desc": "Soldiers equipped with state-of-the-art weaponry to face unknown creatures.",
+            "strings": []
+        },
+        "68049471": {
+            "name": "The Gross Ghost of Fled Dreams",
+            "desc": "This monster feeds on the dreams of an unwary sleeper, dragging the victim into eternal slumber.",
+            "strings": []
+        },
+        "68400115": {
+            "name": "The Emperor's Holiday",
+            "desc": "Negate all Equip Card effects on the field.",
+            "strings": []
+        },
+        "68401546": {
+            "name": "Fairy's Gift",
+            "desc": "This flying monster is known for delivering happiness to all.",
+            "strings": []
+        },
+        "68540058": {
+            "name": "Metalmorph",
+            "desc": "Target 1 face-up monster on the field; equip this card to that target. It gains 300 ATK/DEF. If it attacks, it gains ATK equal to half the ATK of the attack target, during damage calculation only.",
+            "strings": []
+        },
+        "69015963": {
+            "name": "Cyber-Stein",
+            "desc": "(This card is not treated as a \"Cyber\" card.)\nYou can pay 5000 LP; Special Summon 1 Fusion Monster from your Extra Deck in Attack Position.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "69122763": {
+            "name": "Deal of Phantom",
+            "desc": "Select 1 monster face-up on the field. Increase the selected monster's ATK by 100 points for each monster in your Graveyard during the turn this card is activated. The number of monster(s) are applied when this card is activated.",
+            "strings": []
+        },
+        "69140098": {
+            "name": "Gemini Elf",
+            "desc": "Elf twins that alternate their attacks.",
+            "strings": []
+        },
+        "69750536": {
+            "name": "Wow Warrior",
+            "desc": "A fish with arms, legs, and some very sharp teeth.",
+            "strings": []
+        },
+        "69832741": {
+            "name": "Spirit Elimination",
+            "desc": "When monsters in the Graveyard are removed from play, remove monsters on your side of the field from play as substitutes. This card remains active until the end of the turn that it is activated. The substitutes remain removed from play.",
+            "strings": [
+                "Select monsters on your field to banish",
+                "Affected by \"Spirit Elimination\""
+            ]
+        },
+        "69954399": {
+            "name": "Ekibyo Drakmord",
+            "desc": "The equipped monster cannot attack. Destroy the equipped monster at the end of its controller's 2nd turn after this card is activated. At that time, this card is returned to the owner's hand.",
+            "strings": [
+                "Destroy",
+                "Return to hand"
+            ]
+        },
+        "70344351": {
+            "name": "Riryoku Field",
+            "desc": "When a Spell Card that targets exactly 1 monster on the field (and no other cards) is activated: Negate the activation, and if you do, destroy it.",
+            "strings": []
+        },
+        "70828912": {
+            "name": "Premature Burial",
+            "desc": "Activate this card by paying 800 LP, then target 1 monster in your Graveyard; Special Summon that target in Attack Position and equip it with this card. When this card is destroyed, destroy the equipped monster.",
+            "strings": []
+        },
+        "71044499": {
+            "name": "Nobleman of Crossout",
+            "desc": "Target 1 face-down monster on the field; destroy that target, and if you do, banish it, then, if it was a Flip monster, each player reveals their Main Deck, then banishes all cards from it with that monster's name.",
+            "strings": []
+        },
+        "71283180": {
+            "name": "Tornado Bird",
+            "desc": "FLIP: Return 2 Spell or Trap Cards on the field to their owners' hands.",
+            "strings": [
+                "Return to hand"
+            ]
+        },
+        "71466592": {
+            "name": "Maryokutai",
+            "desc": "During your opponent's turn, when your opponent activates a Spell Card (Quick Effect): You can Tribute this card; negate the activation, and if you do, destroy it.",
+            "strings": [
+                "Negate and destroy Spell Card"
+            ]
+        },
+        "71625222": {
+            "name": "Time Wizard",
+            "desc": "Once per turn: You can toss a coin and call it. If you call it right, destroy all monsters your opponent controls. If you call it wrong, destroy as many monsters you control as possible, and if you do, take damage equal to half the total ATK those destroyed monsters had while face-up on the field.",
+            "strings": [
+                "Toss coin and call it"
+            ]
+        },
+        "72929454": {
+            "name": "Turtle Bird",
+            "desc": "An unusual turtle that not only swims at tremendous speeds, but can also sail across the skies.",
+            "strings": []
+        },
+        "73079365": {
+            "name": "Gust",
+            "desc": "You can activate this card when 1 or more of your Spell Cards are destroyed and sent from the field to the Graveyard by a card effect your opponent controls. Destroy 1 Spell or Trap Card on the field.",
+            "strings": []
+        },
+        "73216412": {
+            "name": "Worm Drake",
+            "desc": "Once this monster wraps itself around a victim, there is no escape.",
+            "strings": []
+        },
+        "73915051": {
+            "name": "Scapegoat",
+            "desc": "Special Summon 4 \"Sheep Tokens\" (Beast/EARTH/Level 1/ATK 0/DEF 0) in Defense Position. They cannot be Tributed for a Tribute Summon. You cannot Summon other monsters the turn you activate this card (but you can Normal Set).",
+            "strings": [
+                "Special Summon token",
+                "Affected by \"Scapegoat\": cannot Summon other monsters "
+            ]
+        },
+        "74137509": {
+            "name": "Graceful Dice",
+            "desc": "Roll a six-sided die. All monsters you currently control gain ATK/DEF equal to the result x 100, until the end of this turn.",
+            "strings": []
+        },
+        "74637266": {
+            "name": "Octoberser",
+            "desc": "With the head of a fish and the legs of an octopus, this strange creature attacks enemies by flinging spears.",
+            "strings": []
+        },
+        "74677422": {
+            "name": "Red-Eyes Black Dragon",
+            "desc": "A ferocious dragon with a deadly attack.",
+            "strings": []
+        },
+        "74701381": {
+            "name": "DNA Surgery",
+            "desc": "Activate this card by declaring 1 Monster Type. All face-up monsters on the field become that Type.",
+            "strings": []
+        },
+        "74923978": {
+            "name": "Forced Requisition",
+            "desc": "You can activate this card when you discard from your hand. After that, each time you discard from your hand, your opponent must also discard the same number of cards from his/her hand.",
+            "strings": []
+        },
+        "75347539": {
+            "name": "Valkyrion the Magna Warrior",
+            "desc": "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by Tributing 1 \"Alpha The Magnet Warrior\", \"Beta The Magnet Warrior\", and \"Gamma The Magnet Warrior\" from your hand and/or field. You can Tribute this card, then target 1 \"Alpha The Magnet Warrior\", \"Beta The Magnet Warrior\", and \"Gamma The Magnet Warrior\" in your GY; Special Summon them.",
+            "strings": []
+        },
+        "75372290": {
+            "name": "Total Defense Shogun",
+            "desc": "This card is changed to Defense Position when it is Normal Summoned or Flip Summoned successfully. This card can attack while it is in Defense Position. If this card attacks while in Defense Position, apply the ATK of this card for damage calculation.",
+            "strings": [
+                "Change to defense position"
+            ]
+        },
+        "75646520": {
+            "name": "Metal Detector",
+            "desc": "You can activate this card when a Continuous Trap Card is activated. Negate all Continuous Trap Cards during the turn this card is activated.",
+            "strings": []
+        },
+        "76305638": {
+            "name": "The Rock Spirit",
+            "desc": "Cannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by banishing 1 EARTH monster from your GY. Gains 300 ATK during your opponent's Battle Phase only.",
+            "strings": []
+        },
+        "76775123": {
+            "name": "Patrol Robo",
+            "desc": "During your Standby Phase, you can look at 1 face-down card that's been Set by your opponent as long as this card remains face-up on the field.",
+            "strings": [
+                "Confirm"
+            ]
+        },
+        "76792184": {
+            "name": "Black Magic Ritual",
+            "desc": "This card is used to Ritual Summon \"Magician of Black Chaos\". You must also Tribute monsters from your hand or field whose total Levels equal 8 or more.",
+            "strings": []
+        },
+        "77207191": {
+            "name": "Berfomet",
+            "desc": "When this card is Normal or Flip Summoned: You can add 1 \"Gazelle the King of Mythical Beasts\" from your Deck to your hand.",
+            "strings": [
+                "Search"
+            ]
+        },
+        "77414722": {
+            "name": "Magic Jammer",
+            "desc": "When a Spell Card is activated: Discard 1 card; negate the activation, and if you do, destroy it.",
+            "strings": []
+        },
+        "77527210": {
+            "name": "Soul of Purity and Light",
+            "desc": "This card cannot be Normal Summoned or Set. This card can only be Special Summoned by removing from play 2 LIGHT monsters in your Graveyard. All monsters your opponent controls lose 300 ATK during their Battle Phase only.",
+            "strings": []
+        },
+        "77585513": {
+            "name": "Jinzo",
+            "desc": "Trap Cards, and their effects on the field, cannot be activated. Negate all Trap effects on the field.",
+            "strings": []
+        },
+        "78010363": {
+            "name": "Witch of the Black Forest",
+            "desc": "If this card is sent from the field to the GY: Add 1 monster with 1500 or less DEF from your Deck to your hand, but you cannot activate cards, or the effects of cards, with that name for the rest of this turn. You can only use this effect of \"Witch of the Black Forest\" once per turn.",
+            "strings": [
+                "Search card"
+            ]
+        },
+        "78193831": {
+            "name": "Buster Blader",
+            "desc": "Gains 500 ATK for each Dragon monster your opponent controls or is in their GY.",
+            "strings": []
+        },
+        "78423643": {
+            "name": "Three-Headed Geedo",
+            "desc": "A three-headed nocturnal monster that is absolutely ruthless when fighting.",
+            "strings": []
+        },
+        "78636495": {
+            "name": "Slate Warrior",
+            "desc": "FLIP: This card gains 500 ATK and DEF.\nIf this card is destroyed by battle: The monster that destroyed it loses 500 ATK and DEF.",
+            "strings": [
+                "Gain 500 ATK and DEF",
+                "Lose 500 ATK and DEF"
+            ]
+        },
+        "78658564": {
+            "name": "Goblin Attack Force",
+            "desc": "If this card attacks, it is changed to Defense Position at the end of the Battle Phase, and its battle position cannot be changed until the End Phase of your next turn.",
+            "strings": []
+        },
+        "78861134": {
+            "name": "Darkfire Soldier #2",
+            "desc": "A warrior who gained immeasurable power from the heart of a volcano.",
+            "strings": []
+        },
+        "78984772": {
+            "name": "Twin-Headed Fire Dragon",
+            "desc": "Two dragons fused as one from the effects of the Big Bang.",
+            "strings": []
+        },
+        "79106360": {
+            "name": "Morphing Jar #2",
+            "desc": "FLIP: Shuffle all monsters on the field into the Deck. Then, each player excavates cards from the top of their Deck, until they excavate the same number of monsters they shuffled into their Main Deck. Special Summon all excavated Level 4 or lower monsters in face-down Defense Position, also send the remaining cards to the Graveyard.",
+            "strings": []
+        },
+        "79759861": {
+            "name": "Tribute to The Doomed",
+            "desc": "Discard 1 card, then target 1 monster on the field; destroy it.",
+            "strings": []
+        },
+        "79853073": {
+            "name": "Cipher Soldier",
+            "desc": "If this card battles a Warrior-Type monster, during damage calculation: This card gains 2000 ATK and DEF during that damage calculation only.",
+            "strings": [
+                "Increase ATK and DEF"
+            ]
+        },
+        "79870141": {
+            "name": "Mad Sword Beast",
+            "desc": "If this card attacks a Defense Position monster, inflict piercing battle damage.",
+            "strings": []
+        },
+        "80604092": {
+            "name": "Ultimate Offering",
+            "desc": "During your Main Phase or your opponent's Battle Phase: You can pay 500 Life Points; immediately after this effect resolves, Normal Summon/Set 1 monster.",
+            "strings": [
+                "Special Summon",
+                "Activate effect?",
+                "Normal Summon monster",
+                "Set monster"
+            ]
+        },
+        "80987696": {
+            "name": "Time Machine",
+            "desc": "When exactly 1 monster is destroyed by battle, and that monster is sent to the GY: Special Summon that monster to the same field it was on, in the same battle position it was in when destroyed.\r\n\r\n* The above text is unofficial and describes the card's functionality in the OCG.",
+            "strings": []
+        },
+        "81210420": {
+            "name": "Magical Hats",
+            "desc": "During your opponent's Battle Phase: Choose 2 Spells/Traps from your Deck and 1 monster in your Main Monster Zone. Special Summon them as Normal Monsters (ATK 0/DEF 0) in face-down Defense Position, Set the chosen monster if it is face-up, and shuffle them on the field. The 2 cards chosen from your Deck are destroyed at the end of the Battle Phase, and cannot remain on the field except during this Battle Phase.",
+            "strings": []
+        },
+        "82432018": {
+            "name": "Mask of Brutality",
+            "desc": "The equipped monster gains 1000 ATK and loses 1000 DEF. Once per turn, during your Standby Phase, pay 1000 LP or destroy this card.",
+            "strings": [
+                "Pay 1000 LP?"
+            ]
+        },
+        "83011278": {
+            "name": "Mystic Tomato",
+            "desc": "When this card is destroyed by battle and sent to the GY: You can Special Summon 1 DARK monster with 1500 or less ATK from your Deck, in face-up Attack Position.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "83746708": {
+            "name": "Mage Power",
+            "desc": "The equipped monster gains 500 ATK/DEF for each Spell/Trap you control.",
+            "strings": []
+        },
+        "83764719": {
+            "name": "Monster Reborn",
+            "desc": "Target 1 monster in either GY; Special Summon it.",
+            "strings": []
+        },
+        "83968380": {
+            "name": "Jar of Greed",
+            "desc": "Draw 1 card.",
+            "strings": []
+        },
+        "83994646": {
+            "name": "4-Starred Ladybug of Doom",
+            "desc": "FLIP: Destroy all Level 4 monsters your opponent controls.",
+            "strings": []
+        },
+        "84080939": {
+            "name": "The Forgiving Maiden",
+            "desc": "Offer this face-up card as a Tribute to return to your hand 1 of your monsters destroyed as a result of battle during this turn.",
+            "strings": []
+        },
+        "84620194": {
+            "name": "Girochin Kuwagata",
+            "desc": "Despite its small size, this monster has powerful jaws that can rip metal to shreds.",
+            "strings": []
+        },
+        "84834865": {
+            "name": "Flying Kamakiri #1",
+            "desc": "When this card is destroyed by battle and sent to the Graveyard: You can Special Summon 1 WIND monster with 1500 or less ATK from your Deck, in face-up Attack Position.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "84926738": {
+            "name": "The Immortal of Thunder",
+            "desc": "FLIP: Increase your Life Points by 3000 points. When this card is sent from the field to the Graveyard, you lose 5000 Life Points.",
+            "strings": [
+                "Gain LP",
+                "Lose LP"
+            ]
+        },
+        "85602018": {
+            "name": "Last Will",
+            "desc": "If a monster on your side of the field was sent to your Graveyard this turn, you can Special Summon 1 monster with an ATK of 1500 points or less from your Deck once during this turn. Then shuffle your Deck.",
+            "strings": [
+                "Do you want to activate the effect of \"Last Will\"?"
+            ]
+        },
+        "85742772": {
+            "name": "Gravity Bind",
+            "desc": "Level 4 or higher monsters cannot attack.",
+            "strings": []
+        },
+        "85802526": {
+            "name": "Cure Mermaid",
+            "desc": "As long as this card remains face-up on your side of the field, increase your Life Points by 800 points during each of your Standby Phases.",
+            "strings": [
+                "Gain LP"
+            ]
+        },
+        "86088138": {
+            "name": "Ocubeam",
+            "desc": "Frightening in appearance, this creature uses its large eyes and ears to keep track of any movement.",
+            "strings": []
+        },
+        "86099788": {
+            "name": "The Last Warrior from Another Planet",
+            "desc": "\"Zombyra the Dark\" + \"Maryokutai\"\nIf this card is Special Summoned: Destroy all other monsters you control. Neither player can Summon monsters.",
+            "strings": [
+                "Destroy"
+            ]
+        },
+        "86198326": {
+            "name": "7 Completed",
+            "desc": "Activate this card by choosing ATK or DEF; equip only to a Machine monster. It gains 700 ATK or DEF, depending on the choice.",
+            "strings": [
+                "Gain 700 ATK",
+                "Gain 700 DEF"
+            ]
+        },
+        "86281779": {
+            "name": "Gadget Soldier",
+            "desc": "A rust-free machine warrior born to battle.",
+            "strings": []
+        },
+        "86318356": {
+            "name": "Sogen",
+            "desc": "All Warrior and Beast-Warrior monsters on the field gain 200 ATK/DEF.",
+            "strings": []
+        },
+        "86569121": {
+            "name": "Melchid the Four-Face Beast",
+            "desc": "This monster has four different masks for four different attacks.",
+            "strings": []
+        },
+        "87303357": {
+            "name": "Shining Abyss",
+            "desc": "This monster employs the powers of both Light and Darkness.",
+            "strings": []
+        },
+        "87430998": {
+            "name": "Forest",
+            "desc": "All Insect, Beast, Plant, and Beast-Warrior monsters on the field gain 200 ATK/DEF.",
+            "strings": []
+        },
+        "87511987": {
+            "name": "Spikebot",
+            "desc": "A mechanical soldier created by a wicked sorcerer, it attacks with the two steel balls attached to its arms.",
+            "strings": []
+        },
+        "88240808": {
+            "name": "Kycoo the Ghost Destroyer",
+            "desc": "When this card inflicts battle damage to your opponent: You can target up to 2 monsters in their GY; banish those targets. Your opponent cannot banish cards from either GY.",
+            "strings": [
+                "Select up to 2 monsters to banish"
+            ]
+        },
+        "88472456": {
+            "name": "Zombyra the Dark",
+            "desc": "Cannot attack directly. If this card destroys a monster by battle: This card loses 200 ATK.",
+            "strings": []
+        },
+        "88733579": {
+            "name": "Drill Bug",
+            "desc": "When this card inflicts Battle Damage to your opponent's Life Points, you can select 1 \"Parasite Paracide\" card from your Deck, shuffle the Deck, and place \"Parasite Paracide\" on top of the Deck.",
+            "strings": [
+                "Search"
+            ]
+        },
+        "88819587": {
+            "name": "Baby Dragon",
+            "desc": "Much more than just a child, this dragon is gifted with untapped power.",
+            "strings": []
+        },
+        "90147755": {
+            "name": "Lady Assailant of Flames",
+            "desc": "FLIP: Banish the top 3 cards of your Deck; inflict 800 damage to your opponent.",
+            "strings": [
+                "Inflict damage"
+            ]
+        },
+        "90502999": {
+            "name": "Ground Collapse",
+            "desc": "Select 2 Main Monster Zones on the field. Neither player can use the selected zones. You cannot select a zone that is occupied by a Monster Card.",
+            "strings": []
+        },
+        "90908427": {
+            "name": "Steel Ogre Grotto #2",
+            "desc": "A mechanized iron doll with tremendous strength.",
+            "strings": []
+        },
+        "90925163": {
+            "name": "Dancing Fairy",
+            "desc": "As long as this card remains in face-up Defense Position on your side of the field, increase your Life Points by 1000 points during each of your Standby Phases.",
+            "strings": [
+                "Gain LP"
+            ]
+        },
+        "91512835": {
+            "name": "Insect Queen",
+            "desc": "Gains 200 ATK for each Insect monster on the field. Cannot declare an attack unless you Tribute 1 monster. Once per turn, during the End Phase, if this card destroyed an opponent's monster by battle this turn: Special Summon 1 \"Insect Monster Token\" (Insect/EARTH/Level 1/ATK 100/DEF 100) in Attack Position.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "91842653": {
+            "name": "Toon Summoned Skull",
+            "desc": "(This card is always treated as an \"Archfiend\" card.)\r\nCannot be Normal Summoned/Set. Must first be Special Summoned (from your hand) by Tributing 1 monster, while you control \"Toon World\". Cannot attack the turn it is Special Summoned. You must pay 500 LP to declare an attack with this monster. If \"Toon World\" on the field is destroyed, destroy this card. Can attack your opponent directly, unless they control a Toon monster, in which case this card must target a Toon monster for its attacks.",
+            "strings": []
+        },
+        "91869203": {
+            "name": "Amazoness Archer",
+            "desc": "You can Tribute 2 monsters; inflict 1200 damage to your opponent.",
+            "strings": [
+                "Inflict damage"
+            ]
+        },
+        "93108297": {
+            "name": "Liquid Beast",
+            "desc": "A liquid life form that thrives on water.",
+            "strings": []
+        },
+        "93599951": {
+            "name": "Dark Spirit of the Silent",
+            "desc": "Activate only when an opponent's monster declares an attack. Negate that attack, and select another face-up monster your opponent controls. That monster attacks instead. (If it is in face-up Defense Position, change it to Attack Position.)",
+            "strings": []
+        },
+        "93920745": {
+            "name": "Penguin Soldier",
+            "desc": "FLIP: You can target up to 2 monsters on the field; return those targets to the hand.",
+            "strings": [
+                "Return to hand",
+                "Return Monster Cards to hand?"
+            ]
+        },
+        "94163677": {
+            "name": "Infinite Cards",
+            "desc": "There is no limit to the hand size for each player.",
+            "strings": []
+        },
+        "94377247": {
+            "name": "Curse of the Masked Beast",
+            "desc": "This card is used to Ritual Summon \"The Masked Beast\". You must also Tribute monsters from your hand or field whose total Levels equal 8 or more.",
+            "strings": []
+        },
+        "95132338": {
+            "name": "Aqua Chorus",
+            "desc": "If there are monsters with the same name on the field, those monsters gain 500 ATK/DEF.",
+            "strings": []
+        },
+        "95178994": {
+            "name": "Giant Germ",
+            "desc": "When this card is destroyed by battle and sent to the Graveyard: Inflict 500 damage to your opponent, then you can Special Summon any number of \"Giant Germs\" from your Deck in face-up Attack Position.",
+            "strings": [
+                "Inflict damage",
+                "Special Summon another \"Giant Germ\" from your Deck?"
+            ]
+        },
+        "95220856": {
+            "name": "Vengeful Bog Spirit",
+            "desc": "Monsters cannot attack the turn they are Summoned.",
+            "strings": []
+        },
+        "95286165": {
+            "name": "De-Fusion",
+            "desc": "Target 1 Fusion Monster on the field; return that target to the Extra Deck, then, if all its listed materials that were used for its Fusion Summon are in your GY, you can Special Summon all of them.\r\n\r\n* The above text is unofficial and describes the card's functionality in the OCG.",
+            "strings": [
+                "Special Summon all of the materials that were used for its Fusion Summon?"
+            ]
+        },
+        "95956346": {
+            "name": "Shining Angel",
+            "desc": "When this card is destroyed by battle and sent to the Graveyard: You can Special Summon 1 LIGHT monster with 1500 or less ATK from your Deck, in face-up Attack Position.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "96008713": {
+            "name": "Magical Arm Shield",
+            "desc": "When an opponent's monster declares an attack while they control 2 or more face-up monsters and you control a monster: Target 1 face-up monster your opponent controls, except the attacking monster; take control of that face-up monster (until the end of the Battle Phase), and if you do, change the attack target to it and perform damage calculation.",
+            "strings": []
+        },
+        "96355986": {
+            "name": "Enchanted Javelin",
+            "desc": "Increase your Life Points by the ATK of 1 attacking monster.",
+            "strings": []
+        },
+        "96890582": {
+            "name": "Flash Assailant",
+            "desc": "Decrease the ATK and DEF of this card by 400 points for each card in your hand.",
+            "strings": []
+        },
+        "96965364": {
+            "name": "Insect Imitation",
+            "desc": "Tribute 1 monster; Special Summon 1 Insect monster from your Deck whose Level is 1 higher than the Tributed monster had on the field.",
+            "strings": []
+        },
+        "97017120": {
+            "name": "Giant Rat",
+            "desc": "When this card is destroyed by battle and sent to the GY: You can Special Summon 1 EARTH monster with 1500 or less ATK from your Deck in Attack Position.",
+            "strings": [
+                "Special Summon"
+            ]
+        },
+        "97077563": {
+            "name": "Call of the Haunted",
+            "desc": "Activate this card by targeting 1 monster in your GY; Special Summon that target in Attack Position. When this card leaves the field, destroy that monster. When that monster is destroyed, destroy this card.",
+            "strings": []
+        },
+        "97687912": {
+            "name": "Fairy Meteor Crush",
+            "desc": "If the equipped monster attacks a Defense Position monster, inflict piercing battle damage to your opponent.",
+            "strings": []
+        },
+        "97809599": {
+            "name": "Seal of the Ancients",
+            "desc": "Pay 1000 Life Points. Pick up and see all face-down cards on your opponent's side of the field, then return them to their original positions. (The effects of the face-down cards are not activated.)",
+            "strings": []
+        },
+        "98049915": {
+            "name": "Mystic Lamp",
+            "desc": "This monster can attack your opponent's Life Points directly.",
+            "strings": []
+        },
+        "98139712": {
+            "name": "Skull Invitation",
+            "desc": "Each time a card(s) is sent to the Graveyard, inflict 300 damage to its owner for each card sent.",
+            "strings": []
+        },
+        "98299011": {
+            "name": "Gift of The Mystical Elf",
+            "desc": "Increase your Life Points by 300 points for each monster on the field.",
+            "strings": []
+        },
+        "98456117": {
+            "name": "Boneheimer",
+            "desc": "This monster wanders the seas, sucking dry any creatures it may encounter.",
+            "strings": []
+        },
+        "99785935": {
+            "name": "Alpha The Magnet Warrior",
+            "desc": "Alpha, Beta, and Gamma meld as one to form a powerful monster.",
+            "strings": []
+        },
+        "99789342": {
+            "name": "Dark Magic Curtain",
+            "desc": "Pay half your LP; Special Summon 1 \"Dark Magician\" from your Deck. You cannot Summon other monsters the turn you activate this card (but you can Normal Set).",
+            "strings": [
+                "Affected by \"Dark Magic Curtain\": cannot Summon"
+            ]
+        }
+    }
+}

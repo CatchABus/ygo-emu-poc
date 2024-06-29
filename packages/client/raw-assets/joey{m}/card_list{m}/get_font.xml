@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<font>
+  <info face="CardListCount" size="26" bold="0" italic="0" charset="" unicode="1" stretchH="100" smooth="1" aa="1" padding="0,0,0,0" spacing="1,1" />
+  <common lineHeight="26" base="26" scaleW="140" scaleH="26" pages="1" packed="0" />
+  <pages>
+    <page id="0" file="get_font.png" />
+  </pages>
+  <chars count="10">
+    <char id="48" x="1" y="0" width="15" height="26" xoffset="0" yoffset="0" xadvance="15" page="0" chnl="0" />
+    <char id="49" x="16" y="0" width="11" height="26" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
+    <char id="50" x="28" y="0" width="14" height="26" xoffset="0" yoffset="0" xadvance="14" page="0" chnl="0" />
+    <char id="51" x="43" y="0" width="13" height="26" xoffset="0" yoffset="0" xadvance="13" page="0" chnl="0" />
+    <char id="52" x="57" y="0" width="13" height="26" xoffset="0" yoffset="0" xadvance="13" page="0" chnl="0" />
+    <char id="53" x="71" y="0" width="13" height="26" xoffset="0" yoffset="0" xadvance="13" page="0" chnl="0" />
+    <char id="54" x="85" y="0" width="13" height="26" xoffset="0" yoffset="0" xadvance="13" page="0" chnl="0" />
+    <char id="55" x="99" y="0" width="13" height="26" xoffset="0" yoffset="0" xadvance="13" page="0" chnl="0" />
+    <char id="56" x="113" y="0" width="13" height="26" xoffset="0" yoffset="0" xadvance="13" page="0" chnl="0" />
+    <char id="57" x="127" y="0" width="13" height="26" xoffset="0" yoffset="0" xadvance="13" page="0" chnl="0" />
+    <char id="47" x="141" y="0" width="11" height="26" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
+    <char id="46" x="153" y="0" width="9" height="26" xoffset="0" yoffset="0" xadvance="9" page="0" chnl="0" />
+    <char id="37" x="163" y="0" width="15" height="26" xoffset="0" yoffset="0" xadvance="15" page="0" chnl="0" />
+  </chars>
+</font>

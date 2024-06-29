@@ -1,0 +1,103 @@
+{
+    "frames": {
+        "button0-1.png": {
+            "frame": {
+                "x": 1,
+                "y": 0,
+                "w": 400,
+                "h": 44
+            },
+            "sourceSize": {
+                "w": 400,
+                "h": 44
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 400,
+                "h": 44
+            }
+        },
+        "button0-2.png": {
+            "frame": {
+                "x": 1,
+                "y": 51,
+                "w": 400,
+                "h": 44
+            },
+            "sourceSize": {
+                "w": 400,
+                "h": 44
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 400,
+                "h": 44
+            }
+        },
+        "button0-3.png": {
+            "frame": {
+                "x": 1,
+                "y": 101,
+                "w": 400,
+                "h": 44
+            },
+            "sourceSize": {
+                "w": 400,
+                "h": 44
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 400,
+                "h": 44
+            }
+        },
+        "button0-4.png": {
+            "frame": {
+                "x": 1,
+                "y": 150,
+                "w": 400,
+                "h": 44
+            },
+            "sourceSize": {
+                "w": 400,
+                "h": 44
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 400,
+                "h": 44
+            }
+        },
+        "button0-5.png": {
+            "frame": {
+                "x": 1,
+                "y": 200,
+                "w": 400,
+                "h": 44
+            },
+            "sourceSize": {
+                "w": 400,
+                "h": 44
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 400,
+                "h": 44
+            }
+        }
+    },
+    "meta": {
+        "image": "menu_en_ani0.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 400,
+            "h": 250
+        },
+        "scale": 1
+    }
+}
