@@ -5,6 +5,7 @@ import { pixiManifest } from '@assetpack/plugin-manifest';
 export default {
   entry: './raw-assets',
   output: './public',
+  ignore: '.gitkeep',
   plugins: {
     audio: audio({
       outputs: [
