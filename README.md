@@ -8,7 +8,7 @@ In addition to the original game, this game will be an online game, thus the exi
 NOTE: I do NOT own any of the `YGO: Power of Chaos` games. Please read the [disclaimer](https://github.com/CatchABus/ygo-emu-poc/blob/main/DISCLAIMER.md).
 
 ## Prerequisites
-- [Node.js](https://nodejs.org)
+- [Node.js](https://nodejs.org) v20.6.0 or higher
 
 ## Setup
 - Hit `git clone https://github.com/CatchABus/ygo-emu-poc.git` to get a local copy of the repository
