@@ -9,14 +9,16 @@ NOTE: I do NOT own any of the `YGO: Power of Chaos` games. Please read the [disc
 
 ## Prerequisites
 - [Node.js](https://nodejs.org) v20.6.0 or higher
+- [Visual Studio Code](https://code.visualstudio.com) (Optional)
 
 ## Setup
+- Open cmd/terminal in your computer or in your IDE (if using one)
 - (Windows only) Hit `bash` to enter bash environment
 - Hit `git clone https://github.com/CatchABus/ygo-emu-poc.git` to get a local copy of the repository
 - Hit `cd ygo-emu-poc` to enter the root folder
 - Hit `npm run setup` to install all necessary dependencies
-- Hit `npx nx start card-downloader` to download all cards from [YGOPRODeck](https://ygoprodeck.com/api-guide) API. Card images will be stored directly into game folders.
-- Hit `npx nx assets:build client` to generate static assets for the game.
+- Hit `npx nx start card-downloader` to download all cards from [YGOPRODeck](https://ygoprodeck.com/api-guide) API. Card images will be stored directly into game folders
+- Hit `npx nx assets:build client` to generate static assets for the game
 
 ## Usage
 - Hit `npm run start` to start both client and gameserver. Client will listen to local port 5173.
