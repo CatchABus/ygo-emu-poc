@@ -2,7 +2,7 @@
 
 ## Description
 A client emulator for [YGO: Power of Chaos](https://yugipedia.com/wiki/Yu-Gi-Oh!_Power_of_Chaos) game series ported to browser.  
-The aim of this project is to develop a game with functionality that is as close as to the original one's.  
+The aim of this project is to develop a game with functionality that is as close as possible to the original.  
 In addition to the original game, this game will be an online game, thus the existence of gameserver in the repository.  
 
 NOTE: I do NOT own any of the `YGO: Power of Chaos` games. Please read the [disclaimer](https://github.com/CatchABus/ygo-emu-poc/blob/main/DISCLAIMER.md).
