@@ -25,5 +25,6 @@ NOTE: I do NOT own any of the `YGO: Power of Chaos` games. Please read the [disc
 
 ## Credits
 Special thanks goes to:
-- YGOPRODeck for the card images
+- The `YGOPRODeck` website for the card images
 - derplayer for his amazing [YuGiOh-PoC-ModTools](https://github.com/derplayer/YuGiOh-PoC-ModTools)
+- The `Yu-Gi-Oh Online (DE,DA) Restoration Project` discord server community for its precious guidance
