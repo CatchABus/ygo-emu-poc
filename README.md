@@ -24,4 +24,6 @@ NOTE: I do NOT own any of the `YGO: Power of Chaos` games. Please read the [disc
 - Hit `npm run start` to start both client and gameserver. Client will listen to local port 5173.
 
 ## Credits
+Special thanks goes to:
 - YGOPRODeck for the card images
+- derplayer for his amazing [YuGiOh-PoC-ModTools](https://github.com/derplayer/YuGiOh-PoC-ModTools)
