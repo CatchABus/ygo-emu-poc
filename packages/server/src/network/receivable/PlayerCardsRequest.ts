@@ -1,9 +1,10 @@
 import { CPUDeckData } from '../../data/CPUDeckData';
+import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
 import { PlayerCards } from '../sendable/PlayerCards';
 import { AbstractReceivablePacket } from './AbstractReceivablePacket';
 
-class PlayerCardsRequest extends AbstractReceivablePacket<Buffer> {
-  read(): Buffer {
+class PlayerCardsRequest extends AbstractReceivablePacket {
+  read(): AbstractSendablePacket {
     const deckIds = CPUDeckData.getInstance().getDecks().get('playerStarter');
     const cardData = deckIds.map((id: number) => {
       return {
@@ -12,7 +13,7 @@ class PlayerCardsRequest extends AbstractReceivablePacket<Buffer> {
       };
     })
 
-    return this.client.getPacketContent(new PlayerCards(cardData));
+    return new PlayerCards(cardData);
   }
 }
 

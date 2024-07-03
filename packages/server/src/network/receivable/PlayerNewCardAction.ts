@@ -1,7 +1,7 @@
 import log from 'loglevel';
 import { AbstractReceivablePacket } from './AbstractReceivablePacket';
 
-class PlayerNewCardAction extends AbstractReceivablePacket<void> {
+class PlayerNewCardAction extends AbstractReceivablePacket {
   read(): void {
     const cardId = this.readInt32();
 

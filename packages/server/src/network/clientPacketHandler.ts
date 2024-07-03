@@ -6,7 +6,7 @@ import { PlayerNewCardAction } from './receivable/PlayerNewCardAction';
 function registerClientPacketHandler(client: GameClient): void {
   client.socket.on('playerCardsRequest', (buffer: Buffer, callback: AcknowledgementCallback) => {
     const packet = new PlayerCardsRequest(client, buffer, 'playerCardsRequest');
-    callback(packet.readFromBuffer());
+    callback(packet.readFromBuffer() as Buffer);
   });
 
   client.socket.on('playerNewCardAction', (buffer: Buffer) => {

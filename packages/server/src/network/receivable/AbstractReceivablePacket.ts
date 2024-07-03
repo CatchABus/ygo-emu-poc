@@ -1,7 +1,8 @@
 import log from 'loglevel';
 import { GameClient } from '../GameClient';
+import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
 
-abstract class AbstractReceivablePacket<T> {
+abstract class AbstractReceivablePacket {
   private readonly _client: GameClient;
   private readonly _buffer: Buffer;
   private readonly _eventName: string;
@@ -71,11 +72,17 @@ abstract class AbstractReceivablePacket<T> {
     return value;
   }
 
-  readFromBuffer(): T {
-    let result: T;
+  readFromBuffer(): void | Buffer {
+    let result: void | Buffer;
 
     try {
-      result = <T>this.read();
+      const response = this.read();
+
+      if (response instanceof AbstractSendablePacket) {
+        result = this.client.getPacketContent(response);
+      } else {
+        result = response;
+      }
     } catch (err) {
       log.error(`Failed to read packet ${this._eventName}. Reason: ${(err as Error).message}`);
     }
@@ -83,7 +90,7 @@ abstract class AbstractReceivablePacket<T> {
     return result;
   }
 
-  abstract read(): void | Buffer;
+  abstract read(): void | AbstractSendablePacket;
 }
 
 export {
