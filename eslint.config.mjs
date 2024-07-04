@@ -18,6 +18,7 @@ export default [
     },
     rules: {
       'no-var': 'off',
+      'no-constant-binary-expression': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       '@stylistic/js/quotes': ['error', 'single'],
