@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "setup": "rimraf node_modules package-lock.json && npm install",
+    "setup": "node cleanup.mjs && npm install",
     "start": "nx run-many -t dev"
   },
   "private": true,
@@ -17,7 +17,6 @@
     "globals": "^15.6.0",
     "nodemon": "^3.1.4",
     "nx": "19.3.0",
-    "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.13.1"
