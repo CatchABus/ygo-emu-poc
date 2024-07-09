@@ -4,7 +4,7 @@
   "description": "An application server for handling client functionality",
   "scripts": {
     "build": "tsc",
-    "postbuild": "cp ./.env dist && cp ./package.json dist && cp -r ./static dist",
+    "postbuild": "node postbuild.mjs",
     "start": "node index.js  --env-file .env",
     "dev": "nodemon --exec ts-node src/index.ts --env-file .env --env-file .env.development",
     "lint": "eslint src",
