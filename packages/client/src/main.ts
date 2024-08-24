@@ -1,6 +1,7 @@
 import { Application } from 'pixi.js';
 import { initI18n } from './i18n';
 import { initAssets } from './manager/assetManager';
+import { addSuspendListener } from './manager/resumeSuspend';
 import { setupNavigator } from './navigation';
 import SplashPage from './page/SplashPage';
 import './styles/main.scss';
@@ -42,6 +43,8 @@ async function startApp() {
   const navigator = await setupNavigator(app, SplashPage);
 
   initCursor(app);
+
+  addSuspendListener();
 
   app.renderer.on('resize', (width, height) => {
     if (navigator.currentPage) {

@@ -1,9 +1,9 @@
-import { sound } from '@pixi/sound';
+import { Howler } from 'howler';
 
 function loadSettings(): void {
   const storedVolumeAll: string = localStorage.getItem('volumeAll');
 
-  sound.volumeAll = storedVolumeAll ? parseFloat(storedVolumeAll) : 0.5;
+  Howler.volume(storedVolumeAll ? parseFloat(storedVolumeAll) : 0.5);
 }
 
 function getItem(key: string) {

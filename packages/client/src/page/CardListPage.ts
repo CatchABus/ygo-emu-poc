@@ -1,5 +1,5 @@
-import { Sound } from '@pixi/sound';
 import { FancyButton, ScrollBox, Slider } from '@pixi/ui';
+import { Howl } from 'howler';
 import { AdjustmentFilter } from 'pixi-filters';
 import { AnimatedSprite, Assets, BitmapText, Container, FederatedEvent, Graphics, Sprite, Spritesheet, Text, TextStyleOptions, Texture } from 'pixi.js';
 import { linear } from 'popmotion';
@@ -12,7 +12,6 @@ import MenuPage from './MenuPage';
 import i18next from 'i18next';
 import { CardTemplate, getCardDefinition, isMonster } from '../template/CardTemplate';
 import { cardNameComparator } from '../util/helpers';
-import { TrackableScrollBox } from '../components/TrackableScrollBox';
 import { SliderControls } from '../components/SliderControls';
 import { getSocket } from '../network/serverPacketHandler';
 import { ReceivablePacket } from '../network/ReceivablePacket';
@@ -45,7 +44,7 @@ class CardListPage extends BasePage {
   private _hoverCardSprite: Sprite;
 
   private _previewCardImage: Sprite;
-  private _previewCardScrollView: TrackableScrollBox;
+  private _previewCardScrollView: ScrollBox;
   private _previewCardScrollBar: SliderControls;
   private _previewCardName: Text;
   private _previewCardDesc1: Text;
@@ -57,8 +56,8 @@ class CardListPage extends BasePage {
   private _previewCardDef: Text;
   private _previewCardId: number = 0;
 
-  private _clickSound: Sound;
-  private _track: Sound;
+  private _clickSound: Howl;
+  private _track: Howl;
 
   private _cardData: CardTemplate[];
 
@@ -150,9 +149,13 @@ class CardListPage extends BasePage {
     this._drawPagingControls();
     this._drawHoverElements();
 
-    this._clickSound = Sound.from('commons/decide.ogg');
-    this._track = Sound.from(`${assetPrefix}/card_list/m_bag.ogg`);
-    this._track.loop = true;
+    this._clickSound = new Howl({
+      src: 'commons/decide.ogg'
+    });
+    this._track = new Howl({
+      src: `${assetPrefix}/card_list/m_bag.ogg`,
+      loop: true
+    });
   }
 
   private _drawTitle(): void {
@@ -241,7 +244,7 @@ class CardListPage extends BasePage {
   }
 
   private _generateCardPreviewDetails(): ScrollBox {
-    const scrollView = new TrackableScrollBox();
+    const scrollView = new ScrollBox();
     scrollView.position.set(14, 307);
 
     const cardName = new Text({
@@ -557,20 +560,20 @@ class CardListPage extends BasePage {
       if (isNavigating) {
         return;
       }
-  
+
       isNavigating = true;
 
       const isForward = event.currentTarget === this._rightPageButton;
-  
+
       await this._clickSound.play();
-  
+
       if (isForward) {
         if (this._currenPageNum === 1) {
           this._leftPageButton.setInteractive(true);
         }
-    
+
         this._currenPageNum++;
-        
+
         if (this._currenPageNum >= totalPages) {
           this._rightPageButton.setInteractive(false);
         }
@@ -578,18 +581,18 @@ class CardListPage extends BasePage {
         if (this._currenPageNum === totalPages) {
           this._rightPageButton.setInteractive(true);
         }
-  
+
         this._currenPageNum--;
-  
+
         if (this._currenPageNum <= 1) {
           this._leftPageButton.setInteractive(false);
         }
       }
-  
+
       this._currentPageIndicator.text = this._currenPageNum;
-  
+
       await this._startPagingTransition(isForward);
-  
+
       isNavigating = false;
     };
 
@@ -710,7 +713,8 @@ class CardListPage extends BasePage {
       const scrollBarSlider = this._previewCardScrollBar.slider;
 
       scrollBarSlider.value = 0;
-      scrollBarSlider.max = Math.max(scrollDiff, 1)
+      scrollBarSlider.max = Math.max(scrollDiff, 1);
+      scrollBarSlider.step = 0.01 * scrollBarSlider.max
       this._previewCardScrollBar.visible = scrollDiff > 0;
     };
 

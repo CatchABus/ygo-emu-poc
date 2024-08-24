@@ -1,5 +1,5 @@
-import { Sound } from '@pixi/sound';
 import { ButtonContainer } from '@pixi/ui';
+import { Howl } from 'howler';
 import { Assets, Sprite } from 'pixi.js';
 import { FadeColorFilter } from '../filter/FadeColorFilter';
 import { getCurrentLocale } from '../i18n';
@@ -12,7 +12,7 @@ import MenuPage from './MenuPage';
 
 class SplashPage extends BasePage {
   private _background: ButtonContainer;
-  private _clickSound: Sound;
+  private _clickSound: Howl;
 
   async preload(): Promise<void> {
     const assetPrefix = getGameMode();
@@ -52,7 +52,9 @@ class SplashPage extends BasePage {
     const locale = getCurrentLocale();
 
     this._background = new ButtonContainer(Sprite.from(`${assetPrefix}/splash/trial01${locale}.png`));
-    this._clickSound = Sound.from('commons/decide.ogg');
+    this._clickSound = new Howl({
+      src: 'commons/decide.ogg'
+    });
 
     this.addChild(this._background);
   }

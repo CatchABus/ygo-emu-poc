@@ -75,13 +75,11 @@ class SliderControls extends Container {
 
     this._slider = slider;
 
-    this.addChild(decreaseView);
-
     if (options.bg) {
       this.addChild(options.bg);
     }
 
-    this.addChild(slider, increaseView);
+    this.addChild(decreaseView, slider, increaseView);
   }
 
   destroy(options: DestroyOptions): void {

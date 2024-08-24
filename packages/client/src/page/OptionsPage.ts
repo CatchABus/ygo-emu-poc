@@ -1,5 +1,5 @@
-import { Sound, sound } from '@pixi/sound';
 import { FancyButton, Slider } from '@pixi/ui';
+import { Howl, Howler } from 'howler';
 import { Assets, Graphics, Sprite } from 'pixi.js';
 import { HoverButtonContainer } from '../components/HoverButtonView';
 import { getCurrentLocale } from '../i18n';
@@ -12,12 +12,14 @@ class OptionsPage extends BasePage {
   private _windowModeButton: FancyButton;
   private _fullscreenButton: FancyButton;
 
-  private readonly _clickSound: Sound;
+  private readonly _clickSound: Howl;
 
   constructor() {
     super();
     this.alpha = 0;
-    this._clickSound = Sound.from('commons/decide.ogg');
+    this._clickSound = new Howl({
+      src: 'commons/decide.ogg'
+    });
   }
 
   onNavigatingTo(): void | Promise<void> {
@@ -112,12 +114,13 @@ class OptionsPage extends BasePage {
       min: 0,
       max: 100,
       value: 50,
+      step: 0.01
     });
     slider.max = 1;
-    slider.value = sound.volumeAll;
+    slider.value = Howler.volume();
 
     slider.onUpdate.connect((value) => {
-      sound.volumeAll = value;
+      Howler.volume(value);
       storage.setItem('volumeAll', value.toString());
     });
 

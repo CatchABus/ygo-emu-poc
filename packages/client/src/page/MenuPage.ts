@@ -1,7 +1,7 @@
 import { FancyButton } from '@pixi/ui';
+import { Howl } from 'howler';
 import { AnimatedSprite, Assets, Container, FederatedPointerEvent, Sprite, Spritesheet } from 'pixi.js';
 import { BasePage } from './BasePage';
-import { Sound } from '@pixi/sound';
 import { getNavigator } from '../navigation';
 import op from './OptionsPage';
 import CardListPage from './CardListPage';
@@ -22,9 +22,9 @@ class MenuPage extends BasePage {
   private _logoSprite: Sprite;
   private _shinyEffectSprite: Sprite;
   private _buttonContainer: Container;
-  private _clickSound: Sound;
-  private _returnSound: Sound;
-  private _track: Sound;
+  private _clickSound: Howl;
+  private _returnSound: Howl;
+  private _track: Howl;
 
   async preload(): Promise<void> {
     const assetPrefix = getGameMode();
@@ -72,10 +72,16 @@ class MenuPage extends BasePage {
     this._shinyEffectSprite.anchor.set(1, 0);
     this._shinyEffectSprite.mask = shinyEffectMask;
 
-    this._clickSound = Sound.from('commons/decide.ogg');
-    this._returnSound = Sound.from('commons/return.ogg');
-    this._track = Sound.from(`${assetPrefix}/menu/m_menu.ogg`);
-    this._track.loop = true;
+    this._clickSound = new Howl({
+      src: 'commons/decide.ogg'
+    });
+    this._returnSound = new Howl({
+      src: 'commons/return.ogg'
+    });
+    this._track = new Howl({
+      src: `${assetPrefix}/menu/m_menu.ogg`,
+      loop: true
+    });
 
     logoContent.addChild(this._logoSprite, this._shinyEffectSprite, shinyEffectMask);
 
