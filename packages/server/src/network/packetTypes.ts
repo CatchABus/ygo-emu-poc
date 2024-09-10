@@ -3,11 +3,13 @@ import { GameClient } from './GameClient';
 type AcknowledgementCallback = (data: Buffer) => void;
 
 interface ServerToClientEvents {
-    playerCardsResponse: (buffer: Buffer) => void;
+    cardInventoryResponse: (buffer: Buffer) => void;
+    cardListResponse: (buffer: Buffer) => void;
 }
 
 interface ClientToServerEvents {
-    playerCardsRequest: (buffer: Buffer, callback: AcknowledgementCallback) => void;
+    cardInventoryRequest: (buffer: Buffer, callback: AcknowledgementCallback) => void;
+    cardListRequest: (buffer: Buffer, callback: AcknowledgementCallback) => void;
     playerNewCardAction: (buffer: Buffer) => void;
 }
 

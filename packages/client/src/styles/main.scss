@@ -1,13 +1,24 @@
-html, body {
-    background-color: #000;
-    margin: 0;
-    width: 100%;
-    height: 100%;
+html,
+body {
+  background-color: #000;
+  cursor: none;
+  margin: 0;
+  width: 100%;
+  height: 100%;
 }
 
 #app {
-    aspect-ratio: 4 / 3;
-    margin: auto;
-    max-height: 100%;
-    overflow: hidden;
+  aspect-ratio: 4 / 3;
+  margin: auto;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+#cursor {
+  position: fixed;
+  pointer-events: none;
+  user-select: none;
+  will-change: contents;
+  opacity: 0;
+  z-index: 2000;
 }

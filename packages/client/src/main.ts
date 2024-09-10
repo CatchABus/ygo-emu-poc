@@ -1,7 +1,7 @@
 import { Application } from 'pixi.js';
 import { initI18n } from './i18n';
-import { initAssets } from './manager/assetManager';
-import { addSuspendListener } from './manager/resumeSuspend';
+import { initAssets } from './handler/assetManager';
+import { addSuspendListener } from './handler/resumeSuspend';
 import { setupNavigator } from './navigation';
 import SplashPage from './page/SplashPage';
 import './styles/main.scss';

@@ -1,0 +1,112 @@
+{
+    "frames": {
+        "new-1.png": {
+            "frame": {
+                "x": 2,
+                "y": 1,
+                "w": 38,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 38,
+                "h": 16
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 38,
+                "h": 16
+            }
+        },
+        "new-2.png": {
+            "frame": {
+                "x": 2,
+                "y": 19,
+                "w": 38,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 38,
+                "h": 16
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 38,
+                "h": 16
+            }
+        },
+        "new-3.png": {
+            "frame": {
+                "x": 2,
+                "y": 37,
+                "w": 38,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 38,
+                "h": 16
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 38,
+                "h": 16
+            }
+        },
+        "new-4.png": {
+            "frame": {
+                "x": 2,
+                "y": 55,
+                "w": 38,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 38,
+                "h": 16
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 38,
+                "h": 16
+            }
+        },
+        "new-5.png": {
+            "frame": {
+                "x": 2,
+                "y": 73,
+                "w": 38,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 38,
+                "h": 16
+            },
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 38,
+                "h": 16
+            }
+        }
+    },
+    "meta": {
+        "image": "new_anime_en.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 41,
+            "h": 90
+        },
+        "scale": 1
+    },
+    "animations": {
+        "news": [
+            "new-1.png",
+            "new-2.png",
+            "new-3.png",
+            "new-4.png",
+            "new-5.png"
+        ]
+    }
+}

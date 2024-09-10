@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite --force",
+    "dev": "vite",
     "build": "tsc && vite build",
     "assets:build": "assetpack -c .assetpack.js",
     "assets:watch": "assetpack -w .assetpack.js",
@@ -23,25 +23,20 @@
   },
   "homepage": "https://github.com/CatchABus/ygo-emu-poc#readme",
   "devDependencies": {
-    "@assetpack/cli": "^0.8.0",
-    "@assetpack/core": "^1.0.0",
-    "@assetpack/plugin-compress": "^0.8.0",
-    "@assetpack/plugin-ffmpeg": "^0.8.0",
-    "@assetpack/plugin-manifest": "^0.8.0",
-    "@assetpack/plugin-texture-packer": "^0.8.0",
+    "@assetpack/core": "^1.1.0",
     "@types/howler": "^2.2.11",
     "sass": "^1.77.8",
     "vite": "^5.4.2"
   },
   "dependencies": {
-    "@pixi/ui": "^2.1.3",
+    "@pixi/ui": "^2.1.5",
     "howler": "^2.2.4",
     "i18next": "^23.14.0",
     "jsdom": "^24.1.1",
     "jsdom-global": "^3.0.2",
     "loglevel": "^1.9.1",
     "pixi-filters": "^6.0.4",
-    "pixi.js": "^8.3.3",
+    "pixi.js": "^8.3.4",
     "popmotion": "^11.0.5",
     "socket.io-client": "^4.7.5",
     "typed-signals": "^3.0.0"

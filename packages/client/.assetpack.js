@@ -1,15 +1,16 @@
-import { compressJpg, compressPng } from '@assetpack/plugin-compress';
-import { audio } from '@assetpack/plugin-ffmpeg';
-import { pixiManifest } from '@assetpack/plugin-manifest';
+import { audio } from '@assetpack/core/ffmpeg';
+import { compress } from '@assetpack/core/image';
+import { pixiManifest } from '@assetpack/core/manifest';
 
 export default {
+  cache: false,
   entry: './raw-assets',
   output: './public',
   ignore: [
-    '/cards{m}/images/.gitkeep'
+    'cards{m}/images/.gitkeep'
   ],
-  plugins: {
-    audio: audio({
+  pipes: [
+    audio({
       outputs: [
         {
           formats: ['.ogg'],
@@ -22,8 +23,15 @@ export default {
         }
       ]
     }),
-    compressJpg: compressJpg(),
-    compressPng: compressPng(),
-    manifest: pixiManifest()
-  },
+    compress({
+      jpg: {},
+      png: { quality: 100 },
+      webp: false,
+      avif: false,
+      bc7: false,
+      astc: false,
+      basis: false,
+    }),
+    pixiManifest()
+  ]
 };

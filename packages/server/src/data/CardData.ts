@@ -3,8 +3,11 @@ import log from 'loglevel';
 import { CardTemplate } from '../template/CardTemplate';
 import { AbstractData } from './AbstractData';
 
+const DIR = 'static';
+
 class CardData extends AbstractData {
-  private readonly _templates: Map<number, CardTemplate> = Object.freeze(new Map());
+  private readonly _templates: Map<number, CardTemplate> = new Map();
+  private readonly _deckCardLimits: Map<number, number> = new Map();
 
   private static _instance: CardData;
 
@@ -17,22 +20,42 @@ class CardData extends AbstractData {
 
   public override load(): void {
     try {
-      const fileContent = fs.readFileSync('static/cardData.json', 'utf-8');
-      const dataset = JSON.parse(fileContent);
+      const fileContent = fs.readFileSync(`${DIR}/cardData.json`, 'utf-8');
+      const cardDataset = JSON.parse(fileContent);
 
-      for (const data of dataset) {
+      for (const data of cardDataset) {
         const template = new CardTemplate(data);
         this._templates.set(template.id, template);
       }
-
-      log.info(`Loaded ${this._templates.size} card templates`);
     } catch (err) {
       log.error(err);
     }
+
+    try {
+      const fileContent = fs.readFileSync(`${DIR}/limitedCardData.json`, 'utf-8');
+      const deckCardLimitData: Array<{ id: number, deckLimit: number }> = JSON.parse(fileContent);
+
+      for (const data of deckCardLimitData) {
+        this._deckCardLimits.set(data.id, data.deckLimit);
+      }
+    } catch (err) {
+      log.error(err);
+    }
+
+    log.info(`Loaded ${this._templates.size} card templates`);
+    log.info(`Loaded ${this._deckCardLimits.size} forbidden card limits`);
   }
 
-  getTemplates(): Map<number, CardTemplate> {
-    return this._templates;
+  getTemplates(): Array<[number, CardTemplate]> {
+    return Array.from(this._templates);
+  }
+
+  getTemplateById(id: number): CardTemplate {
+    return this._templates.get(id);
+  }
+
+  getDeckCardLimit(id: number): number {
+    return this._deckCardLimits.has(id) ? this._deckCardLimits.get(id) : -1;
   }
 }
 

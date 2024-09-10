@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import { CardTemplate } from '../template/CardTemplate';
-import { groupD8, Rectangle, Texture } from 'pixi.js';
+import { groupD8, Rectangle, Texture, TextureSourceLike } from 'pixi.js';
 
 function cardNameComparator(a: CardTemplate, b: CardTemplate) {
   const name1 = i18next.t(`cards.${a.id}.name`);
@@ -17,7 +17,15 @@ function cardNameComparator(a: CardTemplate, b: CardTemplate) {
   return 0;
 }
 
-function rotateTexture(rotate: number, texture: Texture): Texture {
+function rotateTexture(rotate: number, source: Texture | TextureSourceLike): Texture {
+  let texture: Texture;
+
+  if (source instanceof Texture) {
+    texture = source;
+  } else {
+    texture = Texture.from(source);
+  }
+  
   const h = groupD8.isVertical(rotate) ? texture.frame.width : texture.frame.height;
   const w = groupD8.isVertical(rotate) ? texture.frame.height : texture.frame.width;
 

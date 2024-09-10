@@ -1,12 +1,14 @@
 type AcknowledgementCallback = (response: ArrayBuffer) => void;
 
 interface ClientToServerEvents {
-  playerCardsRequest: (buffer: ArrayBuffer, callback: AcknowledgementCallback) => void;
+  cardInventoryRequest: (buffer: ArrayBuffer, callback: AcknowledgementCallback) => void;
+  cardListRequest: (buffer: ArrayBuffer, callback: AcknowledgementCallback) => void;
   playerNewCardAction: (buffer: ArrayBuffer) => void;
 }
 
 interface ServerToClientEvents {
-  playerCardsResponse: () => void;
+  cardInventoryResponse: () => void;
+  cardListResponse: () => void;
 }
 
 export {

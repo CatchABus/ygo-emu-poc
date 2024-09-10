@@ -12,7 +12,29 @@ interface CardTemplate {
 }
 
 function isMonster(card: CardTemplate): boolean {
-  return !!(card.type & CardType.MONSTER);
+  return card && !!(card.type & CardType.MONSTER);
+}
+
+function isSpell(card: CardTemplate): boolean {
+  return card && !!(card.type & CardType.SPELL);
+}
+
+function isTrap(card: CardTemplate): boolean {
+  return card && !!(card.type & CardType.TRAP);
+}
+
+function getCardAttributeString(card: CardTemplate): string {
+  let attrString: string;
+
+  if (isSpell(card)) {
+    attrString = 'spell';
+  } else if (isTrap(card)) {
+    attrString = 'trap';
+  } else {
+    attrString = card.attribute ? card.attribute.toString() : '';
+  }
+
+  return attrString;
 }
 
 function getCardDefinition(card: CardTemplate): string {
@@ -56,8 +78,43 @@ function getCardDefinition(card: CardTemplate): string {
   return `[${definition}]`;
 }
 
+function getSpellTrapType(card: CardTemplate): string {
+  let type: string;
+
+  switch (card.type) {
+    case CardType.EQUIP_SPELL:
+      type = 'equip';
+      break;
+    case CardType.FIELD_SPELL:
+      type = 'field';
+      break;
+    case CardType.RITUAL_SPELL:
+      type = 'ritual';
+      break;
+    case CardType.QUICK_SPELL:
+      type = 'quick';
+      break;
+    case CardType.COUNTER_TRAP:
+      type = 'counter';
+      break;
+    case CardType.CONTINUOUS_SPELL:
+    case CardType.CONTINUOUS_TRAP:
+      type = 'continuous';
+      break;
+    default:
+      type = null;
+      break;
+  }
+
+  return type;
+}
+
 export {
   CardTemplate,
   isMonster,
-  getCardDefinition
+  isSpell,
+  isTrap,
+  getCardAttributeString,
+  getCardDefinition,
+  getSpellTrapType
 };

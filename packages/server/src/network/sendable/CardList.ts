@@ -5,7 +5,7 @@ interface CardInfo {
   isNew: boolean;
 }
 
-class PlayerCards extends AbstractSendablePacket {
+class CardList extends AbstractSendablePacket {
   private _playerCards: CardInfo[];
 
   constructor(cards: CardInfo[]) {
@@ -14,7 +14,7 @@ class PlayerCards extends AbstractSendablePacket {
   }
 
   getEventName(): any {
-    return 'playerCardsResponse';
+    return 'cardListResponse';
   }
 
   write(): void {
@@ -28,5 +28,5 @@ class PlayerCards extends AbstractSendablePacket {
 }
 
 export {
-  PlayerCards
+  CardList
 };

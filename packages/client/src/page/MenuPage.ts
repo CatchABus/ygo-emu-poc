@@ -339,8 +339,8 @@ class MenuPage extends BasePage {
     });
   }
 
-  private async _playAudio(): Promise<void> {
-    await this._track.play();
+  private _playAudio(): void {
+    this._track.play();
   }
 }
 

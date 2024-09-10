@@ -39,6 +39,7 @@ class CardListPage extends BasePage {
 
   private _cardAttributeSheet: Spritesheet;
   private _cardRaceSheet: Spritesheet;
+  private _newIndicatorSheet: Spritesheet;
 
   private _hoverCardFilter: AdjustmentFilter;
   private _hoverCardSprite: Sprite;
@@ -70,6 +71,7 @@ class CardListPage extends BasePage {
 
   async preload(): Promise<void> {
     const assetPrefix = getGameMode();
+    const locale = getCurrentLocale();
 
     await Assets.loadBundle(['cards', `${assetPrefix}/card_list`]);
 
@@ -80,6 +82,7 @@ class CardListPage extends BasePage {
 
     this._cardAttributeSheet = Assets.get('cards/icon_attribute.json');
     this._cardRaceSheet = Assets.get('cards/icon_race.json');
+    this._newIndicatorSheet = Assets.get(`${assetPrefix}/card_list/new_anime_${locale}.json`);
   }
 
   async onNavigatingTo(): Promise<void> {
@@ -120,7 +123,7 @@ class CardListPage extends BasePage {
   }
 
   async _requestPlayerCards(): Promise<void> {
-    const responseBuffer = await getSocket().emitWithAck('playerCardsRequest', new ArrayBuffer(0));
+    const responseBuffer = await getSocket().emitWithAck('cardListRequest', new ArrayBuffer(0));
     const packet = new ReceivablePacket(responseBuffer);
     const length = packet.readInt32();
 
@@ -456,10 +459,7 @@ class CardListPage extends BasePage {
   }
 
   private _createNewIndicator(): AnimatedSprite {
-    const locale = getCurrentLocale();
-    const sheet: Spritesheet = Assets.get(`joey/card_list/new_anime_${locale}.json`);
-
-    const indicator = new AnimatedSprite(sheet.animations.news);
+    const indicator = new AnimatedSprite(this._newIndicatorSheet.animations.news);
     indicator.animationSpeed = 0.1;
     indicator.eventMode = 'none';
 
@@ -552,7 +552,7 @@ class CardListPage extends BasePage {
     let isNavigating = false;
 
     this._backButton.onclick = async () => {
-      await this._clickSound.play();
+      this._clickSound.play();
       await this._goBack();
     };
 
@@ -565,7 +565,7 @@ class CardListPage extends BasePage {
 
       const isForward = event.currentTarget === this._rightPageButton;
 
-      await this._clickSound.play();
+      this._clickSound.play();
 
       if (isForward) {
         if (this._currenPageNum === 1) {
@@ -627,7 +627,7 @@ class CardListPage extends BasePage {
         this._newCardIds.splice(newCardIndex, 1);
         newIndicator.visible = false;
 
-        if (this._newIndicatorsUpdateInterval != null) {
+        if (!this._newCardIds.length && this._newIndicatorsUpdateInterval != null) {
           clearInterval(this._newIndicatorsUpdateInterval);
           this._newIndicatorsUpdateInterval = null;
         }
@@ -724,8 +724,8 @@ class CardListPage extends BasePage {
     };
   }
 
-  private async _playAudio(): Promise<void> {
-    await this._track.play();
+  private _playAudio(): void {
+    this._track.play();
   }
 
   private _animateCardList(): Promise<void[]> {
@@ -820,7 +820,7 @@ class CardListPage extends BasePage {
         duration: 400,
         onUpdate: (value: number) => {
           for (const cardView of this._cardContainer.children) {
-            const [, newIndicator] = cardView.children;
+            const newIndicator = cardView.children[1];
             newIndicator.alpha = value;
           }
         }

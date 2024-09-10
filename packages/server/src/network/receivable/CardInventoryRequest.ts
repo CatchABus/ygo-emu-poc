@@ -1,22 +1,27 @@
+import { CardData } from '../../data/CardData';
 import { CPUDeckData } from '../../data/CPUDeckData';
 import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
-import { PlayerCards } from '../sendable/PlayerCards';
+import { CardInventory } from '../sendable/CardInventory';
 import { AbstractReceivablePacket } from './AbstractReceivablePacket';
 
-class PlayerCardsRequest extends AbstractReceivablePacket {
+class CardInventoryRequest extends AbstractReceivablePacket {
   read(): AbstractSendablePacket {
     const deckIds = CPUDeckData.getInstance().getDecks().get('playerStarter');
     const cardData = deckIds.map((id: number) => {
+      const deckLimit = CardData.getInstance().getDeckCardLimit(id);
+
       return {
         id,
-        isNew: id === 3366982
+        isNew: id === 3366982,
+        count: 1,
+        deckLimit
       };
     })
 
-    return new PlayerCards(cardData);
+    return new CardInventory(cardData);
   }
 }
 
 export {
-  PlayerCardsRequest
+  CardInventoryRequest
 };

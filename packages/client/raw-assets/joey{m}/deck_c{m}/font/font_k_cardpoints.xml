@@ -5,17 +5,17 @@
   <pages>
     <page id="0" file="font_k_cardpoints.png" />
   </pages>
-  <chars count="10">
-    <char id="48" x="1" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="7" page="0" chnl="0" />
-    <char id="49" x="7" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="7" page="0" chnl="0" />
-    <char id="50" x="13" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="7" page="0" chnl="0" />
-    <char id="51" x="19" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="7" page="0" chnl="0" />
-    <char id="52" x="25" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="7" page="0" chnl="0" />
-    <char id="53" x="31" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="7" page="0" chnl="0" />
-    <char id="54" x="37" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="7" page="0" chnl="0" />
-    <char id="55" x="43" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="7" page="0" chnl="0" />
-    <char id="56" x="49" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="7" page="0" chnl="0" />
-    <char id="57" x="55" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="7" page="0" chnl="0" />
-    <char id="47" x="61" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="7" page="0" chnl="0" />
+  <chars count="11">
+    <char id="48" x="1" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="6" page="0" chnl="0" />
+    <char id="49" x="7" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="6" page="0" chnl="0" />
+    <char id="50" x="13" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="6" page="0" chnl="0" />
+    <char id="51" x="19" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="6" page="0" chnl="0" />
+    <char id="52" x="25" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="6" page="0" chnl="0" />
+    <char id="53" x="31" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="6" page="0" chnl="0" />
+    <char id="54" x="37" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="6" page="0" chnl="0" />
+    <char id="55" x="43" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="6" page="0" chnl="0" />
+    <char id="56" x="49" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="6" page="0" chnl="0" />
+    <char id="57" x="55" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="6" page="0" chnl="0" />
+    <char id="47" x="61" y="0" width="5" height="15" xoffset="0" yoffset="0" xadvance="6" page="0" chnl="0" />
   </chars>
 </font>
