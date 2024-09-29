@@ -1,10 +1,13 @@
+import bcrypt from 'bcrypt';
 import { parse as parseCookie } from 'cookie';
 import { GameClient } from '../network/GameClient';
 import log from 'loglevel';
 
+const SALT_ROUNDS = 10;
+
 const clients = new Map<string, GameClient>();
 const login = 'admin';
-const pwd = 'admin';
+const pwd = hashPassword('admin');
 
 interface AuthTokenPayload {
   accountName: string,
@@ -26,6 +29,14 @@ function getClientByLogin(login: string): GameClient {
 
 function removeClient(login: string): boolean {
   return clients.delete(login);
+}
+
+function hashPassword(password: string): string {
+  return bcrypt.hashSync(password, SALT_ROUNDS);
+}
+
+function comparePassword(password: string, hash: string): boolean {
+  return bcrypt.compareSync(password, hash);
 }
 
 function getCredentials(payload: string): Credentials {
@@ -54,7 +65,7 @@ function attemptLogin(credentials: Credentials): boolean {
     return false;
   }
 
-  return accountName === login && password === pwd;
+  return accountName === login && comparePassword(password, pwd);
 }
 
 function generateAuthenticationToken(client: GameClient): string {
