@@ -1,15 +1,15 @@
 import { Assets } from 'pixi.js';
-import { getGameMode } from '../util/application-helper';
+import { client } from '../client';
 
 async function initAssets() {
-  const assetPrefix = getGameMode();
+  const assetPrefix = client.gameMode;
 
   // Init PixiJS assets with this asset manifest
   await Assets.init({
     manifest: 'manifest.json'
   });
 
-  await Assets.loadBundle(['default']);
+  await Assets.loadBundle(['default', 'login']);
 
   // Start loading all bundles in the background
   Assets.backgroundLoadBundle([

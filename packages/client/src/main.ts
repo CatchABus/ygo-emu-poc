@@ -1,15 +1,14 @@
-import { Application } from 'pixi.js';
 import { initI18n } from './i18n';
 import { initAssets } from './handler/assetManager';
 import { addSuspendListener } from './handler/resumeSuspend';
 import { setupNavigator } from './navigation';
-import SplashPage from './page/SplashPage';
 import './styles/main.scss';
-import { isApplicationStarted, setApplication } from './util/application-helper';
 import { initCursor } from './util/cursor';
+import LoginPage from './page/LoginPage';
+import { client } from './client';
 
 // For HMR purposes
-if (!isApplicationStarted()) {
+if (!client.isApplicationStarted()) {
   startApp();
 }
 
@@ -22,16 +21,12 @@ async function startApp() {
   // The application will create a renderer using WebGL, if possible,
   // with a fallback to a canvas render. It will also setup the ticker
   // and the root stage PIXI.Container
-  const app = new Application();
-
-  // Wait for the Renderer to be available
-  await app.init({
+  // Also, wait for the Renderer to be available
+  const app = await client.start({
     // Light color is better for making sprites more distinct and positioning easier
     background: '#fff',
     resizeTo: appElement,
   });
-
-  setApplication(app);
 
   await initAssets();
   await initI18n();
@@ -40,7 +35,7 @@ async function startApp() {
   // can then insert into the DOM
   appElement.appendChild(app.canvas);
 
-  const navigator = await setupNavigator(app, SplashPage);
+  const navigator = await setupNavigator(app, LoginPage);
 
   initCursor(app);
 

@@ -4,18 +4,17 @@ import { Assets, Sprite } from 'pixi.js';
 import { FadeColorFilter } from '../filter/FadeColorFilter';
 import { getCurrentLocale } from '../i18n';
 import { getNavigator } from '../navigation';
-import { init } from '../network/serverPacketHandler';
 import storage from '../storage';
-import { getGameMode } from '../util/application-helper';
 import { BasePage } from './BasePage';
 import MenuPage from './MenuPage';
+import { client } from '../client';
 
 class SplashPage extends BasePage {
   private _background: ButtonContainer;
   private _clickSound: Howl;
 
   async preload(): Promise<void> {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     await Assets.loadBundle(`${assetPrefix}/splash`);
   }
 
@@ -27,8 +26,6 @@ class SplashPage extends BasePage {
   }
 
   async onNavigatedTo(): Promise<void> {
-    await init();
-    
     this._background.onpointerdown = (event) => {
       if (event.button <= 0) {
         this._background.eventMode = 'none';
@@ -48,7 +45,7 @@ class SplashPage extends BasePage {
   }
 
   async onNavigatingTo(): Promise<void> {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
 
     this._background = new ButtonContainer(Sprite.from(`${assetPrefix}/splash/trial01${locale}.png`));

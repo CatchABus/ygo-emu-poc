@@ -2,7 +2,6 @@ import { FancyButton, Slider } from '@pixi/ui';
 import { Howl } from 'howler';
 import { AnimatedSprite, Assets, BitmapText, Container, Graphics, groupD8, Sprite, Spritesheet, Text } from 'pixi.js';
 import { getNavigator } from '../navigation';
-import { getGameMode } from '../util/application-helper';
 import { BasePage } from './BasePage';
 import { getCurrentLocale } from '../i18n';
 import MenuPage from './MenuPage';
@@ -10,10 +9,10 @@ import { CrossHatchFilter } from '../filter/CrossHatchFilter';
 import { SliderControls } from '../components/SliderControls';
 import { HoverPressButton } from '../components/HoverPressButton';
 import { ReceivablePacket } from '../network/ReceivablePacket';
-import { getSocket } from '../network/serverPacketHandler';
 import { CardTemplate, getCardAttributeString, getSpellTrapType, isMonster } from '../template/CardTemplate';
 import { rotateTexture } from '../util/helpers';
 import i18next from 'i18next';
+import { client } from '../client';
 
 const BAG_SLOTS = 10;
 
@@ -58,7 +57,7 @@ class DeckConstruction extends BasePage {
   }
 
   async preload(): Promise<void> {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
 
     await Assets.loadBundle(['cards', `${assetPrefix}/deck_c`]);
@@ -109,7 +108,7 @@ class DeckConstruction extends BasePage {
   }
 
   private async _init(): Promise<void> {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
 
     this._drawBackground();
     this._drawBackButton();
@@ -129,7 +128,7 @@ class DeckConstruction extends BasePage {
   }
 
   async _requestCardInventory(): Promise<void> {
-    const responseBuffer = await getSocket().emitWithAck('cardInventoryRequest', new ArrayBuffer(0));
+    const responseBuffer = await client.getSocket().emitWithAck('cardInventoryRequest', new ArrayBuffer(0));
     const packet = new ReceivablePacket(responseBuffer);
     const length = packet.readInt32();
 
@@ -201,7 +200,7 @@ class DeckConstruction extends BasePage {
   }
 
   private _drawBackground(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
 
     const bgLeft = Sprite.from(`${assetPrefix}/deck_c/background/background_l_${getCurrentLocale()}.png`);
 
@@ -218,7 +217,7 @@ class DeckConstruction extends BasePage {
   }
 
   private _drawBackButton(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
 
     const defaultView = Sprite.from(`${assetPrefix}/deck_c/background/back_1_${locale}.png`);
@@ -236,7 +235,7 @@ class DeckConstruction extends BasePage {
   }
 
   private _drawBag(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
 
     const container = new Container();
     container.x = 580;
@@ -267,7 +266,7 @@ class DeckConstruction extends BasePage {
   }
 
   private _createBagButton(): FancyButton {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
 
     const defaultView = Sprite.from(`${assetPrefix}/deck_c/background/arrow_1.png`);
     defaultView.alpha = 0;
@@ -282,7 +281,7 @@ class DeckConstruction extends BasePage {
   }
 
   private _createBagFilters(): Container {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
 
     const container = new Container();
     const filterBg = Sprite.from(`${assetPrefix}/deck_c/background/filter_mini.png`);
@@ -371,7 +370,7 @@ class DeckConstruction extends BasePage {
   }
 
   private _createBagSlotAdvancedDetails(): Container {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const container = new Container();
 
     const name = new Text({
@@ -441,7 +440,7 @@ class DeckConstruction extends BasePage {
   }
 
   private _drawBagScrollbar(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
 
     const scrollBar = new SliderControls();
     scrollBar.position.set(767, 0);

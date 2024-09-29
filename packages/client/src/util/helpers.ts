@@ -17,6 +17,10 @@ function cardNameComparator(a: CardTemplate, b: CardTemplate) {
   return 0;
 }
 
+function getRequestProtocol(requestedProtocol: string): string {
+  return import.meta.env.YGO_SECURE_CONNECTION === 'true' ? requestedProtocol + 's' : requestedProtocol;
+}
+
 function rotateTexture(rotate: number, source: Texture | TextureSourceLike): Texture {
   let texture: Texture;
 
@@ -59,5 +63,6 @@ function rotateTexture(rotate: number, source: Texture | TextureSourceLike): Tex
 
 export {
   cardNameComparator,
+  getRequestProtocol,
   rotateTexture
 };

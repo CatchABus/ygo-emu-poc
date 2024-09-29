@@ -8,9 +8,12 @@ import CardListPage from './CardListPage';
 import { CircleOpenFilter } from '../filter/CircleOpenFilter';
 import SplashPage from './SplashPage';
 import { FadeColorFilter } from '../filter/FadeColorFilter';
-import { getGameMode } from '../util/application-helper';
 import { getCurrentLocale } from '../i18n';
 import DeckConstruction from './DeckConstruction';
+import { client } from '../client';
+import { getRequestProtocol } from '../util/helpers';
+import LoginPage from './LoginPage';
+import log from 'loglevel';
 
 let OptionsPage = op;
 
@@ -27,7 +30,7 @@ class MenuPage extends BasePage {
   private _track: Howl;
 
   async preload(): Promise<void> {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     await Assets.loadBundle(`${assetPrefix}/menu`);
   }
 
@@ -52,7 +55,7 @@ class MenuPage extends BasePage {
   }
 
   private async _init(): Promise<void> {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
 
     const background = Sprite.from(`${assetPrefix}/menu/title_1_${locale}.png`);
@@ -91,7 +94,7 @@ class MenuPage extends BasePage {
   }
 
   private _getDefaultButtonSpritesheets(): Spritesheet[] {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
     const defaultsheets: Spritesheet[] = [];
 
@@ -109,7 +112,7 @@ class MenuPage extends BasePage {
   }
 
   private _getHoverButtonSpritesheets(): Spritesheet[] {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
     const hoversheets: Spritesheet[] = [];
 
@@ -296,13 +299,30 @@ class MenuPage extends BasePage {
   }
 
   private async _onQuitButtonClicked(): Promise<void> {
-    await getNavigator().navigate({
-      createPage: () => new SplashPage(),
-      transition: {
-        filter: new FadeColorFilter(),
-        duration: 2000
+    try {
+      client.isLogoutRequested = true;
+
+      const response = await fetch(`${getRequestProtocol('http')}://${import.meta.env.YGO_HOST}/logout`, {
+        method: 'POST',
+        credentials: 'include',
+        body: client.sessionId
+      });
+  
+      if (response.status === 204) {
+        await getNavigator().navigate({
+          createPage: () => new LoginPage(),
+          transition: {
+            filter: new FadeColorFilter(),
+            duration: 2000
+          }
+        });
+      } else {
+        client.isLogoutRequested = false;
       }
-    });
+    } catch(err) {
+      log.error(err);
+    }
+    
   }
 
   private _runAllAnimations(): Promise<void> {

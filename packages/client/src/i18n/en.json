@@ -1,4 +1,19 @@
 {
+    "game_desc": "A client emulator for YGO: Power of Chaos game series ported to browser.",
+    "error": {
+        "an_error_has_occured_please_contact_admin": "An error has occured! Please contact administrator."
+    },
+    "login": {
+        "title": "YGO PoC EMU",
+        "id": "ID",
+        "password": "Password",
+        "insert_id": "Please insert your ID.",
+        "insert_password": "Please insert your password.",
+        "submit_button": "Login",
+        "account_already_in_use": "Account is already in use! Click 'Login' again to override and reconnect.",
+        "invalid_credentials": "The password you have entered is incorrect!",
+        "response3": "Login successful"
+    },
     "cardRace": {
         "WARRIOR": "Warrior",
         "SPELLCASTER": "Spellcaster",

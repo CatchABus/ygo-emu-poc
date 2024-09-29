@@ -8,6 +8,8 @@ declare module globalThis {
 declare const __SUPPORTED_GAME_MODES__: GameMode[];
 
 interface ImportMetaEnv {
+  readonly YGO_HOST: string;
+  readonly YGO_SECURE_CONNECTION: string;
   readonly YGO_FULL_CARD_SET_ENABLED: string;
   readonly YGO_WRITE_PACKET_MAX_SIZE: string;
   readonly YGO_WINDOW_WIDTH: string;

@@ -1,5 +1,5 @@
 import { AnimationOptions, Driver, animate as animatePopmotion } from 'popmotion';
-import { getApplication } from '../util/application-helper';
+import { client } from '../client';
 
 interface AnimationWrapper {
     stop: () => void;
@@ -7,7 +7,7 @@ interface AnimationWrapper {
 }
 
 const tickerDriver: Driver = (update) => {
-  const { ticker } = getApplication();
+  const { ticker } = client.getApplication();
   const callback = () => update(ticker.deltaMS)
 
   return {

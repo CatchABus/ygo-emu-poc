@@ -17,13 +17,6 @@ class SendablePacket {
     return this._dataView.buffer;
   }
 
-  reset(): void {
-    if (this._currentOffset !== 0) {
-      this._currentOffset = 0;
-      this._resizeBuffer();
-    }
-  }
-
   writeFloat(value: number): void {
     this._dataView.setFloat32(this._currentOffset, value);
     this._currentOffset += 4;

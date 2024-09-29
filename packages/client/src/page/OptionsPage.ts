@@ -4,9 +4,9 @@ import { Assets, Graphics, Sprite } from 'pixi.js';
 import { HoverButtonContainer } from '../components/HoverButtonView';
 import { getCurrentLocale } from '../i18n';
 import storage from '../storage';
-import { getGameMode } from '../util/application-helper';
 import { BasePage } from './BasePage';
 import { SliderControls } from '../components/SliderControls';
+import { client } from '../client';
 
 class OptionsPage extends BasePage {
   private _windowModeButton: FancyButton;
@@ -23,7 +23,7 @@ class OptionsPage extends BasePage {
   }
 
   onNavigatingTo(): void | Promise<void> {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
 
     this.addChild(Sprite.from(`${assetPrefix}/options/joey_menu_op_${locale}.png`));
@@ -71,12 +71,12 @@ class OptionsPage extends BasePage {
   }
 
   async preload(): Promise<void> {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     await Assets.loadBundle(`${assetPrefix}/options`);
   }
 
   private _drawVolumeBar(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const container = new SliderControls();
     const volumeSpritesheet = Assets.get(`${assetPrefix}/options/op_sound.json`);
     const leftHoverSprite: Sprite = Sprite.from(volumeSpritesheet.textures['item-1.png']);
@@ -103,7 +103,7 @@ class OptionsPage extends BasePage {
   }
 
   private _createVolumeSlider(): Slider {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const background = new Graphics().rect(0, 0, 292, 22).fill('transparent');
     const volumeSpritesheet = Assets.get(`${assetPrefix}/options/op_sound.json`);
 
@@ -128,7 +128,7 @@ class OptionsPage extends BasePage {
   }
 
   private _drawCardsetSwitch(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
 
     let cardsetSprite: Sprite;
@@ -152,7 +152,7 @@ class OptionsPage extends BasePage {
   }
 
   private _drawFullscreenSwitch(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
 
     const windowModeSprite = Sprite.from(`${assetPrefix}/options/op_${locale}_win_win.png`);
@@ -202,7 +202,7 @@ class OptionsPage extends BasePage {
   }
 
   private _drawWindowBitControl(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
 
     // This is the default
@@ -230,7 +230,7 @@ class OptionsPage extends BasePage {
   }
 
   private _drawForbiddenCardsControl(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
 
     const storedValue = storage.getItem('disableForbiddenCards');
     const tickSprite = Sprite.from(`${assetPrefix}/options/op_limited.png`);

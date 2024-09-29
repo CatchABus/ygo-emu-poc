@@ -6,17 +6,16 @@ import { linear } from 'popmotion';
 import { HoverButtonContainer } from '../components/HoverButtonView';
 import { getCurrentLocale } from '../i18n';
 import { getNavigator } from '../navigation';
-import { getGameMode } from '../util/application-helper';
 import { BasePage } from './BasePage';
 import MenuPage from './MenuPage';
 import i18next from 'i18next';
 import { CardTemplate, getCardDefinition, isMonster } from '../template/CardTemplate';
 import { cardNameComparator } from '../util/helpers';
 import { SliderControls } from '../components/SliderControls';
-import { getSocket } from '../network/serverPacketHandler';
 import { ReceivablePacket } from '../network/ReceivablePacket';
 import { SendablePacket } from '../network/SendablePacket';
 import { CrossHatchFilter } from '../filter/CrossHatchFilter';
+import { client } from '../client';
 
 const CARD_ROWS = 5;
 const CARD_COLUMNS = 10;
@@ -70,7 +69,7 @@ class CardListPage extends BasePage {
   private _currentPageIndicator: BitmapText;
 
   async preload(): Promise<void> {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
 
     await Assets.loadBundle(['cards', `${assetPrefix}/card_list`]);
@@ -123,7 +122,7 @@ class CardListPage extends BasePage {
   }
 
   async _requestPlayerCards(): Promise<void> {
-    const responseBuffer = await getSocket().emitWithAck('cardListRequest', new ArrayBuffer(0));
+    const responseBuffer = await client.getSocket().emitWithAck('cardListRequest', new ArrayBuffer(0));
     const packet = new ReceivablePacket(responseBuffer);
     const length = packet.readInt32();
 
@@ -140,7 +139,7 @@ class CardListPage extends BasePage {
   }
 
   private async _init(): Promise<void> {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
 
     this.addChild(Sprite.from(`${assetPrefix}/card_list/list_bg.png`));
 
@@ -162,7 +161,7 @@ class CardListPage extends BasePage {
   }
 
   private _drawTitle(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
 
     const title = Sprite.from(`${assetPrefix}/card_list/${locale}_cardlisttitle2.png`);
@@ -188,7 +187,7 @@ class CardListPage extends BasePage {
   }
 
   private _drawBackButton(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
 
     const backButton = new FancyButton({
@@ -307,7 +306,7 @@ class CardListPage extends BasePage {
   }
 
   private _generateCardPreviewScrollBar(): Container {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const scrollBar = new SliderControls();
     scrollBar.position.set(172, 313);
     scrollBar.visible = false;
@@ -353,7 +352,7 @@ class CardListPage extends BasePage {
   }
 
   private _generateCardPreviewStatsContent(): Container {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const statsTextStyle: TextStyleOptions = {
       fontSize: 11,
       fontWeight: 'bold'
@@ -467,7 +466,7 @@ class CardListPage extends BasePage {
   }
 
   private _drawPagingControls(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
     const totalPages = this._cardData.length / CARDS_PER_PAGE;
 
     const leftButton = new HoverButtonContainer(Sprite.from(`${assetPrefix}/card_list/pe_arrow_l.png`));
@@ -505,7 +504,7 @@ class CardListPage extends BasePage {
   }
 
   private _drawHoverElements(): void {
-    const assetPrefix = getGameMode();
+    const assetPrefix = client.gameMode;
 
     this._hoverCardSprite = Sprite.from(`${assetPrefix}/card_list/card_border_s.png`);
     this._hoverCardSprite.visible = false;
@@ -612,7 +611,6 @@ class CardListPage extends BasePage {
 
   private _registerCardClickListener(cardView: Container, index: number): void {
     const [cardImage, newIndicator] = cardView.children;
-    const sp = new SendablePacket();
 
     cardImage.onclick = () => {
       const startDataIndex = (this._currenPageNum - 1) * CARDS_PER_PAGE;
@@ -621,9 +619,10 @@ class CardListPage extends BasePage {
       const newCardIndex = this._newCardIds.indexOf(card.id);
 
       if (newCardIndex >= 0) {
-        sp.reset();
+        const sp = new SendablePacket();
+
         sp.writeInt32(card.id);
-        getSocket().emit('playerNewCardAction', sp.buffer);
+        client.getSocket().emit('playerNewCardAction', sp.buffer);
         this._newCardIds.splice(newCardIndex, 1);
         newIndicator.visible = false;
 
