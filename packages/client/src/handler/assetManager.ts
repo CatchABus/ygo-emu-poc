@@ -13,7 +13,6 @@ async function initAssets() {
 
   // Start loading all bundles in the background
   Assets.backgroundLoadBundle([
-    `${assetPrefix}/splash`,
     `${assetPrefix}/menu`,
     `${assetPrefix}/options`,
     `${assetPrefix}/card_list`,

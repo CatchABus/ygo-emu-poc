@@ -6,7 +6,6 @@ import { getNavigator } from '../navigation';
 import op from './OptionsPage';
 import CardListPage from './CardListPage';
 import { CircleOpenFilter } from '../filter/CircleOpenFilter';
-import SplashPage from './SplashPage';
 import { FadeColorFilter } from '../filter/FadeColorFilter';
 import { getCurrentLocale } from '../i18n';
 import DeckConstruction from './DeckConstruction';
