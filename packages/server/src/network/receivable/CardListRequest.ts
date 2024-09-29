@@ -1,8 +1,9 @@
 import { CPUDeckData } from '../../data/CPUDeckData';
 import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
 import { CardList } from '../sendable/CardList';
-import { AbstractReceivablePacket } from './AbstractReceivablePacket';
+import { AbstractReceivablePacket, EventName } from './AbstractReceivablePacket';
 
+@EventName('cardListRequest')
 class CardListRequest extends AbstractReceivablePacket {
   read(): AbstractSendablePacket {
     const deckIds = CPUDeckData.getInstance().getDecks().get('playerStarter');

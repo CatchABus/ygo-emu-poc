@@ -2,17 +2,23 @@ import log from 'loglevel';
 import { GameClient } from '../GameClient';
 import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
 
+function EventName(value: string) {
+  return (target: any) => {
+    target.eventName = value;
+  };
+}
+
 abstract class AbstractReceivablePacket {
-  private readonly _client: GameClient;
-  private readonly _buffer: Buffer;
-  private readonly _eventName: string;
+  private readonly _client?: GameClient;
+  private readonly _buffer?: Buffer;
 
   private _currentOffset: number = 0;
 
-  constructor(client: GameClient, buffer: Buffer, eventName: string) {
+  public eventName: string;
+
+  constructor(client: GameClient, buffer: Buffer) {
     this._client = client;
     this._buffer = buffer;
-    this._eventName = eventName;
   }
 
   get client(): GameClient {
@@ -84,7 +90,7 @@ abstract class AbstractReceivablePacket {
         result = response;
       }
     } catch (err) {
-      log.error(`Failed to read packet ${this._eventName}. Reason: ${(err as Error).message}`);
+      log.error(`Failed to read packet ${this.eventName}. Reason: ${(err as Error).message}`);
     }
 
     return result;
@@ -94,5 +100,6 @@ abstract class AbstractReceivablePacket {
 }
 
 export {
+  EventName,
   AbstractReceivablePacket
 };

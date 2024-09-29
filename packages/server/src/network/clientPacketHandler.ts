@@ -8,15 +8,15 @@ import { PlayerNewCardAction } from './receivable/PlayerNewCardAction';
 function registerClientPacketHandler(client: GameClient): void {
   const packetMap: ClientToServerEvents = {
     'cardListRequest': (buffer: Buffer, callback: AcknowledgementCallback) => {
-      const packet = new CardListRequest(client, buffer, 'cardListRequest');
+      const packet = new CardListRequest(client, buffer);
       callback(packet.readFromBuffer() as Buffer);
     },
     'cardInventoryRequest': (buffer: Buffer, callback: AcknowledgementCallback) => {
-      const packet = new CardInventoryRequest(client, buffer, 'cardInventoryRequest');
+      const packet = new CardInventoryRequest(client, buffer);
       callback(packet.readFromBuffer() as Buffer);
     },
     'playerNewCardAction': (buffer: Buffer) => {
-      const packet = new PlayerNewCardAction(client, buffer, 'playerNewCardAction');
+      const packet = new PlayerNewCardAction(client, buffer);
       packet.readFromBuffer();
     }
   };

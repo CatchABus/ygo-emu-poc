@@ -5,6 +5,7 @@ type AcknowledgementCallback = (data: Buffer) => void;
 interface ServerToClientEvents {
     cardInventoryResponse: (buffer: Buffer) => void;
     cardListResponse: (buffer: Buffer) => void;
+    loginResponse: (buffer: Buffer) => void;
 }
 
 interface ClientToServerEvents {
@@ -18,7 +19,7 @@ interface InterServerEvents {
 }
 
 interface SocketData {
-    client: GameClient
+    gameClient: GameClient
 }
 
 export {

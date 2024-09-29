@@ -16,7 +16,7 @@ class CardInventory extends AbstractSendablePacket {
   }
 
   getEventName(): any {
-    return 'cardListResponse';
+    return 'cardInventoryResponse';
   }
 
   write(): void {

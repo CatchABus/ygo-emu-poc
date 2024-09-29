@@ -1,3 +1,3 @@
-import { startGameServer } from './GameServer';
+import { startGameServer } from './gameServer';
 
 startGameServer();

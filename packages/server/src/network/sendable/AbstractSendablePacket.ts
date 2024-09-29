@@ -60,7 +60,7 @@ abstract class AbstractSendablePacket {
   private _resizeBuffer(): void {
     const newBuffer: Buffer = Buffer.alloc(this._currentOffset);
 
-    this._buffer.copy(newBuffer, 0, 0, this._currentOffset - 1);
+    this._buffer.copy(newBuffer, 0, 0, this._currentOffset);
     this._buffer = newBuffer;
   }
 
