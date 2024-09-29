@@ -17,6 +17,8 @@ class Client {
    */
   private _isLogoutRequested: boolean = false;
 
+  private _disconnectListener: (reason: Socket.DisconnectReason) => void = null;
+
   isApplicationStarted(): boolean {
     return this._application != null;
   }
@@ -54,9 +56,9 @@ class Client {
       reconnection: false
     });
 
-    socket.on('connect_error', onConnectionError);
+    this._socket = socket;
 
-    socket.on('disconnect', (reason) => {
+    this._disconnectListener = (reason) => {
       if (this._isLogoutRequested) {
         this._isLogoutRequested = false;
       } else {
@@ -64,9 +66,10 @@ class Client {
       }
 
       this.disconnect();
-    });
+    };
 
-    this._socket = socket;
+    socket.on('connect_error', onConnectionError);
+    socket.on('disconnect', this._disconnectListener);
 
     return socket;
   }
@@ -77,7 +80,11 @@ class Client {
     }
 
     this._sessionId = null;
+
     this._socket.off('connection_error', onConnectionError);
+    this._socket.off('disconnect', this._disconnectListener);
+    this._disconnectListener = null;
+    
     this._socket.disconnect();
     this._socket = null;
   }
