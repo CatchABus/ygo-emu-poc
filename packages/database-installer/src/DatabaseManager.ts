@@ -11,7 +11,8 @@ async function _establishSQLConnection(databaseName?: string): Promise<mysql.Con
     port: PORT,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: databaseName
+    database: databaseName,
+    multipleStatements: true
   });
 
   console.info('Connection with MySQL was established successfully!');
@@ -40,11 +41,13 @@ async function _getTableMigrations(): Promise<Map<string, string>> {
 }
 
 async function installDatabase(): Promise<void> {
-  const connection = await _establishSQLConnection();
+  let connection: mysql.Connection;
 
   console.info(`Attempting to create database '${process.env.DB_NAME}' with character set '${process.env.DB_CHARSET}' and collation '${process.env.DB_COLLATION}'...`);
 
   try {
+    connection = await _establishSQLConnection();
+
     await connection.beginTransaction();
     await connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME}`);
     await connection.query(`ALTER DATABASE ${process.env.DB_NAME} CHARACTER SET ${process.env.DB_CHARSET} COLLATE ${process.env.DB_COLLATION}`);
@@ -56,10 +59,24 @@ async function installDatabase(): Promise<void> {
     const migrations = await _getTableMigrations();
   
     console.info('Attempting to create tables...');
+
+    let postInstallQuery: string;
   
     for (const [ fileName, query ] of migrations) {
-      console.info('- ' + fileName);
-      await connection.query(query);
+      if (fileName === 'post_install.sql') {
+        postInstallQuery = query;
+      } else {
+        console.info('- ' + fileName);
+        await connection.query(query);
+      }
+    }
+
+    if (postInstallQuery != null) {
+      console.info('Executing post-installation queries...');
+
+      await connection.query(postInstallQuery);
+
+      console.info('Post-installation queries were executed successfully!');
     }
 
     await connection.commit();
@@ -67,18 +84,25 @@ async function installDatabase(): Promise<void> {
     console.info('All tables have been created successfully!');
   } catch (err) {
     console.error(err);
-    await connection.rollback();
+
+    if (connection != null) {
+      await connection.rollback();
+    }
   } finally {
-    await connection.end();
+    if (connection != null) {
+      await connection.end();
+    }
   }
 }
 
 async function truncateTables(): Promise<void> {
-  const connection = await _establishSQLConnection(process.env.DB_NAME);
+  let connection: mysql.Connection;
 
   console.info(`Attempting to truncate all tables in database '${process.env.DB_NAME}'...`);
 
   try {
+    connection = await _establishSQLConnection(process.env.DB_NAME);
+
     await connection.beginTransaction();
     await connection.query('SET FOREIGN_KEY_CHECKS = 0');
   
@@ -99,23 +123,31 @@ async function truncateTables(): Promise<void> {
     console.info(`Database '${process.env.DB_NAME}' tables were truncated successfully!`);
   } catch (err) {
     console.error(err);
-    await connection.rollback();
+    if (connection != null) {
+      await connection.rollback();
+    }
   } finally {
-    await connection.end();
+    if (connection != null) {
+      await connection.end();
+    }
   }
 }
 
 async function deleteDatabase(): Promise<void> {
-  const connection = await _establishSQLConnection();
+  let connection: mysql.Connection;
 
   console.info(`Attempting to delete database '${process.env.DB_NAME}'...`);
 
   try {
+    connection = await _establishSQLConnection();
+
     await connection.query(`DROP DATABASE ${process.env.DB_NAME}`);
   } catch (err) {
     console.error(err);
   } finally {
-    await connection.end();
+    if (connection != null) {
+      await connection.end();
+    }
   }
 
   console.info(`Database '${process.env.DB_NAME}' was deleted successfully!`);

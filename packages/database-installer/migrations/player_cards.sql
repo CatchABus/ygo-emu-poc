@@ -5,6 +5,5 @@ CREATE TABLE `player_cards` (
 	`count` INT(10),
 	`isNew` TINYINT(1) DEFAULT '0',
   UNIQUE KEY `playerCard` (`playerId`,`cardNum`) USING BTREE,
-	PRIMARY KEY (`id`),
-  FOREIGN KEY (playerId) REFERENCES players(id)
+	PRIMARY KEY (`id`)
 );
