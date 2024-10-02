@@ -44,25 +44,33 @@ async function installDatabase(): Promise<void> {
 
   console.info(`Attempting to create database '${process.env.DB_NAME}' with character set '${process.env.DB_CHARSET}' and collation '${process.env.DB_COLLATION}'...`);
 
-  await connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME}`);
-  await connection.query(`ALTER DATABASE ${process.env.DB_NAME} CHARACTER SET ${process.env.DB_CHARSET} COLLATE ${process.env.DB_COLLATION}`);
-  await connection.query(`USE ${process.env.DB_NAME}`);
+  try {
+    await connection.beginTransaction();
+    await connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME}`);
+    await connection.query(`ALTER DATABASE ${process.env.DB_NAME} CHARACTER SET ${process.env.DB_CHARSET} COLLATE ${process.env.DB_COLLATION}`);
+    await connection.query(`USE ${process.env.DB_NAME}`);
+  
+    console.info(`Database '${process.env.DB_NAME}' was created successfully!`);
+  
+    console.info('Loading table migrations...');
+    const migrations = await _getTableMigrations();
+  
+    console.info('Attempting to create tables...');
+  
+    for (const [ fileName, query ] of migrations) {
+      console.info('- ' + fileName);
+      await connection.query(query);
+    }
 
-  console.info(`Database '${process.env.DB_NAME}' was created successfully!`);
-
-  console.info('Loading table migrations...');
-  const migrations = await _getTableMigrations();
-
-  console.info('Attempting to create tables...');
-
-  for (const [ fileName, query ] of migrations) {
-    console.info('- ' + fileName);
-    await connection.query(query);
+    await connection.commit();
+  
+    console.info('All tables have been created successfully!');
+  } catch (err) {
+    console.error(err);
+    await connection.rollback();
+  } finally {
+    await connection.end();
   }
-
-  console.info('All tables have been created successfully!');
-
-  await connection.end();
 }
 
 async function truncateTables(): Promise<void> {
@@ -70,24 +78,31 @@ async function truncateTables(): Promise<void> {
 
   console.info(`Attempting to truncate all tables in database '${process.env.DB_NAME}'...`);
 
-  await connection.query('SET FOREIGN_KEY_CHECKS = 0');
+  try {
+    await connection.beginTransaction();
+    await connection.query('SET FOREIGN_KEY_CHECKS = 0');
+  
+    const result = await connection.query('SHOW TABLES');
+    const rows = result[0] as [];
+    const key = result[1][0].name;
+  
+    for (const row of rows) {
+      const tableName = row[key];
+  
+      await connection.query(`TRUNCATE TABLE ${tableName}`);
+      console.info(`- Truncated table '${tableName}'`);
+    }
+  
+    await connection.query('SET FOREIGN_KEY_CHECKS = 1');
+    await connection.commit();
 
-  const result = await connection.query('SHOW TABLES');
-  const rows = result[0] as [];
-  const key = result[1][0].name;
-
-  for (const row of rows) {
-    const tableName = row[key];
-
-    await connection.query(`TRUNCATE TABLE ${tableName}`);
-    console.info(`- Truncated table '${tableName}'`);
+    console.info(`Database '${process.env.DB_NAME}' tables were truncated successfully!`);
+  } catch (err) {
+    console.error(err);
+    await connection.rollback();
+  } finally {
+    await connection.end();
   }
-
-  await connection.query('SET FOREIGN_KEY_CHECKS = 1');
-
-  console.info(`Database '${process.env.DB_NAME}' tables were truncated successfully!`);
-
-  await connection.end();
 }
 
 async function deleteDatabase(): Promise<void> {
@@ -95,11 +110,17 @@ async function deleteDatabase(): Promise<void> {
 
   console.info(`Attempting to delete database '${process.env.DB_NAME}'...`);
 
-  await connection.query(`DROP DATABASE ${process.env.DB_NAME}`);
+  try {
+    await connection.query(`DROP DATABASE ${process.env.DB_NAME}`);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await connection.end();
+  }
 
   console.info(`Database '${process.env.DB_NAME}' was deleted successfully!`);
 
-  await connection.end();
+  
 }
 
 export {
