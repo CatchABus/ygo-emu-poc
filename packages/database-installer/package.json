@@ -1,0 +1,27 @@
+{
+  "name": "database-installer",
+  "version": "0.1.0",
+  "description": "A database installer that manages the database setup",
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "node postbuild.mjs",
+    "start": "node index.js  --env-file .env",
+    "dev": "ts-node src/index.ts --env-file .env",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CatchABus/ygo-emu-poc.git"
+  },
+  "author": "CatchABus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CatchABus/ygo-emu-poc/issues"
+  },
+  "homepage": "https://github.com/CatchABus/ygo-emu-poc#readme",
+  "dependencies": {
+    "inquirer": "^11.1.0",
+    "mysql2": "^3.11.1"
+  }
+}
