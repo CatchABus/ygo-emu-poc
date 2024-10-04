@@ -5,5 +5,7 @@ CREATE TABLE `players` (
 	`volume` DECIMAL(4, 2) NOT NULL DEFAULT '1',
 	`forbiddenCardsEnabled` TINYINT(1) DEFAULT '0',
 	`fullScreenEnabled` TINYINT(1) DEFAULT '0',
-	PRIMARY KEY (`id`)
+	PRIMARY KEY (`id`),
+	UNIQUE (`accountId`),
+	UNIQUE (`currentDeckId`)
 );
