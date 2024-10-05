@@ -18,6 +18,7 @@ const BAG_SLOTS = 10;
 
 interface CardSlot {
   id: number;
+  templateId: number;
   isNew: boolean;
   count: number;
   deckLimit: number;
@@ -135,6 +136,7 @@ class DeckConstruction extends BasePage {
     for (let i = 0; i < length; i++) {
       this._cardSlotDataset.push({
         id: packet.readInt32(),
+        templateId: packet.readInt32(),
         isNew: packet.readInt8() === 1,
         count: packet.readInt32(),
         deckLimit: packet.readInt8()
@@ -144,8 +146,13 @@ class DeckConstruction extends BasePage {
 
   _updateCardBag(): void {
     const slots = this._bagSlots;
+    const dataCount = this._cardSlotDataset.length;
 
     for (let i = 0, length = slots.length; i < length; i++) {
+      if (dataCount <= (i + 1)) {
+        break;
+      }
+
       const slot = slots[i];
       const [cardInfo, basicDetails, advancedDetails] = slot.children as [Container, Container<BitmapText>, Container];
       const [cardImage, cardCount, cardLimit, newIndicator] = cardInfo.children as [Sprite, BitmapText, Sprite, AnimatedSprite];
@@ -153,12 +160,12 @@ class DeckConstruction extends BasePage {
       const [cardName, advancedAtkPoints, divider, advancedDefPoints, cardAttribute, cardType, starIcon, starCount] = advancedDetails.children as [Text, BitmapText, BitmapText, BitmapText, Sprite, Sprite, Sprite, BitmapText];
 
       const slotData = this._cardSlotDataset[this._currentBagIndex + i];
-      const template = this._cardData.find(template => template.id === slotData.id);
+      const template = this._cardData.find(template => template.id === slotData.templateId);
 
-      cardImage.texture = Assets.get(`cards/images/${slotData.id}.png`);
+      cardImage.texture = Assets.get(`cards/images/${slotData.templateId}.png`);
       cardCount.text = slotData.count;
       cardLimit.texture = this._deckCardLimitSheet.textures[`decklimit-${slotData.deckLimit}`];
-      cardName.text = i18next.t(`cards.${slotData.id}.name`);
+      cardName.text = i18next.t(`cards.${slotData.templateId}.name`);
       cardAttribute.texture = this._cardAttributeSheet.textures[`attr-${getCardAttributeString(template)}`];
 
       if (slotData.isNew) {
@@ -327,6 +334,7 @@ class DeckConstruction extends BasePage {
     cardLimit.position.set(7, 7);
 
     const newIndicator = this._createNewIndicator();
+    newIndicator.visible = false;
     newIndicator.eventMode = 'none';
     newIndicator.position.set(-1, 16);
 
@@ -398,6 +406,7 @@ class DeckConstruction extends BasePage {
         fontFamily: 'CardPoints'
       },
     });
+    divider.visible = false;
     divider.position.set(24, 26);
 
     const defPoints = new BitmapText({
@@ -416,6 +425,7 @@ class DeckConstruction extends BasePage {
     cardType.position.set(78, 26);
 
     const starIcon = Sprite.from(`${assetPrefix}/deck_c/icon/icon_star.png`);
+    starIcon.visible = false;
     starIcon.position.set(100, 26);
 
     const starCount = new BitmapText({

@@ -26,9 +26,14 @@ const DUMMY_TEXT = 'DUMMY'; // Texts must have a width or scroll box will compla
 const CARD_PREVIEW_SCROLL_HEIGHT = 200;
 const CARD_PREVIEW_MONSTER_SCROLL_HEIGHT = 183;
 
+interface CardIdInfo {
+  id: number;
+  templateId: number;
+}
+
 class CardListPage extends BasePage {
-  private readonly _ownedCardIds: number[] = [];
-  private readonly _newCardIds: number[] = [];
+  private readonly _ownedCards: CardIdInfo[] = [];
+  private readonly _newCardTemplateIds: number[] = [];
 
   private _cardContainer: Container<Container>;
   private _backButton: FancyButton;
@@ -97,7 +102,7 @@ class CardListPage extends BasePage {
 
     this._animateCardList().then(() => this._attachInteractionListeners());
 
-    if (this._newCardIds.length > 0) {
+    if (this._newCardTemplateIds.length) {
       this._animateNewCardIndicators();
     }
   }
@@ -128,12 +133,16 @@ class CardListPage extends BasePage {
 
     for (let i = 0; i < length; i++) {
       const cardId = packet.readInt32();
+      const cardTemplateId = packet.readInt32();
       const isNew = packet.readInt8() === 1;
 
-      this._ownedCardIds.push(cardId);
+      this._ownedCards.push({
+        id: cardId,
+        templateId: cardTemplateId
+      });
 
       if (isNew) {
-        this._newCardIds.push(cardId);
+        this._newCardTemplateIds.push(cardTemplateId);
       }
     }
   }
@@ -519,18 +528,18 @@ class CardListPage extends BasePage {
 
   private _startCardCounter(): void {
     let isPercentageDisplay = true;
-    let value = (this._ownedCardIds.length / this._cardData.length) * 100;
+    let value = (this._ownedCards.length / this._cardData.length) * 100;
 
     this._cardCounter.text = `${value.toFixed(1)}%`;
 
     this._cardCounterUpdateInterval = setInterval(() => {
       if (isPercentageDisplay) {
         isPercentageDisplay = false;
-        this._cardCounter.text = `${this._ownedCardIds.length}/${this._cardData.length}`;
+        this._cardCounter.text = `${this._ownedCards.length}/${this._cardData.length}`;
       } else {
         isPercentageDisplay = true;
 
-        value = (this._ownedCardIds.length / this._cardData.length) * 100;
+        value = (this._ownedCards.length / this._cardData.length) * 100;
         this._cardCounter.text = `${value.toFixed(1)}%`;
       }
     }, 3000);
@@ -615,18 +624,18 @@ class CardListPage extends BasePage {
     cardImage.onclick = () => {
       const startDataIndex = (this._currenPageNum - 1) * CARDS_PER_PAGE;
       const dataIndex = index + startDataIndex;
-      const card = this._cardData[dataIndex];
-      const newCardIndex = this._newCardIds.indexOf(card.id);
+      const cardTemplate = this._cardData[dataIndex];
+      const newCardIndex = this._newCardTemplateIds.indexOf(cardTemplate.id);
 
       if (newCardIndex >= 0) {
         const sp = new SendablePacket();
 
-        sp.writeInt32(card.id);
+        sp.writeInt32(cardTemplate.id);
         client.getSocket().emit('playerNewCardAction', sp.buffer);
-        this._newCardIds.splice(newCardIndex, 1);
+        this._newCardTemplateIds.splice(newCardIndex, 1);
         newIndicator.visible = false;
 
-        if (!this._newCardIds.length && this._newIndicatorsUpdateInterval != null) {
+        if (!this._newCardTemplateIds.length && this._newIndicatorsUpdateInterval != null) {
           clearInterval(this._newIndicatorsUpdateInterval);
           this._newIndicatorsUpdateInterval = null;
         }
@@ -651,19 +660,20 @@ class CardListPage extends BasePage {
     cardImage.onpointerenter = () => {
       const startDataIndex = (this._currenPageNum - 1) * CARDS_PER_PAGE;
       const dataIndex = index + startDataIndex;
-      const card = this._cardData[dataIndex];
+      const cardTemplate = this._cardData[dataIndex];
 
-      if (card && this._ownedCardIds.includes(card.id)) {
-        isMonsterCard = isMonster(card);
 
-        cardId = card.id;
+      if (cardTemplate && this._ownedCards.some((card) => card.templateId === cardTemplate.id)) {
+        isMonsterCard = isMonster(cardTemplate);
+
+        cardId = cardTemplate.id;
         name = i18next.t(`cards.${cardId}.name`);
-        definition = isMonsterCard ? getCardDefinition(card) : '';
+        definition = isMonsterCard ? getCardDefinition(cardTemplate) : '';
         desc = i18next.t(`cards.${cardId}.desc`);
-        attributeTexture = this._cardAttributeSheet.textures[`attr-${card.attribute}`];
-        raceTexture = this._cardRaceSheet.textures[`race-${card.race}`];
-        atk = card.atk.toString();
-        def = card.def.toString();
+        attributeTexture = this._cardAttributeSheet.textures[`attr-${cardTemplate.attribute}`];
+        raceTexture = this._cardRaceSheet.textures[`race-${cardTemplate.race}`];
+        atk = cardTemplate.atk.toString();
+        def = cardTemplate.def.toString();
       } else {
         isMonsterCard = false;
         cardId = 0;
@@ -758,14 +768,14 @@ class CardListPage extends BasePage {
 
         if (cardView) {
           const [cardImage, newIndicator] = cardView.children;
-          const card = cardData[i];
+          const cardTemplate = cardData[i];
 
           let textureSource: string;
           let isNew: boolean;
 
-          if (this._ownedCardIds.includes(card.id)) {
-            textureSource = `cards/images/${card.id}.png`;
-            isNew = this._newCardIds.includes(card.id);
+          if (this._ownedCards.some((card) => card.templateId === cardTemplate.id)) {
+            textureSource = `cards/images/${cardTemplate.id}.png`;
+            isNew = this._newCardTemplateIds.includes(cardTemplate.id);
           } else {
             textureSource = 'cards/card_backing.png';
             isNew = false;
@@ -874,14 +884,14 @@ class CardListPage extends BasePage {
             },
             onRepeat: () => {
               const [cardImage, newIndicator] = cardView.children;
-              const card = cardData[j];
+              const cardTemplate = cardData[j];
 
               let textureSource: string;
               let isNew: boolean;
 
-              if (this._ownedCardIds.includes(card.id)) {
-                textureSource = `cards/images/${card.id}.png`;
-                isNew = this._newCardIds.includes(card.id);
+              if (this._ownedCards.some((card) => card.templateId === cardTemplate.id)) {
+                textureSource = `cards/images/${cardTemplate.id}.png`;
+                isNew = this._newCardTemplateIds.includes(cardTemplate.id);
               } else {
                 textureSource = 'cards/card_backing.png';
                 isNew = false;

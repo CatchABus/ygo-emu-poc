@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "setup": "node cleanup.mjs && npm install",
-    "start": "nx run-many -t dev"
+    "start": "nx run-many -t dev --projects=client,server"
   },
   "private": true,
   "devDependencies": {
