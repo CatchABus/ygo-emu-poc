@@ -1,15 +1,27 @@
 import log from 'loglevel';
-import { AbstractReceivablePacket, EventName } from './AbstractReceivablePacket';
+import { PlayerCard } from '../../model/database/PlayerCard';
+import { AbstractReceivablePacket, PacketEventName } from './AbstractReceivablePacket';
 
-@EventName('playerNewCardAction')
+@PacketEventName('playerNewCardAction')
 class PlayerNewCardAction extends AbstractReceivablePacket {
-  read(): void {
+  async read(): Promise<void> {
     const cardId = this.readInt32();
 
-    log.info(`Card ${cardId} is no longer new`);
+    try {
+      const card = await PlayerCard.find<PlayerCard>(cardId);
+      if (card != null) {
+        card.isNew = 0;
+        await card.save();
+
+        log.info(`New card ${cardId} has become stale`);
+      }
+    } catch (err) {
+      log.error(err);
+    }
   }
 }
 
 export {
   PlayerNewCardAction
 };
+

@@ -1,20 +1,16 @@
-import { CPUDeckData } from '../../data/CPUDeckData';
 import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
 import { CardList } from '../sendable/CardList';
-import { AbstractReceivablePacket, EventName } from './AbstractReceivablePacket';
+import { AbstractReceivablePacket, PacketEventName } from './AbstractReceivablePacket';
 
-@EventName('cardListRequest')
+@PacketEventName('cardListRequest')
 class CardListRequest extends AbstractReceivablePacket {
   read(): AbstractSendablePacket {
-    const deckIds = CPUDeckData.getInstance().getDecks().get('playerStarter');
-    const cardData = deckIds.map((id: number) => {
-      return {
-        id,
-        isNew: id === 3366982 || id === 78658564
-      };
-    })
+    const player = this.client.player;
+    if (player == null) {
+      return null;
+    }
 
-    return new CardList(cardData);
+    return new CardList(player.getAllCards());
   }
 }
 

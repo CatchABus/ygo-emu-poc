@@ -2,14 +2,15 @@ import { CardAttribute, CardRace, CardType } from './CardStats';
 
 
 class CardTemplate {
-  private _id: number;
-  private _type: CardType;
-  private _atk: number;
-  private _def: number;
-  private _level: number;
-  private _race: CardRace;
-  private _attribute: CardAttribute;
-  //private _category: number;
+  private readonly _id: number;
+  private readonly _type: CardType;
+  private readonly _atk: number;
+  private readonly _def: number;
+  private readonly _level: number;
+  private readonly _race: CardRace;
+  private readonly _attribute: CardAttribute;
+  //private readonly _category: number;
+  private _deckLimit: number;
 
   constructor(stats: any) {
     this._id = stats.id;
@@ -48,6 +49,22 @@ class CardTemplate {
 
   get attribute(): CardAttribute {
     return this._attribute;
+  }
+
+  get isMonster(): boolean {
+    return !!(this.type & CardType.MONSTER);
+  }
+
+  get deckLimit(): number {
+    return this._deckLimit;
+  }
+
+  set deckLimit(val: number) {
+    this._deckLimit = val;
+  }
+
+  get isFusionMonster(): boolean {
+    return (this.type & CardType.FUSION_MONSTER) === CardType.FUSION_MONSTER || (this.type & CardType.FUSION_EFFECT_MONSTER) === CardType.FUSION_EFFECT_MONSTER;
   }
 }
 

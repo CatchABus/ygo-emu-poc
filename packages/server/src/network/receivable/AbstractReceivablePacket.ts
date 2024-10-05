@@ -2,7 +2,7 @@ import log from 'loglevel';
 import { GameClient } from '../GameClient';
 import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
 
-function EventName(value: string) {
+function PacketEventName(value: string) {
   return (target: any) => {
     target.eventName = value;
   };
@@ -78,11 +78,11 @@ abstract class AbstractReceivablePacket {
     return value;
   }
 
-  readFromBuffer(): void | Buffer {
+  async readWithResult(): Promise<void | Buffer> {
     let result: void | Buffer;
 
     try {
-      const response = this.read();
+      const response = await this.read();
 
       if (response instanceof AbstractSendablePacket) {
         result = this.client.getPacketContent(response);
@@ -96,10 +96,10 @@ abstract class AbstractReceivablePacket {
     return result;
   }
 
-  abstract read(): void | AbstractSendablePacket;
+  abstract read(): void | AbstractSendablePacket | Promise<void | AbstractSendablePacket>;
 }
 
 export {
-  EventName,
+  PacketEventName,
   AbstractReceivablePacket
 };

@@ -2,6 +2,7 @@ import { Socket } from 'socket.io';
 import { AbstractSendablePacket } from './sendable/AbstractSendablePacket';
 import { ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData } from './packetTypes';
 import { randomUUID } from 'crypto';
+import { Player } from '../model/database/Player';
 
 enum ClientState {
   DISCONNECTED,
@@ -17,6 +18,7 @@ class GameClient {
 
   private _socket: ClientSocket;
   private _state: ClientState = ClientState.AUTHENTICATED;
+  private _player: Player;
 
   constructor(accountName: string) {
     this._sessionId = randomUUID();
@@ -45,6 +47,14 @@ class GameClient {
 
   set state(val: ClientState) {
     this._state = val;
+  }
+
+  get player(): Player {
+    return this._player;
+  }
+
+  set player(val: Player) {
+    this._player = val;
   }
 
   getPacketContent(sp: AbstractSendablePacket): Buffer {

@@ -36,7 +36,10 @@ class CardData extends AbstractData {
       const deckCardLimitData: Array<{ id: number, deckLimit: number }> = JSON.parse(fileContent);
 
       for (const data of deckCardLimitData) {
-        this._deckCardLimits.set(data.id, data.deckLimit);
+        const template = this._templates.has(data.id) ? this._templates.get(data.id) : null;
+        if (template != null) {
+          template.deckLimit = data.deckLimit;
+        }
       }
     } catch (err) {
       log.error(err);

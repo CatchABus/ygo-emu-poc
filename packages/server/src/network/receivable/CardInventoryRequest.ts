@@ -1,25 +1,16 @@
-import { CardData } from '../../data/CardData';
-import { CPUDeckData } from '../../data/CPUDeckData';
 import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
 import { CardInventory } from '../sendable/CardInventory';
-import { AbstractReceivablePacket, EventName } from './AbstractReceivablePacket';
+import { AbstractReceivablePacket, PacketEventName } from './AbstractReceivablePacket';
 
-@EventName('cardInventoryRequest')
+@PacketEventName('cardInventoryRequest')
 class CardInventoryRequest extends AbstractReceivablePacket {
   read(): AbstractSendablePacket {
-    const deckIds = CPUDeckData.getInstance().getDecks().get('playerStarter');
-    const cardData = deckIds.map((id: number) => {
-      const deckLimit = CardData.getInstance().getDeckCardLimit(id);
+    const player = this.client.player;
+    if (player == null) {
+      return null;
+    }
 
-      return {
-        id,
-        isNew: id === 3366982,
-        count: 1,
-        deckLimit
-      };
-    });
-
-    return new CardInventory(cardData);
+    return new CardInventory(player.getAllCards());
   }
 }
 

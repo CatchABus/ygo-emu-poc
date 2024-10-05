@@ -1,6 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { attemptLogin, generateAuthenticationToken, getClientByLogin, getClients, getCredentials, parseAuthenticationCookie, removeClient } from '../loginController';
 import { GameClient } from './GameClient';
+import { Player } from '../model/database/Player';
 
 const COOKIE_MAX_AGE = parseInt(process.env.COOKIE_MAX_AGE);
 
@@ -86,9 +87,9 @@ async function handleLogin(req: IncomingMessage, res: ServerResponse, force: boo
     const payload = await getRequestBody(req);
     const credentials = getCredentials(payload);
     const { accountName } = credentials;
-    const hasValidCredentials = attemptLogin(credentials);
+    const accountId = await attemptLogin(credentials);
 
-    if (hasValidCredentials) {
+    if (accountId != null && accountId != -1) {
       const existingClient = getClientByLogin(accountName);
 
       if (existingClient != null) {
@@ -106,12 +107,9 @@ async function handleLogin(req: IncomingMessage, res: ServerResponse, force: boo
       const client = new GameClient(accountName);
       const token = generateAuthenticationToken(client);
 
-      if (token == null) {
-        return;
-      }
-
-      content = client.sessionId;
+      client.player = await Player.restoreOrCreate(accountId);
       getClients().set(accountName, client);
+      content = client.sessionId;
 
       res.setHeader('Set-Cookie', `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=${COOKIE_MAX_AGE}`);
       res.statusCode = 200;

@@ -5,7 +5,6 @@ type AcknowledgementCallback = (data: Buffer) => void;
 interface ServerToClientEvents {
     cardInventoryResponse: (buffer: Buffer) => void;
     cardListResponse: (buffer: Buffer) => void;
-    loginResponse: (buffer: Buffer) => void;
 }
 
 interface ClientToServerEvents {

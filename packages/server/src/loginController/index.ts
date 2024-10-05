@@ -1,13 +1,12 @@
 import bcrypt from 'bcrypt';
 import { parse as parseCookie } from 'cookie';
-import { GameClient } from '../network/GameClient';
 import log from 'loglevel';
+import { Account } from '../model/database/Account';
+import { GameClient } from '../network/GameClient';
 
 const SALT_ROUNDS = 10;
 
 const clients = new Map<string, GameClient>();
-const login = 'admin';
-const pwd = hashPassword('admin');
 
 interface AuthTokenPayload {
   accountName: string,
@@ -58,14 +57,42 @@ function getCredentials(payload: string): Credentials {
   return credentials;
 }
 
-function attemptLogin(credentials: Credentials): boolean {
+async function attemptLogin(credentials: Credentials): Promise<number> {
   const { accountName, password } = credentials;
 
+  let accountId = -1;
+
   if (accountName == null || password == null) {
-    return false;
+    return accountId;
   }
 
-  return accountName === login && comparePassword(password, pwd);
+  try {
+    const account = await Account.find<Account>(accountName, 'accountName');
+    if (account != null) {
+      if (account.accountName === accountName && comparePassword(password, account.password)) {
+        accountId = account.id;
+      }
+    } else {
+      if (process.env.AUTO_CREATE_ACCOUNTS === 'true') {
+        accountId = await createAccount(accountName, password);
+      }
+    }
+  } catch (err) {
+    log.error(err);
+  }
+
+  return accountId;
+}
+
+async function createAccount(accountName: string, password: string): Promise<number> {
+  const passwordHash = hashPassword(password);
+
+  const account = new Account();
+  account.accountName = accountName;
+  account.password = passwordHash;
+  await account.save();
+
+  return account.id;
 }
 
 function generateAuthenticationToken(client: GameClient): string {
@@ -87,7 +114,7 @@ function parseAuthenticationCookie(cookie: string): AuthTokenPayload {
   }
 
   const parsedCookieValues = parseCookie(cookie);
-  const token = parsedCookieValues['auth-token'];
+  const token = parsedCookieValues[process.env.COOKIE_NAME];
 
   if (!token) {
     log.warn('Attempted to parse a null token');
@@ -111,10 +138,7 @@ function parseAuthenticationCookie(cookie: string): AuthTokenPayload {
 
 export {
   attemptLogin,
-  generateAuthenticationToken,
-  getCredentials,
-  getClients,
-  getClientByLogin,
-  parseAuthenticationCookie,
+  createAccount,
+  generateAuthenticationToken, getClientByLogin, getClients, getCredentials, parseAuthenticationCookie,
   removeClient
 };

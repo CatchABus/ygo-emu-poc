@@ -1,16 +1,12 @@
+import { PlayerCard } from '../../model/database/PlayerCard';
 import { AbstractSendablePacket } from './AbstractSendablePacket';
 
-interface CardInfo {
-  id: number;
-  isNew: boolean;
-}
-
 class CardList extends AbstractSendablePacket {
-  private _playerCards: CardInfo[];
+  private _cards: Map<number, PlayerCard>;
 
-  constructor(cards: CardInfo[]) {
+  constructor(cards: Map<number, PlayerCard>) {
     super();
-    this._playerCards = cards;
+    this._cards = cards;
   }
 
   getEventName(): any {
@@ -18,11 +14,12 @@ class CardList extends AbstractSendablePacket {
   }
 
   write(): void {
-    this.writeInt32(this._playerCards.length);
+    this.writeInt32(this._cards.size);
 
-    for (const card of this._playerCards) {
+    for (const [, card] of this._cards) {
       this.writeInt32(card.id);
-      this.writeInt8(card.isNew ? 1 : 0);
+      this.writeInt32(card.templateId);
+      this.writeInt8(card.isNew);
     }
   }
 }
