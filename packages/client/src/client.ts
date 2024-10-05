@@ -43,6 +43,9 @@ class Client {
   }
 
   getSocket(): Socket {
+    if (this._socket == null) {
+      throw new Error('Failed to request data from server. Client is not connected!');
+    }
     return this._socket;
   }
 

@@ -1,18 +1,19 @@
 import { FancyButton, Slider } from '@pixi/ui';
 import { Howl } from 'howler';
+import i18next from 'i18next';
+import log from 'loglevel';
 import { AnimatedSprite, Assets, BitmapText, Container, Graphics, groupD8, Sprite, Spritesheet, Text } from 'pixi.js';
-import { getNavigator } from '../navigation';
-import { BasePage } from './BasePage';
-import { getCurrentLocale } from '../i18n';
-import MenuPage from './MenuPage';
-import { CrossHatchFilter } from '../filter/CrossHatchFilter';
-import { SliderControls } from '../components/SliderControls';
+import { client } from '../client';
 import { HoverPressButton } from '../components/HoverPressButton';
+import { SliderControls } from '../components/SliderControls';
+import { CrossHatchFilter } from '../filter/CrossHatchFilter';
+import { getCurrentLocale } from '../i18n';
+import { getNavigator } from '../navigation';
 import { ReceivablePacket } from '../network/ReceivablePacket';
 import { CardTemplate, getCardAttributeString, getSpellTrapType, isMonster } from '../template/CardTemplate';
 import { rotateTexture } from '../util/helpers';
-import i18next from 'i18next';
-import { client } from '../client';
+import { BasePage } from './BasePage';
+import MenuPage from './MenuPage';
 
 const BAG_SLOTS = 10;
 
@@ -90,7 +91,17 @@ class DeckConstruction extends BasePage {
     await this._init();
     await this._requestCardInventory();
 
-    this._bagSlider.max = this._cardSlotDataset.length <= BAG_SLOTS ? 0 : this._cardSlotDataset.length - BAG_SLOTS;
+    const cardCount = this._cardSlotDataset.length;
+
+    this._bagSlider.max = cardCount <= BAG_SLOTS ? 0 : cardCount - BAG_SLOTS;
+
+    // When owned cards are less than bag slots, hide the remaining slots
+    if (cardCount < BAG_SLOTS) {
+      for (let i = cardCount; i < BAG_SLOTS; i++) {
+        this._bagSlots[i].visible = false;
+      }
+    }
+
     this._updateCardBag();
   }
 
@@ -129,18 +140,22 @@ class DeckConstruction extends BasePage {
   }
 
   async _requestCardInventory(): Promise<void> {
-    const responseBuffer = await client.getSocket().emitWithAck('cardInventoryRequest', new ArrayBuffer(0));
-    const packet = new ReceivablePacket(responseBuffer);
-    const length = packet.readInt32();
+    try {
+      const responseBuffer = await client.getSocket().emitWithAck('cardInventoryRequest', new ArrayBuffer(0));
+      const packet = new ReceivablePacket(responseBuffer);
+      const length = packet.readInt32();
 
-    for (let i = 0; i < length; i++) {
-      this._cardSlotDataset.push({
-        id: packet.readInt32(),
-        templateId: packet.readInt32(),
-        isNew: packet.readInt8() === 1,
-        count: packet.readInt32(),
-        deckLimit: packet.readInt8()
-      });
+      for (let i = 0; i < length; i++) {
+        this._cardSlotDataset.push({
+          id: packet.readInt32(),
+          templateId: packet.readInt32(),
+          isNew: packet.readInt8() === 1,
+          count: packet.readInt32(),
+          deckLimit: packet.readInt8()
+        });
+      }
+    } catch (err) {
+      log.error(err);
     }
   }
 
@@ -149,7 +164,7 @@ class DeckConstruction extends BasePage {
     const dataCount = this._cardSlotDataset.length;
 
     for (let i = 0, length = slots.length; i < length; i++) {
-      if (dataCount <= (i + 1)) {
+      if (dataCount <= i) {
         break;
       }
 

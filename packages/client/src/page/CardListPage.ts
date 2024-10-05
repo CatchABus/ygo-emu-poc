@@ -1,21 +1,22 @@
 import { FancyButton, ScrollBox, Slider } from '@pixi/ui';
 import { Howl } from 'howler';
+import i18next from 'i18next';
+import log from 'loglevel';
 import { AdjustmentFilter } from 'pixi-filters';
 import { AnimatedSprite, Assets, BitmapText, Container, FederatedEvent, Graphics, Sprite, Spritesheet, Text, TextStyleOptions, Texture } from 'pixi.js';
 import { linear } from 'popmotion';
+import { client } from '../client';
 import { HoverButtonContainer } from '../components/HoverButtonView';
+import { SliderControls } from '../components/SliderControls';
+import { CrossHatchFilter } from '../filter/CrossHatchFilter';
 import { getCurrentLocale } from '../i18n';
 import { getNavigator } from '../navigation';
-import { BasePage } from './BasePage';
-import MenuPage from './MenuPage';
-import i18next from 'i18next';
-import { CardTemplate, getCardDefinition, isMonster } from '../template/CardTemplate';
-import { cardNameComparator } from '../util/helpers';
-import { SliderControls } from '../components/SliderControls';
 import { ReceivablePacket } from '../network/ReceivablePacket';
 import { SendablePacket } from '../network/SendablePacket';
-import { CrossHatchFilter } from '../filter/CrossHatchFilter';
-import { client } from '../client';
+import { CardTemplate, getCardDefinition, isMonster } from '../template/CardTemplate';
+import { cardNameComparator } from '../util/helpers';
+import { BasePage } from './BasePage';
+import MenuPage from './MenuPage';
 
 const CARD_ROWS = 5;
 const CARD_COLUMNS = 10;
@@ -127,23 +128,27 @@ class CardListPage extends BasePage {
   }
 
   async _requestPlayerCards(): Promise<void> {
-    const responseBuffer = await client.getSocket().emitWithAck('cardListRequest', new ArrayBuffer(0));
-    const packet = new ReceivablePacket(responseBuffer);
-    const length = packet.readInt32();
+    try {
+      const responseBuffer = await client.getSocket().emitWithAck('cardListRequest', new ArrayBuffer(0));
+      const packet = new ReceivablePacket(responseBuffer);
+      const length = packet.readInt32();
 
-    for (let i = 0; i < length; i++) {
-      const cardId = packet.readInt32();
-      const cardTemplateId = packet.readInt32();
-      const isNew = packet.readInt8() === 1;
+      for (let i = 0; i < length; i++) {
+        const cardId = packet.readInt32();
+        const cardTemplateId = packet.readInt32();
+        const isNew = packet.readInt8() === 1;
 
-      this._ownedCards.push({
-        id: cardId,
-        templateId: cardTemplateId
-      });
+        this._ownedCards.push({
+          id: cardId,
+          templateId: cardTemplateId
+        });
 
-      if (isNew) {
-        this._newCardTemplateIds.push(cardTemplateId);
+        if (isNew) {
+          this._newCardTemplateIds.push(cardTemplateId);
+        }
       }
+    } catch (err) {
+      log.error(err);
     }
   }
 
@@ -631,13 +636,18 @@ class CardListPage extends BasePage {
         const sp = new SendablePacket();
 
         sp.writeInt32(cardTemplate.id);
-        client.getSocket().emit('playerNewCardAction', sp.buffer);
-        this._newCardTemplateIds.splice(newCardIndex, 1);
-        newIndicator.visible = false;
 
-        if (!this._newCardTemplateIds.length && this._newIndicatorsUpdateInterval != null) {
-          clearInterval(this._newIndicatorsUpdateInterval);
-          this._newIndicatorsUpdateInterval = null;
+        try {
+          client.getSocket().emit('playerNewCardAction', sp.buffer);
+          this._newCardTemplateIds.splice(newCardIndex, 1);
+          newIndicator.visible = false;
+
+          if (!this._newCardTemplateIds.length && this._newIndicatorsUpdateInterval != null) {
+            clearInterval(this._newIndicatorsUpdateInterval);
+            this._newIndicatorsUpdateInterval = null;
+          }
+        } catch (err) {
+          log.error(err);
         }
       }
     };
