@@ -3,7 +3,7 @@ type AcknowledgementCallback = (response: ArrayBuffer) => void;
 interface ClientToServerEvents {
   cardInventoryRequest: (buffer: ArrayBuffer, callback: AcknowledgementCallback) => void;
   cardListRequest: (buffer: ArrayBuffer, callback: AcknowledgementCallback) => void;
-  playerNewCardAction: (buffer: ArrayBuffer) => void;
+  clearCardNewStateRequest: (buffer: ArrayBuffer) => void;
 }
 
 interface ServerToClientEvents {

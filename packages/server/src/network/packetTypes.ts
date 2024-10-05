@@ -10,7 +10,7 @@ interface ServerToClientEvents {
 interface ClientToServerEvents {
     cardInventoryRequest: (buffer: Buffer, callback: AcknowledgementCallback) => void;
     cardListRequest: (buffer: Buffer, callback: AcknowledgementCallback) => void;
-    playerNewCardAction: (buffer: Buffer) => void;
+    clearCardNewStateRequest: (buffer: Buffer) => void;
 }
 
 interface InterServerEvents {

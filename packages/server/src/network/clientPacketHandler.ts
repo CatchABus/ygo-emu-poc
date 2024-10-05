@@ -3,7 +3,7 @@ import { GameClient } from './GameClient';
 import { AcknowledgementCallback, ClientToServerEvents } from './packetTypes';
 import { CardInventoryRequest } from './receivable/CardInventoryRequest';
 import { CardListRequest } from './receivable/CardListRequest';
-import { PlayerNewCardAction } from './receivable/PlayerNewCardAction';
+import { ClearCardNewStateRequest } from './receivable/ClearCardNewStateRequest';
 
 function registerClientPacketHandler(client: GameClient): void {
   const packetMap: ClientToServerEvents = {
@@ -17,8 +17,8 @@ function registerClientPacketHandler(client: GameClient): void {
       const readBuffer = await packet.readWithResult() as Buffer;
       callback(readBuffer);
     },
-    'playerNewCardAction': async (buffer: Buffer) => {
-      const packet = new PlayerNewCardAction(client, buffer);
+    'clearCardNewStateRequest': async (buffer: Buffer) => {
+      const packet = new ClearCardNewStateRequest(client, buffer);
       await packet.readWithResult();
     }
   };

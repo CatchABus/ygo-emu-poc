@@ -638,7 +638,7 @@ class CardListPage extends BasePage {
         sp.writeInt32(cardTemplate.id);
 
         try {
-          client.getSocket().emit('playerNewCardAction', sp.buffer);
+          client.getSocket().emit('clearCardNewStateRequest', sp.buffer);
           this._newCardTemplateIds.splice(newCardIndex, 1);
           newIndicator.visible = false;
 
