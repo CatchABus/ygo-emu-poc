@@ -6,7 +6,7 @@ import { AdjustmentFilter } from 'pixi-filters';
 import { AnimatedSprite, Assets, BitmapText, Container, FederatedEvent, Graphics, Sprite, Spritesheet, Text, TextStyleOptions, Texture } from 'pixi.js';
 import { linear } from 'popmotion';
 import { client } from '../client';
-import { HoverButtonContainer } from '../components/HoverButtonView';
+import { HoverButtonContainer } from '../components/HoverButtonContainer';
 import { SliderControls } from '../components/SliderControls';
 import { CrossHatchFilter } from '../filter/CrossHatchFilter';
 import { getCurrentLocale } from '../i18n';
@@ -14,7 +14,7 @@ import { getNavigator } from '../navigation';
 import { ReceivablePacket } from '../network/ReceivablePacket';
 import { SendablePacket } from '../network/SendablePacket';
 import { CardTemplate, getCardDefinition, isMonster } from '../template/CardTemplate';
-import { cardNameComparator } from '../util/helpers';
+import { cardNameComparator, createRect } from '../util/helpers';
 import { BasePage } from './BasePage';
 import MenuPage from './MenuPage';
 
@@ -336,8 +336,7 @@ class CardListPage extends BasePage {
     const sliderBg = Sprite.from(`${assetPrefix}/card_list/scroll_bar.png`);
     sliderBg.y = 15;
     const scrollTrack = Sprite.from(`${assetPrefix}/card_list/scroll_box.png`);
-    const sliderDummyBg = new Graphics().rect(sliderBg.y - 16, sliderBg.x, sliderBg.height - 16, sliderBg.width)
-      .fill('transparent');
+    const sliderDummyBg = createRect(sliderBg.y - 16, sliderBg.x, sliderBg.height - 16, sliderBg.width);
 
     scrollTrack.angle = -93;
 

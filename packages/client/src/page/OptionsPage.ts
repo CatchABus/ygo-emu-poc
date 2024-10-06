@@ -1,12 +1,13 @@
 import { FancyButton, Slider } from '@pixi/ui';
 import { Howl, Howler } from 'howler';
 import { Assets, Graphics, Sprite } from 'pixi.js';
-import { HoverButtonContainer } from '../components/HoverButtonView';
+import { HoverButtonContainer } from '../components/HoverButtonContainer';
 import { getCurrentLocale } from '../i18n';
 import storage from '../storage';
 import { BasePage } from './BasePage';
 import { SliderControls } from '../components/SliderControls';
 import { client } from '../client';
+import { createRect } from '../util/helpers';
 
 class OptionsPage extends BasePage {
   private _windowModeButton: FancyButton;
@@ -104,7 +105,7 @@ class OptionsPage extends BasePage {
 
   private _createVolumeSlider(): Slider {
     const assetPrefix = client.gameMode;
-    const background = new Graphics().rect(0, 0, 292, 22).fill('transparent');
+    const background = createRect(0, 0, 292, 22);
     const volumeSpritesheet = Assets.get(`${assetPrefix}/options/op_sound.json`);
 
     const slider = new Slider({

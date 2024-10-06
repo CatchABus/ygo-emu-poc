@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import { CardTemplate } from '../template/CardTemplate';
-import { groupD8, Rectangle, Texture, TextureSourceLike } from 'pixi.js';
+import { ColorSource, Graphics, groupD8, Rectangle, Texture, TextureSourceLike } from 'pixi.js';
 
 function cardNameComparator(a: CardTemplate, b: CardTemplate) {
   const name1 = i18next.t(`cards.${a.id}.name`);
@@ -19,6 +19,18 @@ function cardNameComparator(a: CardTemplate, b: CardTemplate) {
 
 function getRequestProtocol(requestedProtocol: string): string {
   return import.meta.env.YGO_SECURE_CONNECTION === 'true' ? requestedProtocol + 's' : requestedProtocol;
+}
+
+function createRect(x: number, y: number, width: number, height: number, color?: ColorSource, radius?: number): Graphics {
+  const graphics = new Graphics();
+
+  if (radius) {
+    graphics.roundRect(x, y, width, height, radius);
+  } else {
+    graphics.rect(x, y, width, height);
+  }
+
+  return graphics.fill(color ?? 'transparent');
 }
 
 function rotateTexture(rotate: number, source: Texture | TextureSourceLike): Texture {
@@ -63,6 +75,7 @@ function rotateTexture(rotate: number, source: Texture | TextureSourceLike): Tex
 
 export {
   cardNameComparator,
+  createRect,
   getRequestProtocol,
   rotateTexture
 };

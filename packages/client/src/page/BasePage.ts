@@ -1,6 +1,7 @@
-import { Container, ContainerChild, ContainerOptions, Graphics } from 'pixi.js';
+import { Container, ContainerChild, ContainerOptions } from 'pixi.js';
 import { AnimationWrapper, animate } from '../animation';
 import { AnimationOptions } from 'popmotion';
+import { createRect } from '../util/helpers';
 
 const WIDTH = parseFloat(import.meta.env.YGO_WINDOW_WIDTH);
 const HEIGHT = parseFloat(import.meta.env.YGO_WINDOW_HEIGHT);
@@ -11,7 +12,7 @@ abstract class BasePage extends Container {
   constructor(options?: ContainerOptions<ContainerChild>) {
     super(options);
 
-    this.addChild(new Graphics().rect(0, 0, WIDTH, HEIGHT).fill('transparent'));
+    this.addChild(createRect(0, 0, WIDTH, HEIGHT));
   }
 
   resize(width: number, height: number): void {

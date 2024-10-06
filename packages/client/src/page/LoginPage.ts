@@ -10,7 +10,7 @@ import { AdjustmentFilter } from 'pixi-filters';
 import i18next from 'i18next';
 import { client } from '../client';
 import log from 'loglevel';
-import { getRequestProtocol } from '../util/helpers';
+import { createRect, getRequestProtocol } from '../util/helpers';
 
 class LoginPage extends BasePage {
   private _background: Sprite;
@@ -113,13 +113,7 @@ class LoginPage extends BasePage {
     });
     password.position.set((loginForm.width - password.width) / 2, 40);
 
-    const submitButton = new FancyButton({
-      defaultView: new Graphics().roundRect(0, 0, 100, 30, 8).fill('rgb(0, 180, 216)'),
-      hoverView: new Graphics().roundRect(0, 0, 100, 30, 8).fill('rgb(77, 225, 255)'),
-      pressedView: new Graphics().roundRect(0, 0, 100, 30, 8).fill('rgb(0, 180, 216)'),
-      text: i18next.t('login.submit_button'),
-      padding: 4
-    });
+    const submitButton = this._createSubmitButton();
     submitButton.position.set((loginForm.width - submitButton.width) / 2, 92);
     submitButton.onUp.connect(onSubmit);
 
@@ -144,13 +138,7 @@ class LoginPage extends BasePage {
     });
     message.position.set((loginForm.width - message.width) / 2, 0);
 
-    const submitButton = new FancyButton({
-      defaultView: new Graphics().roundRect(0, 0, 100, 30, 8).fill('rgb(0, 180, 216)'),
-      hoverView: new Graphics().roundRect(0, 0, 100, 30, 8).fill('rgb(77, 225, 255)'),
-      pressedView: new Graphics().roundRect(0, 0, 100, 30, 8).fill('rgb(0, 180, 216)'),
-      text: i18next.t('login.submit_button'),
-      padding: 4
-    });
+    const submitButton = this._createSubmitButton();
     submitButton.position.set((loginForm.width - submitButton.width) / 2, 92);
     submitButton.onUp.connect(onSubmit);
 
@@ -176,9 +164,19 @@ class LoginPage extends BasePage {
     loginForm.addChild(message);
   }
 
+  private _createSubmitButton(): FancyButton {
+    return new FancyButton({
+      defaultView: createRect(0, 0, 100, 30, 'rgb(0, 180, 216)', 8),
+      hoverView: createRect(0, 0, 100, 30, 'rgb(77, 225, 255)', 8),
+      pressedView: createRect(0, 0, 100, 30, 'rgb(0, 180, 216)', 8),
+      text: i18next.t('login.submit_button'),
+      padding: 4
+    });
+  }
+
   private _createFooter(): Container {
     const container = new Container();
-    const bg = new Graphics().rect(0, 0, this._background.width, 40).fill('rgba(0, 0, 0, 0.6)');
+    const bg = createRect(0, 0, this._background.width, 40, 'rgba(0, 0, 0, 0.6)');
 
     this._loginMessage = new Text({
       text: i18next.t('game_desc'),

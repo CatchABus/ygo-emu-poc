@@ -4,14 +4,13 @@ import i18next from 'i18next';
 import log from 'loglevel';
 import { AnimatedSprite, Assets, BitmapText, Container, Graphics, groupD8, Sprite, Spritesheet, Text } from 'pixi.js';
 import { client } from '../client';
-import { HoverPressButton } from '../components/HoverPressButton';
 import { SliderControls } from '../components/SliderControls';
 import { CrossHatchFilter } from '../filter/CrossHatchFilter';
 import { getCurrentLocale } from '../i18n';
 import { getNavigator } from '../navigation';
 import { ReceivablePacket } from '../network/ReceivablePacket';
 import { CardTemplate, getCardAttributeString, getSpellTrapType, isMonster } from '../template/CardTemplate';
-import { rotateTexture } from '../util/helpers';
+import { createRect, rotateTexture } from '../util/helpers';
 import { BasePage } from './BasePage';
 import MenuPage from './MenuPage';
 
@@ -262,7 +261,7 @@ class DeckConstruction extends BasePage {
     const container = new Container();
     container.x = 580;
 
-    const bagMask = new Graphics().rect(580, 0, 192, 600).fill('red');
+    const bagMask = createRect(580, 0, 192, 600, 'red');
     container.mask = bagMask;
 
     const bag = Sprite.from(`${assetPrefix}/deck_c/background/bag.png`);
@@ -470,20 +469,25 @@ class DeckConstruction extends BasePage {
     const scrollBar = new SliderControls();
     scrollBar.position.set(767, 0);
 
-    const scrollUpButton = new HoverPressButton({
-      pressedView: `${assetPrefix}/deck_c/background/bag_up.png`,
+    const scrollUpSprite = Sprite.from(`${assetPrefix}/deck_c/background/bag_up.png`);
+    const scrollDownSprite = Sprite.from(`${assetPrefix}/deck_c/background/bag_down.png`);
+
+
+    const scrollUpButton = new FancyButton({
+      defaultView: createRect(0, 0, scrollUpSprite.width, scrollUpSprite.height),
+      pressedView: scrollUpSprite,
     });
     scrollUpButton.position.set(8, 50);
 
-    const scrollDownButton = new HoverPressButton({
-      pressedView: `${assetPrefix}/deck_c/background/bag_down.png`,
+    const scrollDownButton = new FancyButton({
+      defaultView: createRect(0, 0, scrollDownSprite.width, scrollDownSprite.height),
+      pressedView: scrollDownSprite,
     });
     scrollDownButton.position.set(8, 533);
 
     const sliderBg = Sprite.from(`${assetPrefix}/deck_c/background/right.png`);
     const scrollTrack = Sprite.from(rotateTexture(groupD8.S, `${assetPrefix}/deck_c/background/bag_bar.png`));
-    const sliderDummyBg = new Graphics().rect(0, 0, 404, 22)
-      .fill('transparent');
+    const sliderDummyBg = createRect(0, 0, 404, 22);
 
     const slider = new Slider({
       bg: sliderDummyBg,
