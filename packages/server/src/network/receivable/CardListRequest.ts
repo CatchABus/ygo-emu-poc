@@ -4,7 +4,7 @@ import { AbstractReceivablePacket, PacketEventName } from './AbstractReceivableP
 
 @PacketEventName('cardListRequest')
 class CardListRequest extends AbstractReceivablePacket {
-  read(): AbstractSendablePacket {
+  run(): AbstractSendablePacket {
     const player = this.client.player;
     if (player == null) {
       return null;

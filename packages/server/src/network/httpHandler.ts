@@ -1,9 +1,11 @@
+import AsyncLock from 'async-lock';
 import { IncomingMessage, ServerResponse } from 'http';
 import { attemptLogin, generateAuthenticationToken, getClientByLogin, getClients, getCredentials, parseAuthenticationCookie, removeClient } from '../loginController';
-import { GameClient } from './GameClient';
 import { Player } from '../model/database/Player';
+import { GameClient } from './GameClient';
 
 const COOKIE_MAX_AGE = parseInt(process.env.COOKIE_MAX_AGE);
+const lock = new AsyncLock();
 
 function getRequestBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -25,7 +27,7 @@ function getRequestBody(req: IncomingMessage): Promise<string> {
 
 async function httpHandler(req: IncomingMessage, res: ServerResponse) {
   const urlInstance = new URL(req.url, 'https://localhost');
-  
+
   // Set the response header content type
   res.setHeader('Content-Type', 'text/plain');
 
@@ -87,35 +89,38 @@ async function handleLogin(req: IncomingMessage, res: ServerResponse, force: boo
     const payload = await getRequestBody(req);
     const credentials = getCredentials(payload);
     const { accountName } = credentials;
-    const accountId = await attemptLogin(credentials);
 
-    if (accountId != null && accountId != -1) {
-      const existingClient = getClientByLogin(accountName);
+    await lock.acquire(accountName, async () => {
+      const accountId = await attemptLogin(credentials);
 
-      if (existingClient != null) {
-        // Override session
-        if (force) {
-          existingClient.close();
-          removeClient(accountName);
-        } else {
-          res.statusCode = 409;
-          res.end();
-          return;
+      if (accountId != null && accountId != -1) {
+        const existingClient = getClientByLogin(accountName);
+
+        if (existingClient != null) {
+          // Override session
+          if (force) {
+            existingClient.close();
+            removeClient(accountName);
+          } else {
+            res.statusCode = 409;
+            res.end();
+            return;
+          }
         }
+
+        const client = new GameClient(accountName);
+        const token = generateAuthenticationToken(client);
+
+        client.player = await Player.restoreOrCreate(accountId);
+        getClients().set(accountName, client);
+        content = client.sessionId;
+
+        res.setHeader('Set-Cookie', `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=${COOKIE_MAX_AGE}`);
+        res.statusCode = 200;
+      } else {
+        res.statusCode = 401;
       }
-
-      const client = new GameClient(accountName);
-      const token = generateAuthenticationToken(client);
-
-      client.player = await Player.restoreOrCreate(accountId);
-      getClients().set(accountName, client);
-      content = client.sessionId;
-
-      res.setHeader('Set-Cookie', `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=${COOKIE_MAX_AGE}`);
-      res.statusCode = 200;
-    } else {
-      res.statusCode = 401;
-    }
+    });
   } else {
     res.statusCode = 405;
   }
@@ -133,24 +138,26 @@ async function handleLogout(req: IncomingMessage, res: ServerResponse): Promise<
     const sessionId = await getRequestBody(req);
 
     if (sessionId) {
-      const payload = cookie ? parseAuthenticationCookie(cookie) : null;
-      let isAuthenticated = false;
+      await lock.acquire(sessionId, async () => {
+        const payload = cookie ? parseAuthenticationCookie(cookie) : null;
+        let isAuthenticated = false;
 
-      if (payload != null) {
-        const client = getClientByLogin(payload.accountName);
-        if (client != null && client.sessionId === sessionId) {
-          client.close();
-          removeClient(client.accountName);
-          isAuthenticated = true;
+        if (payload != null) {
+          const client = getClientByLogin(payload.accountName);
+          if (client != null && client.sessionId === sessionId) {
+            client.close();
+            removeClient(client.accountName);
+            isAuthenticated = true;
+          }
         }
-      }
 
-      if (isAuthenticated) {
-        res.setHeader('Set-Cookie', 'auth-token=; HttpOnly; Secure; Path=/; Max-Age=0');
-        res.statusCode = 204;
-      } else {
-        res.statusCode = 401;
-      }
+        if (isAuthenticated) {
+          res.setHeader('Set-Cookie', 'auth-token=; HttpOnly; Secure; Path=/; Max-Age=0');
+          res.statusCode = 204;
+        } else {
+          res.statusCode = 401;
+        }
+      });
     } else {
       res.statusCode = 400;
     }

@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/CatchABus/ygo-emu-poc#readme",
   "dependencies": {
+    "async-lock": "^1.4.1",
     "bcrypt": "^5.1.1",
     "cookie": "^0.6.0",
     "loglevel": "^1.9.1",

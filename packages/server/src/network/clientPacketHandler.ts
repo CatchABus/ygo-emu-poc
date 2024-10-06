@@ -9,17 +9,17 @@ function registerClientPacketHandler(client: GameClient): void {
   const packetMap: ClientToServerEvents = {
     'cardListRequest': async (buffer: Buffer, callback: AcknowledgementCallback) => {
       const packet = new CardListRequest(client, buffer);
-      const readBuffer = await packet.readWithResult() as Buffer;
-      callback(readBuffer);
+      const responseBuffer = await packet.handle() as Buffer;
+      callback(responseBuffer);
     },
     'cardInventoryRequest': async (buffer: Buffer, callback: AcknowledgementCallback) => {
       const packet = new CardInventoryRequest(client, buffer);
-      const readBuffer = await packet.readWithResult() as Buffer;
-      callback(readBuffer);
+      const responseBuffer = await packet.handle() as Buffer;
+      callback(responseBuffer);
     },
     'clearCardNewStateRequest': async (buffer: Buffer) => {
       const packet = new ClearCardNewStateRequest(client, buffer);
-      await packet.readWithResult();
+      await packet.handle();
     }
   };
 

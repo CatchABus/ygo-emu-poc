@@ -25,6 +25,10 @@ abstract class AbstractReceivablePacket {
     return this._client;
   }
 
+  getBufferSize() {
+    return this._buffer.length;
+  }
+
   readFloat(): number {
     const value: number = this._buffer.readFloatBE(this._currentOffset);
     this._currentOffset += 4;
@@ -78,11 +82,28 @@ abstract class AbstractReceivablePacket {
     return value;
   }
 
-  async readWithResult(): Promise<void | Buffer> {
+  read(): boolean | Promise<boolean> {
+    return true;
+  }
+
+  async handle(): Promise<void | Buffer> {
+    let isPacketRead: boolean;
+
+    try {
+      isPacketRead = await this.read();
+    } catch (err) {
+      isPacketRead = false;
+      log.error(`Failed to read packet ${this.eventName} received from client ${this.client.accountName}. Reason: ${(err as Error).message}`);
+    }
+
+    if (!isPacketRead) {
+      return null;
+    }
+
     let result: void | Buffer;
 
     try {
-      const response = await this.read();
+      const response = await this.run();
 
       if (response instanceof AbstractSendablePacket) {
         result = this.client.getPacketContent(response);
@@ -90,13 +111,14 @@ abstract class AbstractReceivablePacket {
         result = response;
       }
     } catch (err) {
-      log.error(`Failed to read packet ${this.eventName}. Reason: ${(err as Error).message}`);
+      result = null;
+      log.error(`Failed to handle packet ${this.eventName} received from client ${this.client.accountName}. Reason: ${(err as Error).message}`);
     }
 
     return result;
   }
 
-  abstract read(): void | AbstractSendablePacket | Promise<void | AbstractSendablePacket>;
+  abstract run(): void | AbstractSendablePacket | Promise<void | AbstractSendablePacket>;
 }
 
 export {
