@@ -257,7 +257,7 @@ class LoginPage extends BasePage {
         }
       }
     } catch (err) {
-      log.error(err);
+      log.error(err instanceof Error ? err.message : err);
     }
 
     this._isLoggingIn = false;
@@ -296,7 +296,7 @@ class LoginPage extends BasePage {
           break;
       }
     } catch (err) {
-      log.error(err);
+      log.error(err instanceof Error ? err.message : err);
     }
 
     this.animate({

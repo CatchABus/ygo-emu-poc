@@ -17,7 +17,7 @@ import log from 'loglevel';
 let OptionsPage = op;
 
 interface CustomFancyButton extends FancyButton {
-    hoverViewTemp: Container;
+  hoverViewTemp: Container;
 }
 
 class MenuPage extends BasePage {
@@ -306,7 +306,7 @@ class MenuPage extends BasePage {
         credentials: 'include',
         body: client.sessionId
       });
-  
+
       if (response.status === 204) {
         await getNavigator().navigate({
           createPage: () => new LoginPage(),
@@ -318,10 +318,9 @@ class MenuPage extends BasePage {
       } else {
         client.isLogoutRequested = false;
       }
-    } catch(err) {
-      log.error(err);
+    } catch (err) {
+      log.error(err instanceof Error ? err.message : err);
     }
-    
   }
 
   private _runAllAnimations(): Promise<void> {

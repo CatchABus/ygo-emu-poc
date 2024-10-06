@@ -145,7 +145,7 @@ class CardListPage extends BasePage {
         });
       }
     } catch (err) {
-      log.error(err);
+      log.error(err instanceof Error ? err.message : err);
     }
   }
 
@@ -647,7 +647,7 @@ class CardListPage extends BasePage {
             this._newIndicatorsUpdateInterval = null;
           }
         } catch (err) {
-          log.error(err);
+          log.error(err instanceof Error ? err.message : err);
         }
       }
     };

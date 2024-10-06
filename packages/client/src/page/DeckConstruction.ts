@@ -155,7 +155,7 @@ class DeckConstruction extends BasePage {
         });
       }
     } catch (err) {
-      log.error(err);
+      log.error(err instanceof Error ? err.message : err);
     }
   }
 
