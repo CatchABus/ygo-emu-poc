@@ -45,7 +45,7 @@ class SliderControls extends Container {
         duration: (1000 / max) * diff,
         ease: linear,
         onUpdate: (value: number) => {
-          this._slider.value = value;
+          this._slider.value = Math.round(value / this._slider.step) * this._slider.step;
         },
         onComplete: () => {
           this._sliderUpdateAnimation = null;
