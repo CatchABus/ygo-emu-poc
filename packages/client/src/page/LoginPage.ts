@@ -236,11 +236,17 @@ class LoginPage extends BasePage {
       });
 
       switch (response.status) {
-        case 200: {
+        case 200:
+        case 201: {
           const sessionId = await response.text();
+          const messageId = response.status === 201 ? 'login.account_created_successfully' : 'login.account_authenticated_successfully';
 
-          this._loginMessage.text = '';
+          this._loginMessage.text = i18next.t(messageId);
           await this._establishConnection(sessionId);
+          break;
+        }
+        case 400: {
+          this._loginMessage.text = i18next.t('login.insert_id_password');
           break;
         }
         case 401: {
@@ -294,6 +300,7 @@ class LoginPage extends BasePage {
           break;
       }
     } catch (err) {
+      this._renderErrorMessage();
       log.error(err instanceof Error ? err.message : err);
     }
 

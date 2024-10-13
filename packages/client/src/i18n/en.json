@@ -9,10 +9,12 @@
         "password": "Password",
         "insert_id": "Please insert your ID.",
         "insert_password": "Please insert your password.",
+        "insert_id_password": "Please insert your ID and password.",
         "submit_button": "Login",
+        "account_created_successfully": "Account was created successfully!",
+        "account_authenticated_successfully": "Account authentication was successful!",
         "account_already_in_use": "Account is already in use! Click 'Login' again to override and reconnect.",
-        "invalid_credentials": "The password you have entered is incorrect!",
-        "response3": "Login successful"
+        "invalid_credentials": "The password you have entered is incorrect!"
     },
     "cardRace": {
         "WARRIOR": "Warrior",
