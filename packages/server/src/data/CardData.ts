@@ -5,17 +5,17 @@ import { AbstractData } from './AbstractData';
 
 const DIR = 'static';
 
-class CardData extends AbstractData {
-  private readonly _templates: Map<number, CardTemplate> = new Map();
-  private readonly _deckCardLimits: Map<number, number> = new Map();
+let instance: CardDataImpl = null;
 
-  private static _instance: CardData;
+class CardDataImpl extends AbstractData {
+  private readonly _templates: Map<number, CardTemplate>;
+  private readonly _deckCardLimits: Map<number, number>;
 
-  public static getInstance(): CardData {
-    if (!CardData._instance) {
-      CardData._instance = new CardData();
-    }
-    return CardData._instance;
+  constructor() {
+    super();
+
+    this._templates = new Map();
+    this._deckCardLimits = new Map();
   }
 
   public override load(): void {
@@ -62,6 +62,12 @@ class CardData extends AbstractData {
   }
 }
 
-export {
-  CardData
+export const CardData = {
+  getInstance(): CardDataImpl {
+    if (instance == null) {
+      instance = new CardDataImpl();
+    }
+
+    return instance;
+  }
 };

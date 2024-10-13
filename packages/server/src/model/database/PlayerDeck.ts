@@ -1,7 +1,7 @@
 import log from 'loglevel';
 import { BaseModel, DatabaseSchema } from './BaseModel';
 import { PlayerCard } from './PlayerCard';
-import { DatabaseSource } from '../../databaseSource';
+import { DatabaseSource } from '../../DataSource';
 import { Player } from './Player';
 import { RowDataPacket } from 'mysql2';
 

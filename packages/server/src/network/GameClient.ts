@@ -76,8 +76,14 @@ class GameClient {
     }
   }
 
-  close(): void {
+  async close(): Promise<void> {
     const socket = this.socket;
+    const player = this.player;
+
+    if (player) {
+      await player.save();
+    }
+
     if (socket) {
       socket.data.gameClient = null;
       socket.removeAllListeners();

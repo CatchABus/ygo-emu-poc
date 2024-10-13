@@ -1,5 +1,5 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
-import { DatabaseSource } from '../../databaseSource';
+import { DatabaseSource } from '../../DataSource';
 
 type TinyInt = 0 | 1;
 

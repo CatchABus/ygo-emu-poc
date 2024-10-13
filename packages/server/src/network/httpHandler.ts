@@ -1,6 +1,6 @@
 import AsyncLock from 'async-lock';
 import { IncomingMessage, ServerResponse } from 'http';
-import { attemptLogin, createAccount, generateAuthenticationToken, getAccountFromDatabase, getClientByLogin, getClients, getCredentials, parseAuthenticationCookie, removeClient } from '../loginController';
+import { LoginController } from '../login';
 import { Player } from '../model/database/Player';
 import { GameClient } from './GameClient';
 
@@ -52,12 +52,13 @@ async function httpHandler(req: IncomingMessage, res: ServerResponse) {
 async function handleInit(req: IncomingMessage, res: ServerResponse): Promise<void> {
   if (req.method === 'POST') {
     const { cookie } = req.headers;
-    const payload = cookie ? parseAuthenticationCookie(cookie) : null;
+    const lc = LoginController.getInstance();
+    const payload = cookie ? lc.parseAuthenticationCookie(cookie) : null;
     let requestSessionId = null;
 
     if (payload != null) {
       const { accountName, sessionId } = payload;
-      const client = getClientByLogin(accountName);
+      const client = lc.getClientByLogin(accountName);
 
       if (client != null) {
         if (client.sessionId === sessionId) {
@@ -87,7 +88,8 @@ async function handleLogin(req: IncomingMessage, res: ServerResponse, force: boo
 
   if (req.method === 'POST') {
     const payload = await getRequestBody(req);
-    const credentials = getCredentials(payload);
+    const lc = LoginController.getInstance();
+    const credentials = lc.getCredentials(payload);
     const { accountName, password } = credentials;
 
     // Invalid input from client
@@ -99,26 +101,26 @@ async function handleLogin(req: IncomingMessage, res: ServerResponse, force: boo
         let isNewAccount: boolean = false;
 
         // If account exists then validate it, otherwise create it if auto-account creation is enabled
-        const account = await getAccountFromDatabase(accountName);
+        const account = await lc.getAccountFromDatabase(accountName);
         if (account != null) {
-          if (attemptLogin(account, password)) {
+          if (lc.attemptLogin(account, password)) {
             accountId = account.id;
           }
         } else {
           if (process.env.AUTO_CREATE_ACCOUNTS === 'true') {
-            accountId = await createAccount(accountName, password);
+            accountId = await lc.createAccount(accountName, password);
             isNewAccount = true;
           }
         }
 
         if (accountId != null && accountId != -1) {
-          const existingClient = getClientByLogin(accountName);
+          const existingClient = lc.getClientByLogin(accountName);
 
           if (existingClient != null) {
             // Override session
             if (force) {
-              existingClient.close();
-              removeClient(accountName);
+              await existingClient.close();
+              lc.removeClient(accountName);
             } else {
               res.statusCode = 409;
               return;
@@ -126,10 +128,10 @@ async function handleLogin(req: IncomingMessage, res: ServerResponse, force: boo
           }
 
           const client = new GameClient(accountName);
-          const token = generateAuthenticationToken(client);
+          const token = lc.generateAuthenticationToken(client);
 
           client.player = await Player.restoreOrCreate(accountId);
-          getClients().set(accountName, client);
+          lc.getClients().set(accountName, client);
           content = client.sessionId;
 
           res.setHeader('Set-Cookie', `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=${COOKIE_MAX_AGE}`);
@@ -157,14 +159,15 @@ async function handleLogout(req: IncomingMessage, res: ServerResponse): Promise<
 
     if (sessionId) {
       await lock.acquire(sessionId, async () => {
-        const payload = cookie ? parseAuthenticationCookie(cookie) : null;
+        const lc = LoginController.getInstance();
+        const payload = cookie ? lc.parseAuthenticationCookie(cookie) : null;
         let isAuthenticated = false;
 
         if (payload != null) {
-          const client = getClientByLogin(payload.accountName);
+          const client = lc.getClientByLogin(payload.accountName);
           if (client != null && client.sessionId === sessionId) {
-            client.close();
-            removeClient(client.accountName);
+            await client.close();
+            lc.removeClient(client.accountName);
             isAuthenticated = true;
           }
         }

@@ -6,7 +6,7 @@ const PORT = parseInt(process.env.DB_PORT);
 let instance: DatabaseSourceImpl = null;
 
 class DatabaseSourceImpl {
-  private readonly _pool: Pool;
+  private _pool: Pool;
 
   constructor() {
     this._pool = createPool({
@@ -39,6 +39,17 @@ class DatabaseSourceImpl {
   releasePoolConnection(conn: PoolConnection): void {
     this._pool.releaseConnection(conn);
     conn.release();
+  }
+
+  async shutDown(): Promise<void> {
+    try {
+      await this._pool.end();
+      this._pool = null;
+
+      log.info('DatabaseSource: All connections have been disconnected');
+    } catch (err) {
+      log.error('DatabaseSource: Failed to shut down MySQL data source. Reason: ' + err);
+    }
   }
 }
 

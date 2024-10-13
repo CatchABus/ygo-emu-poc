@@ -5,17 +5,10 @@ import { AbstractData } from './AbstractData';
 const FOLDER_PATH = 'static/decks';
 const FILE_EXT = '.deck.json';
 
-class CPUDeckData extends AbstractData {
+let instance: CPUDeckDataImpl = null;
+
+class CPUDeckDataImpl extends AbstractData {
   private readonly _decks: Map<string, number[]> = Object.freeze(new Map());
-
-  private static _instance: CPUDeckData;
-
-  public static getInstance(): CPUDeckData {
-    if (!CPUDeckData._instance) {
-      CPUDeckData._instance = new CPUDeckData();
-    }
-    return CPUDeckData._instance;
-  }
 
   public override load(): void {
     try {
@@ -42,6 +35,12 @@ class CPUDeckData extends AbstractData {
   }
 }
 
-export {
-  CPUDeckData
+export const CPUDeckData = {
+  getInstance(): CPUDeckDataImpl {
+    if (instance == null) {
+      instance = new CPUDeckDataImpl();
+    }
+
+    return instance;
+  }
 };

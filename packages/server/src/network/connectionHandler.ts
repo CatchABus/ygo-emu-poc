@@ -2,7 +2,7 @@ import { Socket } from 'socket.io';
 import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from './packetTypes';
 import { registerClientPacketHandler } from './clientPacketHandler';
 import { ClientState, GameClient } from './GameClient';
-import { getClientByLogin, parseAuthenticationCookie } from '../loginController';
+import { LoginController } from '../login';
 import { IncomingMessage } from 'http';
 import log from 'loglevel';
 
@@ -27,10 +27,11 @@ function onHandshakeRequest(req: IncomingMessage, callback: (err: string | null 
   let isAuthenticated = false;
 
   if (cookie) {
-    const payload = parseAuthenticationCookie(cookie);
+    const lc = LoginController.getInstance();
+    const payload = lc.parseAuthenticationCookie(cookie);
 
     if (payload != null) {
-      const client = getClientByLogin(payload.accountName);
+      const client = lc.getClientByLogin(payload.accountName);
 
       if (client) {
         if (client.state === ClientState.AUTHENTICATED) {

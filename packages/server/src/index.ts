@@ -1,3 +1,3 @@
-import { startGameServer } from './gameServer';
+import { GameServer } from './GameServer';
 
-startGameServer();
+GameServer.getInstance();
