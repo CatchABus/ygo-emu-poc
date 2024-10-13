@@ -98,6 +98,7 @@ async function handleLogin(req: IncomingMessage, res: ServerResponse, force: boo
         let accountId: number = -1;
         let isNewAccount: boolean = false;
 
+        // If account exists then validate it, otherwise create it if auto-account creation is enabled
         const account = await getAccountFromDatabase(accountName);
         if (account != null) {
           if (attemptLogin(account, password)) {
