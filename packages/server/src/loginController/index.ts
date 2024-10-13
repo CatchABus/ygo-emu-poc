@@ -57,31 +57,13 @@ function getCredentials(payload: string): Credentials {
   return credentials;
 }
 
-async function attemptLogin(credentials: Credentials): Promise<number> {
-  const { accountName, password } = credentials;
+async function getAccountFromDatabase(accountName: string): Promise<Account> {
+  const account = await Account.find<Account>(accountName, 'accountName');
+  return account;
+}
 
-  let accountId = -1;
-
-  if (accountName == null || password == null) {
-    return accountId;
-  }
-
-  try {
-    const account = await Account.find<Account>(accountName, 'accountName');
-    if (account != null) {
-      if (account.accountName === accountName && comparePassword(password, account.password)) {
-        accountId = account.id;
-      }
-    } else {
-      if (process.env.AUTO_CREATE_ACCOUNTS === 'true') {
-        accountId = await createAccount(accountName, password);
-      }
-    }
-  } catch (err) {
-    log.error(err);
-  }
-
-  return accountId;
+function attemptLogin(account: Account, password: string): boolean {
+  return comparePassword(password, account.password);
 }
 
 async function createAccount(accountName: string, password: string): Promise<number> {
@@ -139,6 +121,11 @@ function parseAuthenticationCookie(cookie: string): AuthTokenPayload {
 export {
   attemptLogin,
   createAccount,
-  generateAuthenticationToken, getClientByLogin, getClients, getCredentials, parseAuthenticationCookie,
+  generateAuthenticationToken,
+  getAccountFromDatabase,
+  getClientByLogin,
+  getClients,
+  getCredentials,
+  parseAuthenticationCookie,
   removeClient
 };

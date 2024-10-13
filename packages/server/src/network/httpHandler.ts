@@ -1,6 +1,6 @@
 import AsyncLock from 'async-lock';
 import { IncomingMessage, ServerResponse } from 'http';
-import { attemptLogin, generateAuthenticationToken, getClientByLogin, getClients, getCredentials, parseAuthenticationCookie, removeClient } from '../loginController';
+import { attemptLogin, createAccount, generateAuthenticationToken, getAccountFromDatabase, getClientByLogin, getClients, getCredentials, parseAuthenticationCookie, removeClient } from '../loginController';
 import { Player } from '../model/database/Player';
 import { GameClient } from './GameClient';
 
@@ -88,39 +88,56 @@ async function handleLogin(req: IncomingMessage, res: ServerResponse, force: boo
   if (req.method === 'POST') {
     const payload = await getRequestBody(req);
     const credentials = getCredentials(payload);
-    const { accountName } = credentials;
+    const { accountName, password } = credentials;
 
-    await lock.acquire(accountName, async () => {
-      const accountId = await attemptLogin(credentials);
+    // Invalid input from client
+    if (!accountName || !password) {
+      res.statusCode = 400;
+    } else {
+      await lock.acquire(accountName, async () => {
+        let accountId: number = -1;
+        let isNewAccount: boolean = false;
 
-      if (accountId != null && accountId != -1) {
-        const existingClient = getClientByLogin(accountName);
-
-        if (existingClient != null) {
-          // Override session
-          if (force) {
-            existingClient.close();
-            removeClient(accountName);
-          } else {
-            res.statusCode = 409;
-            res.end();
-            return;
+        const account = await getAccountFromDatabase(accountName);
+        if (account != null) {
+          if (attemptLogin(account, password)) {
+            accountId = account.id;
+          }
+        } else {
+          if (process.env.AUTO_CREATE_ACCOUNTS === 'true') {
+            accountId = await createAccount(accountName, password);
+            isNewAccount = true;
           }
         }
 
-        const client = new GameClient(accountName);
-        const token = generateAuthenticationToken(client);
+        if (accountId != null && accountId != -1) {
+          const existingClient = getClientByLogin(accountName);
 
-        client.player = await Player.restoreOrCreate(accountId);
-        getClients().set(accountName, client);
-        content = client.sessionId;
+          if (existingClient != null) {
+            // Override session
+            if (force) {
+              existingClient.close();
+              removeClient(accountName);
+            } else {
+              res.statusCode = 409;
+              return;
+            }
+          }
 
-        res.setHeader('Set-Cookie', `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=${COOKIE_MAX_AGE}`);
-        res.statusCode = 200;
-      } else {
-        res.statusCode = 401;
-      }
-    });
+          const client = new GameClient(accountName);
+          const token = generateAuthenticationToken(client);
+
+          client.player = await Player.restoreOrCreate(accountId);
+          getClients().set(accountName, client);
+          content = client.sessionId;
+
+          res.setHeader('Set-Cookie', `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=${COOKIE_MAX_AGE}`);
+          res.statusCode = isNewAccount ? 201 : 200;
+        } else {
+          res.statusCode = 401;
+        }
+      });
+    }
   } else {
     res.statusCode = 405;
   }
