@@ -9,7 +9,7 @@ import { Button, FancyButton, Input } from '@pixi/ui';
 import { AdjustmentFilter } from 'pixi-filters';
 import i18next from 'i18next';
 import { client } from '../client';
-import log from 'loglevel';
+import * as log from 'loglevel';
 import { createRect, getRequestProtocol } from '../util/helpers';
 
 class LoginPage extends BasePage {
@@ -100,6 +100,7 @@ class LoginPage extends BasePage {
     const password = new Input({
       bg: new Graphics().roundRect(0, 0, 160, 30, 5).fill('#fefefe'),
       placeholder: i18next.t('login.password'),
+      secure: true,
       textStyle: {
         fontSize: 16
       },

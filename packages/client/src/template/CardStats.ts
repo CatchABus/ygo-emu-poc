@@ -9,6 +9,19 @@ enum CardAttribute {
   DIVINE = 64
 }
 
+const ORDERED_ATTRIBUTES: Array<CardAttribute | 'spell' | 'trap'> = [
+  CardAttribute.LIGHT,
+  CardAttribute.DARK,
+  CardAttribute.WATER,
+  CardAttribute.FIRE,
+  CardAttribute.EARTH,
+  CardAttribute.WIND,
+  CardAttribute.NONE,
+  'spell',
+  'trap',
+  CardAttribute.DIVINE
+];
+
 enum CardRace {
   NONE = 0,
   WARRIOR = 1,
@@ -33,6 +46,29 @@ enum CardRace {
   REPTILE = 524288
 }
 
+const ORDERED_RACES: CardRace[] = [
+  CardRace.DRAGON,
+  CardRace.ZOMBIE,
+  CardRace.FIEND,
+  CardRace.PYRO,
+  CardRace.SEA_SERPENT,
+  CardRace.ROCK,
+  CardRace.MACHINE,
+  CardRace.FISH,
+  CardRace.DINOSAUR,
+  CardRace.INSECT,
+  CardRace.BEAST,
+  CardRace.BEAST_WARRIOR,
+  CardRace.PLANT,
+  CardRace.AQUA,
+  CardRace.WARRIOR,
+  CardRace.WINGED_BEAST,
+  CardRace.FAIRY,
+  CardRace.SPELLCASTER,
+  CardRace.THUNDER,
+  CardRace.REPTILE
+];
+
 enum CardType {
   SPELL = 2,
   TRAP = 4,
@@ -53,8 +89,31 @@ enum CardType {
   TOON_MONSTER = 37748769
 }
 
+const ORDERED_CARD_TYPES: CardType[] = [
+  CardType.MONSTER,
+  CardType.EFFECT_MONSTER,
+  CardType.FLIP_EFFECT_MONSTER,
+  CardType.EFFECT_MONSTER_CANNOT_BE_SUMMONED,
+  CardType.TOON_MONSTER,
+  CardType.FUSION_MONSTER,
+  CardType.FUSION_EFFECT_MONSTER,
+  CardType.RITUAL_MONSTER,
+  CardType.SPELL,
+  CardType.QUICK_SPELL,
+  CardType.EQUIP_SPELL,
+  CardType.CONTINUOUS_SPELL,
+  CardType.FIELD_SPELL,
+  CardType.RITUAL_SPELL,
+  CardType.TRAP,
+  CardType.COUNTER_TRAP,
+  CardType.CONTINUOUS_TRAP
+];
+
 export {
   CardAttribute,
   CardRace,
-  CardType
+  CardType,
+  ORDERED_ATTRIBUTES,
+  ORDERED_RACES,
+  ORDERED_CARD_TYPES
 };

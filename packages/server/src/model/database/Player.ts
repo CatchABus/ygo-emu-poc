@@ -1,4 +1,4 @@
-import log from 'loglevel';
+import * as log from 'loglevel';
 import { BaseModel, DatabaseSchema, TinyInt } from './BaseModel';
 import { CPUDeckData } from '../../data/CPUDeckData';
 import { PlayerCard } from './PlayerCard';

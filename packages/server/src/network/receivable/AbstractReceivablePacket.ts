@@ -1,4 +1,4 @@
-import log from 'loglevel';
+import * as log from 'loglevel';
 import { GameClient } from '../GameClient';
 import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
 

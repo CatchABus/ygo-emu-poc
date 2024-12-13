@@ -1,7 +1,7 @@
 import { FancyButton, ScrollBox, Slider } from '@pixi/ui';
 import { Howl } from 'howler';
 import i18next from 'i18next';
-import log from 'loglevel';
+import * as log from 'loglevel';
 import { AdjustmentFilter } from 'pixi-filters';
 import { AnimatedSprite, Assets, BitmapText, Container, FederatedEvent, Graphics, Sprite, Spritesheet, Text, TextStyleOptions, Texture } from 'pixi.js';
 import { linear } from 'popmotion';
@@ -17,6 +17,7 @@ import { CardTemplate, getCardDefinition, isMonster } from '../template/CardTemp
 import { cardNameComparator, createRect } from '../util/helpers';
 import { BasePage } from './BasePage';
 import MenuPage from './MenuPage';
+import { ORDERED_ATTRIBUTES, ORDERED_RACES } from '../template/CardStats';
 
 const CARD_ROWS = 5;
 const CARD_COLUMNS = 10;
@@ -65,7 +66,7 @@ class CardListPage extends BasePage {
   private _clickSound: Howl;
   private _track: Howl;
 
-  private _cardData: CardTemplate[];
+  private _cardTemplates: CardTemplate[];
 
   private _cardCounterUpdateInterval: ReturnType<typeof setInterval>;
   private _newIndicatorsUpdateInterval: ReturnType<typeof setInterval>;
@@ -82,8 +83,8 @@ class CardListPage extends BasePage {
 
     const { default: cardData } = await import('../data/cardData.json');
 
-    this._cardData = cardData;
-    this._cardData.sort(cardNameComparator);
+    this._cardTemplates = Array.from(cardData);
+    this._cardTemplates.sort(cardNameComparator);
 
     this._cardAttributeSheet = Assets.get('cards/icon_attribute.json');
     this._cardRaceSheet = Assets.get('cards/icon_race.json');
@@ -477,7 +478,7 @@ class CardListPage extends BasePage {
 
   private _drawPagingControls(): void {
     const assetPrefix = client.gameMode;
-    const totalPages = this._cardData.length / CARDS_PER_PAGE;
+    const totalPages = this._cardTemplates.length / CARDS_PER_PAGE;
 
     const leftButton = new HoverButtonContainer(Sprite.from(`${assetPrefix}/card_list/pe_arrow_l.png`));
     leftButton.position.set(408, 565);
@@ -531,18 +532,18 @@ class CardListPage extends BasePage {
     const ownedCount = this._ownedCards.length;
     
     let isPercentageDisplay = true;
-    let value = (ownedCount / this._cardData.length) * 100;
+    let value = (ownedCount / this._cardTemplates.length) * 100;
 
     this._cardCounter.text = `${value.toFixed(1)}%`;
 
     this._cardCounterUpdateInterval = setInterval(() => {
       if (isPercentageDisplay) {
         isPercentageDisplay = false;
-        this._cardCounter.text = `${ownedCount}/${this._cardData.length}`;
+        this._cardCounter.text = `${ownedCount}/${this._cardTemplates.length}`;
       } else {
         isPercentageDisplay = true;
 
-        value = (ownedCount / this._cardData.length) * 100;
+        value = (ownedCount / this._cardTemplates.length) * 100;
         this._cardCounter.text = `${value.toFixed(1)}%`;
       }
     }, 3000);
@@ -559,7 +560,7 @@ class CardListPage extends BasePage {
   }
 
   private _attachInteractionListeners(): void {
-    const totalPages = this._cardData.length / CARDS_PER_PAGE;
+    const totalPages = this._cardTemplates.length / CARDS_PER_PAGE;
     let isNavigating = false;
 
     this._backButton.onclick = async () => {
@@ -627,7 +628,7 @@ class CardListPage extends BasePage {
     cardImage.onclick = () => {
       const startDataIndex = (this._currenPageNum - 1) * CARDS_PER_PAGE;
       const dataIndex = index + startDataIndex;
-      const cardTemplate = this._cardData[dataIndex];
+      const cardTemplate = this._cardTemplates[dataIndex];
       const card = this._ownedCards.find((card) => card.templateId === cardTemplate.id);
 
       if (card?.isNew) {
@@ -669,18 +670,20 @@ class CardListPage extends BasePage {
     cardImage.onpointerenter = () => {
       const startDataIndex = (this._currenPageNum - 1) * CARDS_PER_PAGE;
       const dataIndex = index + startDataIndex;
-      const cardTemplate = this._cardData[dataIndex];
+      const cardTemplate = this._cardTemplates[dataIndex];
 
 
       if (cardTemplate && this._ownedCards.some((card) => card.templateId === cardTemplate.id)) {
+        const attributeIndex = ORDERED_ATTRIBUTES.indexOf(cardTemplate.attribute);
+        const raceIndex = ORDERED_RACES.indexOf(cardTemplate.race);
         isMonsterCard = isMonster(cardTemplate);
 
         cardId = cardTemplate.id;
         name = i18next.t(`cards.${cardId}.name`);
         definition = isMonsterCard ? getCardDefinition(cardTemplate) : '';
         desc = i18next.t(`cards.${cardId}.desc`);
-        attributeTexture = this._cardAttributeSheet.textures[`attr-${cardTemplate.attribute}`];
-        raceTexture = this._cardRaceSheet.textures[`race-${cardTemplate.race}`];
+        attributeTexture = attributeIndex >= 0 ? this._cardAttributeSheet.textures[`attr-${attributeIndex}`] : null;
+        raceTexture = raceIndex >= 0 ? this._cardRaceSheet.textures[`race-${raceIndex}`] : null;
         atk = cardTemplate.atk.toString();
         def = cardTemplate.def.toString();
       } else {
@@ -749,7 +752,7 @@ class CardListPage extends BasePage {
   private _animateCardList(): Promise<void[]> {
     const cardViews = this._cardContainer.children;
     const startIndex = CARD_COLUMNS - 1;
-    const cardData = this._cardData.slice((this._currenPageNum - 1) * CARDS_PER_PAGE, (this._currenPageNum - 1) * CARDS_PER_PAGE + CARDS_PER_PAGE);
+    const cardData = this._cardTemplates.slice((this._currenPageNum - 1) * CARDS_PER_PAGE, (this._currenPageNum - 1) * CARDS_PER_PAGE + CARDS_PER_PAGE);
     const animationPromises: Promise<void>[] = [];
 
     for (let col = startIndex; col >= 0; col--) {
@@ -850,7 +853,7 @@ class CardListPage extends BasePage {
   private _startPagingTransition(forward: boolean): Promise<void[]> {
     const cardViews = this._cardContainer.children;
     const startIndex = forward ? (CARD_COLUMNS - 1) : 0;
-    const cardData = this._cardData.slice((this._currenPageNum - 1) * CARDS_PER_PAGE, (this._currenPageNum - 1) * CARDS_PER_PAGE + CARDS_PER_PAGE);
+    const cardTemplates = this._cardTemplates.slice((this._currenPageNum - 1) * CARDS_PER_PAGE, (this._currenPageNum - 1) * CARDS_PER_PAGE + CARDS_PER_PAGE);
     const animationPromises: Promise<void>[] = [];
 
     for (let i = 0; i < CARD_COLUMNS; i++) {
@@ -894,7 +897,7 @@ class CardListPage extends BasePage {
             },
             onRepeat: () => {
               const [cardImage, newIndicator] = cardView.children;
-              const cardTemplate = cardData[j];
+              const cardTemplate = cardTemplates[j];
               const card = this._ownedCards.find((card) => card.templateId === cardTemplate.id);
 
               let textureSource: string;

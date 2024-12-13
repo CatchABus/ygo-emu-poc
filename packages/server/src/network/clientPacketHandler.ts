@@ -1,4 +1,4 @@
-import log from 'loglevel';
+import * as log from 'loglevel';
 import { GameClient } from './GameClient';
 import { AcknowledgementCallback, ClientToServerEvents } from './packetTypes';
 import { CardInventoryRequest } from './receivable/CardInventoryRequest';

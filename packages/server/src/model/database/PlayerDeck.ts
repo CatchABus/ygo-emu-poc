@@ -1,4 +1,4 @@
-import log from 'loglevel';
+import * as log from 'loglevel';
 import { BaseModel, DatabaseSchema } from './BaseModel';
 import { PlayerCard } from './PlayerCard';
 import { DatabaseSource } from '../../DataSource';

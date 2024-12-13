@@ -1,4 +1,4 @@
-import log from 'loglevel';
+import * as log from 'loglevel';
 import { Application, ApplicationOptions } from 'pixi.js';
 import { io, ManagerOptions, Socket, SocketOptions } from 'socket.io-client';
 import { getRequestProtocol } from './util/helpers';

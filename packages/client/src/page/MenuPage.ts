@@ -12,7 +12,7 @@ import DeckConstruction from './DeckConstruction';
 import { client } from '../client';
 import { getRequestProtocol } from '../util/helpers';
 import LoginPage from './LoginPage';
-import log from 'loglevel';
+import * as log from 'loglevel';
 
 let OptionsPage = op;
 

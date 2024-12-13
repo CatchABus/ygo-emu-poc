@@ -32,6 +32,12 @@ export default {
       astc: false,
       basis: false,
     }),
-    pixiManifest()
+    pixiManifest({
+      output: 'manifest.json',
+      createShortcuts: false,
+      trimExtensions: false,
+      includeMetaData: true,
+      nameStyle: 'relative'
+    })
   ]
 };

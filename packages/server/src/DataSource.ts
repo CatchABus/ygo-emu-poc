@@ -1,4 +1,4 @@
-import log from 'loglevel';
+import * as log from 'loglevel';
 import { createPool, Pool, PoolConnection } from 'mysql2/promise';
 
 const PORT = parseInt(process.env.DB_PORT);

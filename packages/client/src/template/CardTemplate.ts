@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import { CardAttribute, CardRace, CardType } from './CardStats';
+import { CardAttribute, CardRace, CardType, ORDERED_ATTRIBUTES } from './CardStats';
 
 interface CardTemplate {
   id: number;
@@ -23,18 +23,18 @@ function isTrap(card: CardTemplate): boolean {
   return card && !!(card.type & CardType.TRAP);
 }
 
-function getCardAttributeString(card: CardTemplate): string {
-  let attrString: string;
+function getCardAttributeIndex(card: CardTemplate): number {
+  let index: number;
 
   if (isSpell(card)) {
-    attrString = 'spell';
+    index = ORDERED_ATTRIBUTES.indexOf('spell');
   } else if (isTrap(card)) {
-    attrString = 'trap';
+    index = ORDERED_ATTRIBUTES.indexOf('trap');
   } else {
-    attrString = card.attribute ? card.attribute.toString() : '';
+    index = ORDERED_ATTRIBUTES.indexOf(card.attribute);
   }
 
-  return attrString;
+  return index;
 }
 
 function getCardDefinition(card: CardTemplate): string {
@@ -114,7 +114,7 @@ export {
   isMonster,
   isSpell,
   isTrap,
-  getCardAttributeString,
+  getCardAttributeIndex,
   getCardDefinition,
   getSpellTrapType
 };

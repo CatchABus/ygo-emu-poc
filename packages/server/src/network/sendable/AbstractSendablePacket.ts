@@ -1,4 +1,4 @@
-import log from 'loglevel';
+import * as log from 'loglevel';
 
 const MAX_BYTE_LENGTH = parseInt(process.env.WRITE_PACKET_MAX_SIZE);
 

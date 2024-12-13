@@ -1,5 +1,5 @@
 import fs from 'fs';
-import log from 'loglevel';
+import * as log from 'loglevel';
 import { CardTemplate } from '../template/CardTemplate';
 import { AbstractData } from './AbstractData';
 

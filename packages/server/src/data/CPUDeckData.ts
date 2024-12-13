@@ -1,5 +1,5 @@
 import fs from 'fs';
-import log from 'loglevel';
+import * as log from 'loglevel';
 import { AbstractData } from './AbstractData';
 
 const FOLDER_PATH = 'static/decks';

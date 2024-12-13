@@ -1,0 +1,139 @@
+{
+  "frames": {
+    "bag-filter-0": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      },
+      "sourceSize": {
+        "w": 89,
+        "h": 14
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      }
+    },
+    "bag-filter-1": {
+      "frame": {
+        "x": 89,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      },
+      "sourceSize": {
+        "w": 89,
+        "h": 14
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      }
+    },
+    "bag-filter-2": {
+      "frame": {
+        "x": 178,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      },
+      "sourceSize": {
+        "w": 89,
+        "h": 14
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      }
+    },
+    "bag-filter-3": {
+      "frame": {
+        "x": 267,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      },
+      "sourceSize": {
+        "w": 89,
+        "h": 14
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      }
+    },
+    "bag-filter-4": {
+      "frame": {
+        "x": 356,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      },
+      "sourceSize": {
+        "w": 89,
+        "h": 14
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      }
+    },
+    "bag-filter-5": {
+      "frame": {
+        "x": 445,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      },
+      "sourceSize": {
+        "w": 89,
+        "h": 14
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      }
+    },
+    "bag-filter-6": {
+      "frame": {
+        "x": 534,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      },
+      "sourceSize": {
+        "w": 89,
+        "h": 14
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 89,
+        "h": 14
+      }
+    }
+  },
+  "meta": {
+    "image": "icon_filter_en.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 623,
+      "h": 14
+    },
+    "scale": 1
+  }
+}

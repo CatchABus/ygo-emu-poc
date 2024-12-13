@@ -4,7 +4,7 @@ import { registerClientPacketHandler } from './clientPacketHandler';
 import { ClientState, GameClient } from './GameClient';
 import { LoginController } from '../login';
 import { IncomingMessage } from 'http';
-import log from 'loglevel';
+import * as log from 'loglevel';
 
 interface HandshakeMessage extends IncomingMessage {
   gameClient: GameClient;
