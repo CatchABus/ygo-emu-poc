@@ -1,6 +1,6 @@
 import { FancyButton } from '@pixi/ui';
 import { Howl } from 'howler';
-import { AnimatedSprite, Assets, Container, FederatedPointerEvent, Sprite, Spritesheet } from 'pixi.js';
+import { AnimatedSprite, Assets, Container, FederatedPointerEvent, Sprite, Spritesheet, Graphics } from 'pixi.js';
 import { BasePage } from './BasePage';
 import { getNavigator } from '../navigation';
 import op from './OptionsPage';
@@ -58,6 +58,7 @@ class MenuPage extends BasePage {
     const locale = getCurrentLocale();
 
     const background = Sprite.from(`${assetPrefix}/menu/title_1_${locale}.png`);
+    const logoBoundsMask = new Graphics();
 
     const logoContent = new Container();
     logoContent.x = 120;
@@ -74,6 +75,11 @@ class MenuPage extends BasePage {
     this._shinyEffectSprite.anchor.set(1, 0);
     this._shinyEffectSprite.mask = shinyEffectMask;
 
+    logoBoundsMask.rect(0, 0, this._logoSprite.width, this._logoSprite.height);
+    logoBoundsMask.fill();
+
+    logoContent.mask = logoBoundsMask;
+
     this._clickSound = new Howl({
       src: 'commons/decide.ogg'
     });
@@ -85,7 +91,7 @@ class MenuPage extends BasePage {
       loop: true
     });
 
-    logoContent.addChild(this._logoSprite, this._shinyEffectSprite, shinyEffectMask);
+    logoContent.addChild(this._logoSprite, this._shinyEffectSprite, shinyEffectMask, logoBoundsMask);
 
     this.addChild(background, logoContent);
 
@@ -191,7 +197,7 @@ class MenuPage extends BasePage {
 
       if (this.defaultView instanceof AnimatedSprite) {
         this.hoverViewTemp = this.hoverView;
-        this.hoverView = null;
+        this.hoverView = undefined;
         this.defaultView.gotoAndPlay(1);
       }
 
