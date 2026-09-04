@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { parse as parseCookie } from 'cookie';
+import { parseCookie } from 'cookie';
 import * as log from 'loglevel';
 import { Account } from '../model/database/Account';
 import { GameClient } from '../network/GameClient';

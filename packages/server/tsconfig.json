@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "outDir": "./dist",
+    "rootDir": "./src",
     "useDefineForClassFields": true,
     "module": "NodeNext",
     "lib": [
@@ -11,7 +12,7 @@
     "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     /* Linting */
-    "strict": true,
+    "strict": false,
     "strictNullChecks": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

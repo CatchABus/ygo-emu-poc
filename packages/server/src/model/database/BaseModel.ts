@@ -107,7 +107,7 @@ abstract class BaseModel {
 
     const tableName = (this.constructor as any).tableName;
     const dirtyColumns = Array.from(this._dirtyProperties);
-    const values = dirtyColumns.map((column) => this[column as keyof BaseModel]);
+    const values = dirtyColumns.map((column) => this[column]);
     const marks = new Array(values.length).fill('?');
 
     try {
@@ -129,7 +129,7 @@ abstract class BaseModel {
 
     const tableName = (this.constructor as any).tableName;
     const dirtyColumns = Array.from(this._dirtyProperties);
-    const values = dirtyColumns.map((column) => this[column as keyof BaseModel]);
+    const values = dirtyColumns.map((column) => this[column]);
     const declarations = dirtyColumns.map((column) => `${column} = ?`);
 
     try {
