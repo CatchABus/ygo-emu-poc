@@ -1,6 +1,5 @@
 import { Howl } from 'howler';
 import { Assets, Container, FederatedPointerEvent, Graphics, Sprite, Text } from 'pixi.js';
-import { FadeColorFilter } from '../filter/FadeColorFilter';
 import { getNavigator } from '../navigation';
 import storage from '../storage';
 import { BasePage } from './BasePage';
@@ -201,32 +200,32 @@ class LoginPage extends BasePage {
     const loginControls = this._loginForm.children[2];
     const [accountName, password] = loginControls.children as [Input, Input];
 
-    this._clickSound.play();
-
-    if (!accountName?.value) {
-      this._loginMessage.text = i18next.t('login.insert_id');
-      return;
-    }
-
-    if (!password?.value) {
-      this._loginMessage.text = i18next.t('login.insert_password');
-      return;
-    }
-
     this._isLoggingIn = true;
 
-    let url = `${getRequestProtocol('http')}://${import.meta.env.YGO_HOST}/login`;
-
-    // Player has already attempted to login with this account but it's already in use
-    if (this._accountNameToReconnect) {
-      if (this._accountNameToReconnect === accountName.value) {
-        url += '?force';
-      }
-
-      this._accountNameToReconnect = null;
-    }
+    this._clickSound.play();
 
     try {
+      if (!accountName?.value) {
+        this._loginMessage.text = i18next.t('login.insert_id');
+        return;
+      }
+
+      if (!password?.value) {
+        this._loginMessage.text = i18next.t('login.insert_password');
+        return;
+      }
+
+      let url = `${getRequestProtocol('http')}://${import.meta.env.YGO_HOST}/login`;
+
+      // Player has already attempted to login with this account but it's already in use
+      if (this._accountNameToReconnect) {
+        if (this._accountNameToReconnect === accountName.value) {
+          url += '?force';
+        }
+
+        this._accountNameToReconnect = null;
+      }
+
       const response = await fetch(url, {
         method: 'POST',
         credentials: 'include',
@@ -263,9 +262,9 @@ class LoginPage extends BasePage {
       }
     } catch (err) {
       log.error(err instanceof Error ? err.message : err);
+    } finally {
+      this._isLoggingIn = false;
     }
-
-    this._isLoggingIn = false;
   }
 
   private async _reconnect(sessionId: string): Promise<void> {
@@ -273,10 +272,11 @@ class LoginPage extends BasePage {
       return;
     }
 
-    this._clickSound.play();
-
     this._isLoggingIn = true;
+
+    this._clickSound.play();
     await this._establishConnection(sessionId);
+
     this._isLoggingIn = false;
   }
 
@@ -325,15 +325,13 @@ class LoginPage extends BasePage {
   
         storage.loadSettings();
   
-        getNavigator().navigate({
-          createPage: () => new MenuPage(),
-          transition: {
-            filter: new FadeColorFilter(),
-            duration: 2000
-          }
-        });
+        setTimeout(() => {
+          getNavigator().navigate({
+            createPage: () => new MenuPage(),
+          });
 
-        resolve();
+          resolve();
+        }, 1000);
       });
     });
   }
