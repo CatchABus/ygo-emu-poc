@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "setup": "node cleanup.mjs && npm install",
-    "start": "nx run-many -t dev --projects=client,server"
+    "start": "cross-env NX_LOAD_DOT_ENV_FILES=false nx run-many -t dev --projects=client,server"
   },
   "private": true,
   "devDependencies": {
@@ -14,12 +14,13 @@
     "@types/async-lock": "^1.4.2",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.10.1",
+    "cross-env": "^10.1.0",
     "dotenv": "^16.4.5",
     "eslint": "^9.16.0",
     "globals": "^15.12.0",
-    "nodemon": "^3.1.7",
     "nx": "^20.1.4",
     "ts-node": "^10.9.2",
+    "tsc-watch": "^7.2.1",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.16.0"
   },

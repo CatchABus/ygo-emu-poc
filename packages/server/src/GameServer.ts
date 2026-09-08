@@ -29,7 +29,7 @@ class GameServerImpl {
     LoginController.getInstance();
     CardData.getInstance().load();
     CPUDeckData.getInstance().load();
-    await AppDataSource.initialize();
+    await AppDataSource.getInstance().initialize();
 
     this._httpServer = secure ? createSecureServer(httpHandler) : createServer(httpHandler);
   
@@ -61,7 +61,7 @@ class GameServerImpl {
     await LoginController.getInstance().disconnectAllClients();
 
     try {
-      await AppDataSource.destroy();
+      await AppDataSource.getInstance().destroy();
     } catch(err) {
       log.error(err);
     }
