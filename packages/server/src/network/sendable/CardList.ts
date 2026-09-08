@@ -19,7 +19,7 @@ class CardList extends AbstractSendablePacket {
     for (const [, card] of this._cards) {
       this.writeInt32(card.id);
       this.writeInt32(card.templateId);
-      this.writeInt8(card.isNew);
+      this.writeInt8(card.isNew ? 1 : 0);
     }
   }
 }

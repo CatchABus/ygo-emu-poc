@@ -4,11 +4,11 @@ import log, { LogLevelDesc } from 'loglevel';
 import { Server } from 'socket.io';
 import { CardData } from './data/CardData';
 import { CPUDeckData } from './data/CPUDeckData';
-import { DatabaseSource } from './DataSource';
 import { onConnection, onHandshakeRequest } from './network/connectionHandler';
 import { httpHandler } from './network/httpHandler';
 import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from './network/packetTypes';
 import { LoginController } from './login';
+import { AppDataSource } from './AppDataSource';
 
 const PORT = parseInt(process.env.GAMESERVER_PORT);
 const secure: boolean = !!(process.env.HTTPS_KEY_PATH && process.env.HTTPS_CERT_PATH);
@@ -29,7 +29,7 @@ class GameServerImpl {
     LoginController.getInstance();
     CardData.getInstance().load();
     CPUDeckData.getInstance().load();
-    await DatabaseSource.getInstance().initialize();
+    await AppDataSource.initialize();
 
     this._httpServer = secure ? createSecureServer(httpHandler) : createServer(httpHandler);
   
@@ -60,7 +60,11 @@ class GameServerImpl {
     // Disconnect online clients before anything else
     await LoginController.getInstance().disconnectAllClients();
 
-    await DatabaseSource.getInstance().shutDown();
+    try {
+      await AppDataSource.destroy();
+    } catch(err) {
+      log.error(err);
+    }
 
     if (this._server) {
       await this._server.close();

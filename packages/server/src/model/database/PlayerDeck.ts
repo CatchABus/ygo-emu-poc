@@ -1,47 +1,40 @@
 import * as log from 'loglevel';
-import { BaseModel, DatabaseSchema } from './BaseModel';
 import { PlayerCard } from './PlayerCard';
-import { DatabaseSource } from '../../DataSource';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Player } from './Player';
-import { RowDataPacket } from 'mysql2';
+import { PlayerDeckSlot } from './PlayerDeckSlot';
+import { DeckType } from '../../template/DeckType';
 
-enum DeckType {
-  NORMAL,
-  EXTRA,
-  FUSION
-}
+@Entity('player_decks')
+class PlayerDeck extends BaseEntity {
+  @PrimaryGeneratedColumn({ type: 'int' })
+  id: number;
 
-interface DeckSlot {
-  card: PlayerCard;
-  type: DeckType;
-}
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  name: string;
 
-const SLOTS_TABLE = 'player_deck_slots';
+  @Column({ type: 'bigint' })
+  playerId: number;
 
-@DatabaseSchema('player_decks', [
-  'name',
-  'playerId'
-])
-class PlayerDeck extends BaseModel {
-  declare name: string;
-  declare playerId: number;
+  @Column({ type: 'boolean', default: false })
+  isEquipped: boolean;
+
+  public static DEFAULT_DECK_NAME = 'default';
 
   private _owner: Player;
 
-  private readonly _slots: DeckSlot[] = [];
-  private readonly _extraSlots: DeckSlot[] = [];
-  private readonly _fusionSlots: DeckSlot[] = [];
+  private readonly _slots: PlayerDeckSlot[] = [];
+  private readonly _extraSlots: PlayerDeckSlot[] = [];
+  private readonly _fusionSlots: PlayerDeckSlot[] = [];
 
   public async createSlot(card: PlayerCard, type: DeckType): Promise<void> {
     try {
-      const pool = DatabaseSource.getInstance().getPool();
+      const deckSlot = new PlayerDeckSlot();
 
-      await pool.execute(`INSERT INTO ${SLOTS_TABLE} VALUES (?,?,?)`, [this.id, card.id, DeckType[type]]);
-
-      this._appendSlot({
-        card,
-        type
-      });
+      deckSlot.deckId = this.id;
+      deckSlot.cardId = card.id;
+      deckSlot.type = type;
+      await deckSlot.save();
     } catch (err) {
       log.error(err);
     }
@@ -51,7 +44,7 @@ class PlayerDeck extends BaseModel {
     await this._restoreSlots();
   }
 
-  private _appendSlot(slot: DeckSlot): void {
+  private _appendSlot(slot: PlayerDeckSlot): void {
     switch (slot.type) {
       case DeckType.NORMAL:
         this._slots.push(slot);
@@ -63,7 +56,7 @@ class PlayerDeck extends BaseModel {
         this._fusionSlots.push(slot);
         break;
       default:
-        log.warn(`Invalid deck slot type ${slot.type} for card ${slot.card.id} in deck ${this.id}`);
+        log.warn(`Invalid deck slot type ${slot.type} for card ${slot.cardId} in deck ${this.id}`);
         break;
     }
   }
@@ -76,19 +69,15 @@ class PlayerDeck extends BaseModel {
     const cards = this.owner.getAllCards();
 
     try {
-      const pool = DatabaseSource.getInstance().getPool();
-      const [ rows ] = await pool.execute<RowDataPacket[]>(`SELECT cardId, type FROM ${SLOTS_TABLE} WHERE deckId = ?`, [this.id]);
+      const deckSlots = await PlayerDeckSlot.findBy({
+        deckId: this.id
+      });
 
-      for (const row of rows) {
-        if (cards.has(row.cardId)) {
-          const card: PlayerCard = cards.get(row.cardId);
-
-          this._appendSlot({
-            card,
-            type: DeckType[row.type as keyof typeof DeckType]
-          });
+      for (const slot of deckSlots) {
+        if (cards.has(slot.cardId)) {
+          this._appendSlot(slot);
         } else {
-          log.warn(`Deck ${this.id} that belongs to player ${this.owner.id} contains a card ID without ownership: ${row.id}`);
+          log.warn(`Deck ${this.id} that belongs to player ${this.owner.id} contains a card ID without ownership: ${slot.cardId}`);
         }
       }
     } catch (err) {
@@ -104,21 +93,19 @@ class PlayerDeck extends BaseModel {
     this._owner = val;
   }
 
-  get slots(): DeckSlot[] {
+  get slots(): PlayerDeckSlot[] {
     return this._slots;
   }
 
-  get extraSlots(): DeckSlot[] {
+  get extraSlots(): PlayerDeckSlot[] {
     return this._extraSlots;
   }
 
-  get fusionSlots(): DeckSlot[] {
+  get fusionSlots(): PlayerDeckSlot[] {
     return this._fusionSlots;
   }
 }
 
 export {
-  DeckType,
-  DeckSlot,
   PlayerDeck
 };

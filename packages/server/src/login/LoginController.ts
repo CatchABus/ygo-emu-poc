@@ -80,8 +80,9 @@ class LoginControllerImpl {
   }
   
   async getAccountFromDatabase(accountName: string): Promise<Account> {
-    const account = await Account.find<Account>(accountName, 'accountName');
-    return account;
+    return await Account.findOneBy({
+      accountName
+    });
   }
   
   attemptLogin(account: Account, password: string): boolean {

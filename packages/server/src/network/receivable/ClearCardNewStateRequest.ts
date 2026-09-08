@@ -29,12 +29,12 @@ class ClearCardNewStateRequest extends AbstractReceivablePacket {
     if (cards.has(this._cardId)) {
       const card = cards.get(this._cardId);
 
-      if (card.isNew === 0) {
+      if (!card.isNew) {
         log.warn(`Client ${this.client.accountName} attempted to clear new state for an old card! Card ID: ${this._cardId}`);
         return;
       }
 
-      card.isNew = 0;
+      card.isNew = false;
 
       try {
         await card.save();

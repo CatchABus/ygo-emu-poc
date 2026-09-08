@@ -1,24 +1,32 @@
 import * as log from 'loglevel';
-import { BaseModel, DatabaseSchema, TinyInt } from './BaseModel';
 import { CPUDeckData } from '../../data/CPUDeckData';
+import { PlayerDeck } from './PlayerDeck';
+import { AfterInsert, BaseEntity, Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { PlayerCard } from './PlayerCard';
-import { DeckType, PlayerDeck } from './PlayerDeck';
+import { DeckType } from '../../template/DeckType';
+import { Account } from './Account';
 
-const DEFAULT_DECK_NAME = 'default';
+@Entity('players')
+class Player extends BaseEntity {
+  @PrimaryGeneratedColumn({ type: 'int' })
+  id: number;
 
-@DatabaseSchema('players', [
-  'accountId',
-  'currentDeckId',
-  'volume',
-  'forbiddenCardsEnabled',
-  'fullScreenEnabled'
-])
-class Player extends BaseModel {
-  declare accountId: number;
-  declare currentDeckId: number;
-  declare volume: number;
-  declare forbiddenCardsEnabled: TinyInt;
-  declare fullScreenEnabled: TinyInt;
+  @Column({ type: 'bigint', unique: true })
+  accountId: number;
+
+  @Column({ type: 'decimal', precision: 4, scale: 2, default: 1 })
+  volume: number;
+
+  @Column({ type: 'boolean', default: false })
+  forbiddenCardsEnabled: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  fullScreenEnabled: boolean;
+
+  @OneToOne(() => Account, {
+    lazy: true
+  })
+  account: Promise<Account>;
 
   private _currentDeck: PlayerDeck;
 
@@ -29,7 +37,9 @@ class Player extends BaseModel {
     let player: Player;
 
     try {
-      player = await Player.find<Player>(accountId, 'accountId');
+      player = await Player.findOneBy({
+        accountId
+      });
 
       if (player != null) {
         await player.restore();
@@ -51,7 +61,8 @@ class Player extends BaseModel {
     await this._restoreDecks();
   }
 
-  override async onCreate(): Promise<void> {
+  @AfterInsert()
+  async onCreate(): Promise<void> {
     await this._createStarterCards();
     await this._createStarterDeck();
   }
@@ -65,7 +76,7 @@ class Player extends BaseModel {
         card.templateId = templateId;
         card.playerId = this.id;
         card.count = 1;
-        card.isNew = 0;
+        card.isNew = false;
 
         await card.save();
 
@@ -80,8 +91,10 @@ class Player extends BaseModel {
     try {
       // Create starter deck
       const deck = new PlayerDeck();
-      deck.name = DEFAULT_DECK_NAME;
+      deck.name = PlayerDeck.DEFAULT_DECK_NAME;
       deck.playerId = this.id;
+      // Set deck to be player's current deck
+      deck.isEquipped = true;
       await deck.save();
 
       // Create deck slots
@@ -92,8 +105,6 @@ class Player extends BaseModel {
       deck.owner = this;
       this._decks.set(deck.name, deck);
 
-      // Set deck to be player's current deck
-      this.currentDeckId = deck.id;
       await this.save();
 
       this._currentDeck = deck;
@@ -104,7 +115,10 @@ class Player extends BaseModel {
 
   private async _restoreCards(): Promise<void> {
     try {
-      const cards = await PlayerCard.findAll<PlayerCard>('WHERE playerId = ?', [this.id]);
+      const cards = await PlayerCard.findBy({
+        playerId: this.id
+      });
+
       if (cards.length) {
         for (const card of cards) {
           this._cards.set(card.id, card);
@@ -119,7 +133,10 @@ class Player extends BaseModel {
 
   private async _restoreDecks(): Promise<void> {
     try {
-      const decks = await PlayerDeck.findAll<PlayerDeck>('WHERE playerId = ?', [this.id]);
+      const decks = await PlayerDeck.findBy<PlayerDeck>({
+        playerId: this.id
+      });
+
       if (decks.length) {
         for (const deck of decks) {
           deck.owner = this;
@@ -128,7 +145,7 @@ class Player extends BaseModel {
           this._decks.set(deck.name, deck);
 
           // Set current deck
-          if (deck.id === this.currentDeckId) {
+          if (deck.isEquipped) {
             this._currentDeck = deck;
           }
         }

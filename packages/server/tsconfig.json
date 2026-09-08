@@ -13,6 +13,8 @@
     "resolveJsonModule": true,
     /* Linting */
     "strict": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "strictNullChecks": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

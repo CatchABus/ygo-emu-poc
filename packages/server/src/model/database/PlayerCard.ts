@@ -1,30 +1,39 @@
+import { AfterInsert, AfterLoad, AfterUpdate, BaseEntity, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { CardData } from '../../data/CardData';
 import { CardTemplate } from '../../template/CardTemplate';
-import { BaseModel, DatabaseSchema, TinyInt } from './BaseModel';
 
-@DatabaseSchema('player_cards', [
-  'playerId',
-  'templateId',
-  'count',
-  'isNew'
-])
-class PlayerCard extends BaseModel {
-  declare playerId: number;
-  declare templateId: number;
-  declare count: number;
-  declare isNew: TinyInt;
+@Entity('player_cards')
+@Index(['playerId', 'templateId'], { unique: true })
+class PlayerCard extends BaseEntity {
+  @PrimaryGeneratedColumn({ type: 'int' })
+  id: number;
+
+  @Column({ type: 'bigint' })
+  playerId: number;
+
+  @Column({ type: 'bigint' })
+  templateId: number;
+
+  @Column({ type: 'int', default: 1 })
+  count: number;
+
+  @Column({ type: 'boolean', default: false })
+  isNew: boolean;
 
   private _template: CardTemplate;
 
-  override onCreate(): void {
+  @AfterInsert()
+  onCreate(): void {
     this._template = CardData.getInstance().getTemplateById(this.templateId);
   }
 
-  override onRestore(): void {
+  @AfterLoad()
+  onRestore(): void {
     this._template = CardData.getInstance().getTemplateById(this.templateId);
   }
 
-  override onUpdate(): void {
+  @AfterUpdate()
+  onUpdate(): void {
     if (this._template != null && this._template.id !== this.templateId) {
       this._template = CardData.getInstance().getTemplateById(this.templateId);
     }
