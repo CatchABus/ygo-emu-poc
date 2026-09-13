@@ -16,17 +16,28 @@ import * as log from 'loglevel';
 
 let OptionsPage = op;
 
-interface CustomFancyButton extends FancyButton {
-  hoverViewTemp: Container;
-}
-
 class MenuPage extends BasePage {
   private _logoSprite: Sprite;
   private _shinyEffectSprite: Sprite;
   private _buttonContainer: Container;
+  private _btnAnimContainer: Container;
   private _clickSound: Howl;
   private _returnSound: Howl;
   private _track: Howl;
+
+  private readonly _buttonCallbacks;
+
+  constructor() {
+    super();
+
+    this._buttonCallbacks = [
+      () => {},
+      async () => await this._onDeckConstructionButtonClicked(),
+      async () => await this._onCardListButtonClicked(),
+      async () => await this._onOptionsButtonClicked(),
+      async () => await this._onQuitButtonClicked()
+    ];
+  }
 
   async preload(): Promise<void> {
     const assetPrefix = client.gameMode;
@@ -132,123 +143,102 @@ class MenuPage extends BasePage {
   private async _renderMenuItems(): Promise<void> {
     const defaultsheets = this._getDefaultButtonSpritesheets();
     const hoversheets = this._getHoverButtonSpritesheets();
+    const buttonCount = this._buttonCallbacks.length;
     const hoverSpritesCallback = (sheet: Spritesheet, index: number) => sheet.textures[`button${index + 1}-${i}.png`];
+    const containerX = 201;
+    const containerY = 320;
 
     let i: number;
 
     this._buttonContainer = new Container();
-    this._buttonContainer.x = 201;
-    this._buttonContainer.y = 320;
+    this._buttonContainer.position.set(containerX, containerY);
     this._buttonContainer.alpha = 0;
 
-    for (i = 1; i <= 5; i++) {
-      const defaultTexture = defaultsheets[0].textures[`button0-${i}.png`];
+    this._btnAnimContainer = new Container();
+    this._btnAnimContainer.position.set(containerX, containerY);
 
-      const defaultAnimatedSprite: AnimatedSprite = new AnimatedSprite([
-        defaultTexture,
+    for (i = 1; i <= buttonCount; i++) {
+      const defaultSprite = Sprite.from(defaultsheets[0].textures[`button0-${i}.png`]);
+      const buttonY = defaultSprite.texture.frame.y;
+
+      const pressedAnimSprite: AnimatedSprite = new AnimatedSprite([
         defaultsheets[1].textures[`button5-${i}.png`],
         defaultsheets[2].textures[`button6-${i}.png`],
         defaultsheets[3].textures[`button5-${i}.png`],
         defaultsheets[4].textures[`button6-${i}.png`],
       ]);
-      defaultAnimatedSprite.loop = false;
-      defaultAnimatedSprite.animationSpeed = 0.15;
+      pressedAnimSprite.loop = false;
+      pressedAnimSprite.animationSpeed = 0.15;
+      pressedAnimSprite.visible = false;
+      pressedAnimSprite.eventMode = 'none';
 
       const hoverAnimatedSprite: AnimatedSprite = new AnimatedSprite(hoversheets.map(hoverSpritesCallback));
       hoverAnimatedSprite.loop = true;
       hoverAnimatedSprite.animationSpeed = 0.07;
 
-      const button: CustomFancyButton = new FancyButton({
-        defaultView: defaultAnimatedSprite,
+      const button = new FancyButton({
+        defaultView: defaultSprite,
         hoverView: hoverAnimatedSprite
-      }) as CustomFancyButton;
-      button.y = defaultTexture.frame.y;
+      });
+
+      button.y = buttonY;
+      pressedAnimSprite.y = buttonY;
 
       this._buttonContainer.addChild(button);
+      this._btnAnimContainer.addChild(pressedAnimSprite);
     }
 
-    this.addChild(this._buttonContainer);
+    this.addChild(this._buttonContainer, this._btnAnimContainer);
   }
 
   private _attachButtonListeners(): void {
-    if (!this._buttonContainer.children.length) {
+    const buttons = this._buttonContainer.children as FancyButton[];
+
+    if (!buttons.length) {
       return;
     }
-
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const page = this;
+    
+    const btnAnimSprites = this._btnAnimContainer.children as AnimatedSprite[];
     let isInteracting: boolean = false;
 
-    const onButtonSpriteComplete = (button: CustomFancyButton) => {
-      const defaultView: AnimatedSprite = <AnimatedSprite>button.defaultView;
-
-      defaultView.currentFrame = 0;
-      button.hoverView = button.hoverViewTemp;
-      delete button.hoverViewTemp;
-      isInteracting = false;
-    }
-
-    const onButtonPointerDownCallback = function (this: CustomFancyButton, event: FederatedPointerEvent) {
+    const onBtnPointerDownCallback = (event: FederatedPointerEvent, button: FancyButton, sprite: AnimatedSprite) => {
       if (isInteracting || event.button > 0) {
         return;
       }
 
       isInteracting = true;
-
-      if (this.defaultView instanceof AnimatedSprite) {
-        this.hoverViewTemp = this.hoverView;
-        this.hoverView = undefined;
-        this.defaultView.gotoAndPlay(1);
-      }
-
-      page._clickSound.play();
+      button.visible = false;
+      sprite.visible = true;
+      sprite.play();
+      this._clickSound.play();
     };
 
-    const onButtonPointerEnterCallback = function (this: CustomFancyButton) {
-      const hoverSprite = (this.hoverView || this.hoverViewTemp) as AnimatedSprite;
+    const onButtonPointerEnterCallback = function (this: FancyButton) {
+      const hoverSprite = this.hoverView as AnimatedSprite;
       if (hoverSprite) {
         hoverSprite.play();
       }
     };
 
-    const onButtonPointerLeaveCallback = function (this: CustomFancyButton) {
-      const hoverSprite = (this.hoverView || this.hoverViewTemp) as AnimatedSprite;
+    const onButtonPointerLeaveCallback = function (this: FancyButton) {
+      const hoverSprite = this.hoverView as AnimatedSprite;
       if (hoverSprite) {
         hoverSprite.stop();
       }
     };
 
-    const button1: CustomFancyButton = <CustomFancyButton>this._buttonContainer.children[0];
-    (button1.defaultView as AnimatedSprite).onComplete = () => {
-      onButtonSpriteComplete(button1);
-    };
+    for (let i = 0, length = this._buttonCallbacks.length; i < length; i++) {
+      const button = buttons[i];
+      const btnAnimSprite = btnAnimSprites[i];
 
-    const button2: CustomFancyButton = <CustomFancyButton>this._buttonContainer.children[1];
-    (button2.defaultView as AnimatedSprite).onComplete = () => {
-      onButtonSpriteComplete(button2);
-      this._onDeckConstructionButtonClicked();
-    };
-
-    const button3: CustomFancyButton = <CustomFancyButton>this._buttonContainer.children[2];
-    (button3.defaultView as AnimatedSprite).onComplete = () => {
-      onButtonSpriteComplete(button3);
-      this._onCardListButtonClicked();
-    };
-
-    const button4: CustomFancyButton = <CustomFancyButton>this._buttonContainer.children[3];
-    (button4.defaultView as AnimatedSprite).onComplete = () => {
-      onButtonSpriteComplete(button4);
-      this._onOptionsButtonClicked();
-    };
-
-    const button5: CustomFancyButton = <CustomFancyButton>this._buttonContainer.children[4];
-    (button5.defaultView as AnimatedSprite).onComplete = () => {
-      onButtonSpriteComplete(button5);
-      this._onQuitButtonClicked();
-    };
-
-    for (const button of this._buttonContainer.children) {
-      button.onmousedown = onButtonPointerDownCallback;
+      btnAnimSprite.onComplete = () => {
+        btnAnimSprite.currentFrame = 0;
+        btnAnimSprite.visible = false;
+        button.visible = true;
+        isInteracting = false;
+        this._buttonCallbacks[i]();
+      };
+      button.onmousedown = (event: FederatedPointerEvent) => onBtnPointerDownCallback(event, button, btnAnimSprite);
       button.onpointerenter = onButtonPointerEnterCallback;
       button.onpointerleave = onButtonPointerLeaveCallback;
     }
