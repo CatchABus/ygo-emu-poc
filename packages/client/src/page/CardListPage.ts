@@ -936,16 +936,4 @@ class CardListPage extends BasePage {
   }
 }
 
-if (import.meta.hot) {
-  import.meta.hot.accept((newModule: any) => {
-    if (newModule) {
-      if (getNavigator().currentPage instanceof CardListPage) {
-        getNavigator().navigate({
-          createPage: () => new newModule.default()
-        });
-      }
-    }
-  });
-}
-
 export default CardListPage;

@@ -337,16 +337,4 @@ class LoginPage extends BasePage {
   }
 }
 
-if (import.meta.hot) {
-  import.meta.hot.accept((newModule: any) => {
-    if (newModule) {
-      if (getNavigator().currentPage instanceof LoginPage) {
-        getNavigator().navigate({
-          createPage: () => new newModule.default()
-        });
-      }
-    }
-  });
-}
-
 export default LoginPage;

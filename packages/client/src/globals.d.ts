@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
-declare module globalThis {
-  var __onLiveSync: (newModule: any, modulePathname: string) => void;
+declare namespace globalThis {
+  var __onLiveSync: (newModule: any) => void;
   var __PIXI_APP__: import('pixi.js').Application;
 }
 

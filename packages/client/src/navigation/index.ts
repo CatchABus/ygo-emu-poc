@@ -103,6 +103,7 @@ class Navigator {
     this._isNavigating = true;
         
     const { width, height } = this._app.renderer;
+    const newPage = options.createPage();
     let bitmapToAnimate: Container = null;
 
     options = {
@@ -124,14 +125,17 @@ class Navigator {
       await oldPage.onNavigatingFrom();
 
       this._app.stage.removeChild(oldPage);
-      oldPage.destroy({
-        children: true
-      });
+
+      if (newPage !== oldPage) {
+        oldPage.destroy({
+          children: true
+        });
+      }
 
       await oldPage.onNavigatedFrom();
     }
 
-    this._currentPage = options.createPage();
+    this._currentPage = newPage;
 
     if (this._currentPage) {
       await this._currentPage.preload();

@@ -953,16 +953,4 @@ class DeckConstruction extends BasePage {
   }
 }
 
-if (import.meta.hot) {
-  import.meta.hot.accept((newModule: any) => {
-    if (newModule) {
-      if (getNavigator().currentPage instanceof DeckConstruction) {
-        getNavigator().navigate({
-          createPage: () => new newModule.default()
-        });
-      }
-    }
-  });
-}
-
 export default DeckConstruction;

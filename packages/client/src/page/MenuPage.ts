@@ -1,20 +1,18 @@
 import { FancyButton } from '@pixi/ui';
 import { Howl } from 'howler';
-import { AnimatedSprite, Assets, Container, FederatedPointerEvent, Sprite, Spritesheet, Graphics } from 'pixi.js';
-import { BasePage } from './BasePage';
-import { getNavigator } from '../navigation';
-import op from './OptionsPage';
-import CardListPage from './CardListPage';
+import * as log from 'loglevel';
+import { AnimatedSprite, Assets, Container, FederatedPointerEvent, Graphics, Sprite, Spritesheet } from 'pixi.js';
+import { client } from '../client';
 import { CircleOpenFilter } from '../filter/CircleOpenFilter';
 import { FadeColorFilter } from '../filter/FadeColorFilter';
 import { getCurrentLocale } from '../i18n';
-import DeckConstruction from './DeckConstruction';
-import { client } from '../client';
+import { getNavigator } from '../navigation';
 import { getRequestProtocol } from '../util/helpers';
+import { BasePage } from './BasePage';
+import CardListPage from './CardListPage';
+import DeckConstruction from './DeckConstruction';
 import LoginPage from './LoginPage';
-import * as log from 'loglevel';
-
-let OptionsPage = op;
+import OptionsPage from './OptionsPage';
 
 class MenuPage extends BasePage {
   private _logoSprite: Sprite;
@@ -356,29 +354,6 @@ class MenuPage extends BasePage {
   private _playAudio(): void {
     this._track.play();
   }
-}
-
-if (import.meta.hot) {
-  import.meta.hot.accept((newModule: any) => {
-    if (newModule) {
-      if (getNavigator().currentPage instanceof MenuPage) {
-        getNavigator().navigate({
-          createPage: () => new newModule.default()
-        });
-      }
-    }
-  });
-
-  import.meta.hot.accept('./OptionsPage', async (newModule: any) => {
-    if (newModule) {
-      if (getNavigator().currentModal instanceof OptionsPage) {
-        await getNavigator().replaceModal({
-          createPage: () => new newModule.default()
-        });
-      }
-      OptionsPage = newModule.default;
-    }
-  });
 }
 
 export default MenuPage;

@@ -1,9 +1,8 @@
 import { initI18n } from './i18n';
 import { initAssets } from './handler/assetManager';
 import { addSuspendListener } from './handler/resumeSuspend';
-import { setupNavigator } from './navigation';
+import { getNavigator, setupNavigator } from './navigation';
 import './styles/main.scss';
-import { initCursor } from './util/cursor';
 import LoginPage from './page/LoginPage';
 import { client } from './client';
 
@@ -36,9 +35,6 @@ async function startApp() {
   appElement.appendChild(app.canvas);
 
   const navigator = await setupNavigator(app, LoginPage);
-
-  initCursor(app);
-
   addSuspendListener();
 
   app.renderer.on('resize', (width, height) => {
@@ -52,5 +48,13 @@ async function startApp() {
 
   if (import.meta.env.DEV) {
     globalThis.__PIXI_APP__ = app;
+    globalThis.__onLiveSync = (newModule) => {
+      const currentPage = getNavigator().currentPage;
+      const newPage = currentPage.constructor.name === newModule.default.name ? new newModule.default() : currentPage;
+
+      getNavigator().navigate({
+        createPage: () => newPage
+      });
+    }
   }
 }
