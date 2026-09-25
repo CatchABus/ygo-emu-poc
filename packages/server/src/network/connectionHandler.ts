@@ -1,6 +1,5 @@
 import { Socket } from 'socket.io';
 import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from './packetTypes';
-import { registerClientPacketHandler } from './clientPacketHandler';
 import { ClientState, GameClient } from './GameClient';
 import { LoginController } from '../login';
 import { IncomingMessage } from 'http';
@@ -13,9 +12,7 @@ interface HandshakeMessage extends IncomingMessage {
 function onConnection(socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>): void {
   const { gameClient } = socket.request as HandshakeMessage;
   if (gameClient != null) {
-    gameClient.socket = socket;
-    socket.data.gameClient = gameClient;
-    registerClientPacketHandler(gameClient);
+    gameClient.connect(socket);
   } else {
     log.warn(`Could not find client for socket '${socket.id}' to connect`);
   }
@@ -35,7 +32,7 @@ function onHandshakeRequest(req: IncomingMessage, callback: (err: string | null 
 
       if (client) {
         if (client.state === ClientState.AUTHENTICATED) {
-          if (client.sessionId === payload.sessionId) {
+          if (client.getSessionId() === payload.sessionId) {
             handshakeReq.gameClient = client;
             isAuthenticated = true;
           } else {

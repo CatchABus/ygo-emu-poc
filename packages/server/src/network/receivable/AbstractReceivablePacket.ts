@@ -2,19 +2,13 @@ import * as log from 'loglevel';
 import { GameClient } from '../GameClient';
 import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
 
-function PacketEventName(value: string) {
-  return (target: any) => {
-    target.eventName = value;
-  };
-}
-
 abstract class AbstractReceivablePacket {
+  declare eventName: string;
+  
   private readonly _client?: GameClient;
   private readonly _buffer?: Buffer;
 
   private _currentOffset: number = 0;
-
-  public eventName: string;
 
   constructor(client: GameClient, buffer: Buffer) {
     this._client = client;
@@ -93,7 +87,7 @@ abstract class AbstractReceivablePacket {
       isPacketRead = await this.read();
     } catch (err) {
       isPacketRead = false;
-      log.error(`Failed to read packet ${this.eventName} received from client ${this.client.accountName}. Reason: ${(err as Error).message}`);
+      log.error(`Failed to read packet ${this.eventName} received from client ${this.client.getAccountName()}. Reason: ${(err as Error).message}`);
     }
 
     if (!isPacketRead) {
@@ -112,7 +106,7 @@ abstract class AbstractReceivablePacket {
       }
     } catch (err) {
       result = null;
-      log.error(`Failed to handle packet ${this.eventName} received from client ${this.client.accountName}. Reason: ${(err as Error).message}`);
+      log.error(`Failed to handle packet ${this.eventName} received from client ${this.client.getAccountName()}. Reason: ${(err as Error).message}`);
     }
 
     return result;
@@ -122,6 +116,5 @@ abstract class AbstractReceivablePacket {
 }
 
 export {
-  PacketEventName,
   AbstractReceivablePacket
 };

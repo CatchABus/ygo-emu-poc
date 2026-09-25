@@ -1,8 +1,9 @@
-import { Socket } from 'socket.io';
-import { AbstractSendablePacket } from './sendable/AbstractSendablePacket';
-import { ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData } from './packetTypes';
 import { randomUUID } from 'crypto';
+import { Socket } from 'socket.io';
 import { Player } from '../model/database/Player';
+import { ClientPacketHandler } from './ClientPacketHandler';
+import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from './packetTypes';
+import { AbstractSendablePacket } from './sendable/AbstractSendablePacket';
 
 enum ClientState {
   DISCONNECTED,
@@ -19,26 +20,11 @@ class GameClient {
   private _socket: ClientSocket;
   private _state: ClientState = ClientState.AUTHENTICATED;
   private _player: Player;
+  private _packetHandler: ClientPacketHandler;
 
   constructor(accountName: string) {
     this._sessionId = randomUUID();
     this._accountName = accountName;
-  }
-
-  get sessionId(): string {
-    return this._sessionId;
-  }
-
-  get accountName(): string {
-    return this._accountName;
-  }
-
-  get socket(): ClientSocket {
-    return this._socket;
-  }
-
-  set socket(val: ClientSocket) {
-    this._socket = val;
   }
 
   get state(): ClientState {
@@ -57,31 +43,56 @@ class GameClient {
     this._player = val;
   }
 
+  getSessionId(): string {
+    return this._sessionId;
+  }
+
+  getAccountName(): string {
+    return this._accountName;
+  }
+
+  getSocket(): ClientSocket {
+    return this._socket;
+  }
+
   getPacketContent(sp: AbstractSendablePacket): Buffer {
     sp.writeToBuffer();
     return sp.buffer;
   }
 
   sendPacket(sp: AbstractSendablePacket): void {
-    const socket = this.socket;
+    const socket = this._socket;
     if (socket) {
-      socket.emit(sp.getEventName() as keyof ServerToClientEvents, this.getPacketContent(sp));
+      socket.emit(sp.eventName as keyof ServerToClientEvents, this.getPacketContent(sp));
     }
   }
 
   broadcastToOthers(sp: AbstractSendablePacket): void {
-    const socket = this.socket;
+    const socket = this._socket;
     if (socket) {
-      socket.broadcast.emit(sp.getEventName() as keyof ServerToClientEvents, this.getPacketContent(sp));
+      socket.broadcast.emit(sp.eventName as keyof ServerToClientEvents, this.getPacketContent(sp));
     }
   }
 
+  connect(socket: ClientSocket): void {
+    this._socket = socket;
+    socket.data.gameClient = this;
+
+    this._packetHandler = new ClientPacketHandler(this);
+    this._packetHandler.register();
+  }
+
   async close(): Promise<void> {
-    const socket = this.socket;
+    const socket = this._socket;
     const player = this.player;
 
     if (player) {
       await player.save();
+    }
+
+    if (this._packetHandler) {
+      this._packetHandler.unregister();
+      this._packetHandler = null;
     }
 
     if (socket) {
@@ -93,6 +104,7 @@ class GameClient {
 }
 
 export {
+  ClientSocket,
   ClientState,
   GameClient
 };

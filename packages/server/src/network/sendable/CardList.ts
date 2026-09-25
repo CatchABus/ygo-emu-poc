@@ -1,16 +1,13 @@
 import { PlayerCard } from '../../model/database/PlayerCard';
-import { AbstractSendablePacket } from './AbstractSendablePacket';
+import { AbstractSendablePacket, SendableEventName } from './AbstractSendablePacket';
 
+@SendableEventName('cardListResponse')
 class CardList extends AbstractSendablePacket {
   private _cards: Map<number, PlayerCard>;
 
   constructor(cards: Map<number, PlayerCard>) {
     super();
     this._cards = cards;
-  }
-
-  getEventName(): any {
-    return 'cardListResponse';
   }
 
   write(): void {

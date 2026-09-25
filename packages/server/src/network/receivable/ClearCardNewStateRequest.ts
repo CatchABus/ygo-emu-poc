@@ -1,7 +1,6 @@
 import * as log from 'loglevel';
-import { AbstractReceivablePacket, PacketEventName } from './AbstractReceivablePacket';
+import { AbstractReceivablePacket } from './AbstractReceivablePacket';
 
-@PacketEventName('clearCardNewStateRequest')
 class ClearCardNewStateRequest extends AbstractReceivablePacket {
   private _cardId: number;
 
@@ -30,7 +29,7 @@ class ClearCardNewStateRequest extends AbstractReceivablePacket {
       const card = cards.get(this._cardId);
 
       if (!card.isNew) {
-        log.warn(`Client ${this.client.accountName} attempted to clear new state for an old card! Card ID: ${this._cardId}`);
+        log.warn(`Client ${this.client.getAccountName()} attempted to clear new state for an old card! Card ID: ${this._cardId}`);
         return;
       }
 
@@ -44,7 +43,7 @@ class ClearCardNewStateRequest extends AbstractReceivablePacket {
 
       log.debug(`New card ${this._cardId} has become stale`);
     } else {
-      log.warn(`Client ${this.client.accountName} attempted to clear new state for a card ID that doesn't own!`);
+      log.warn(`Client ${this.client.getAccountName()} attempted to clear new state for a card ID that doesn't own!`);
     }
   }
 }

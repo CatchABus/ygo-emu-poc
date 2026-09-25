@@ -1,13 +1,27 @@
 import * as log from 'loglevel';
+import { ServerToClientEvents } from '../packetTypes';
 
 const MAX_BYTE_LENGTH = parseInt(process.env.WRITE_PACKET_MAX_SIZE);
+
+function SendableEventName(value: keyof ServerToClientEvents) {
+  return (target: typeof AbstractSendablePacket) => {
+    Object.defineProperty(target, 'eventName', {
+      value,
+      enumerable: false,
+      writable: false,
+      configurable: false
+    });
+  };
+}
 
 abstract class AbstractSendablePacket {
   private _buffer: Buffer;
   private _currentOffset: number = 0;
 
-  constructor(maxByteLength: number = MAX_BYTE_LENGTH) {
-    this._buffer = Buffer.alloc(maxByteLength);
+  public eventName: string;
+
+  constructor(..._args) {
+    this._buffer = Buffer.alloc(MAX_BYTE_LENGTH);
   }
 
   get buffer(): Buffer {
@@ -53,7 +67,7 @@ abstract class AbstractSendablePacket {
     try {
       this.write();
     } catch (err) {
-      log.error(`Failed to write packet ${this.getEventName()}. Reason: ${(err as Error).message}`);
+      log.error(`Failed to write packet ${this.eventName}. Reason: ${(err as Error).message}`);
     }
   }
 
@@ -64,10 +78,10 @@ abstract class AbstractSendablePacket {
     this._buffer = newBuffer;
   }
 
-  abstract getEventName(): string;
   protected abstract write(): void;
 }
 
 export {
-  AbstractSendablePacket
+  AbstractSendablePacket,
+  SendableEventName
 };

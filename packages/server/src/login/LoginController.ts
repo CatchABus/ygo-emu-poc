@@ -106,7 +106,7 @@ class LoginControllerImpl {
       return null;
     }
   
-    const content = client.accountName + ':' + client.sessionId;
+    const content = client.getAccountName() + ':' + client.getSessionId();
     const buffer = Buffer.from(content, 'utf-8');
     const token = buffer.toString('base64');
   

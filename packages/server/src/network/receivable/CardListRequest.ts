@@ -1,8 +1,7 @@
 import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
 import { CardList } from '../sendable/CardList';
-import { AbstractReceivablePacket, PacketEventName } from './AbstractReceivablePacket';
+import { AbstractReceivablePacket } from './AbstractReceivablePacket';
 
-@PacketEventName('cardListRequest')
 class CardListRequest extends AbstractReceivablePacket {
   run(): AbstractSendablePacket {
     const player = this.client.player;

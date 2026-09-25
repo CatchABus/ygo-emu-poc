@@ -61,7 +61,7 @@ async function handleInit(req: IncomingMessage, res: ServerResponse): Promise<vo
       const client = lc.getClientByLogin(accountName);
 
       if (client != null) {
-        if (client.sessionId === sessionId) {
+        if (client.getSessionId() === sessionId) {
           requestSessionId = sessionId;
         } else {
           // Player might have already logged in from another device or browser
@@ -132,7 +132,7 @@ async function handleLogin(req: IncomingMessage, res: ServerResponse, force: boo
 
           client.player = await Player.restoreOrCreate(accountId);
           lc.getClients().set(accountName, client);
-          content = client.sessionId;
+          content = client.getSessionId();
 
           res.setHeader('Set-Cookie', `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=${COOKIE_MAX_AGE}`);
           res.statusCode = isNewAccount ? 201 : 200;
@@ -165,9 +165,9 @@ async function handleLogout(req: IncomingMessage, res: ServerResponse): Promise<
 
         if (payload != null) {
           const client = lc.getClientByLogin(payload.accountName);
-          if (client != null && client.sessionId === sessionId) {
+          if (client != null && client.getSessionId() === sessionId) {
             await client.close();
-            lc.removeClient(client.accountName);
+            lc.removeClient(client.getAccountName());
             isAuthenticated = true;
           }
         }

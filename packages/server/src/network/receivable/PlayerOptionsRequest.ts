@@ -1,19 +1,18 @@
 import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
-import { CardInventory } from '../sendable/CardInventory';
+import { PlayerOptions } from '../sendable/PlayerOptions';
 import { AbstractReceivablePacket } from './AbstractReceivablePacket';
 
-class CardInventoryRequest extends AbstractReceivablePacket {
+class PlayerOptionsRequest extends AbstractReceivablePacket {
   run(): AbstractSendablePacket {
     const player = this.client.player;
     if (player == null) {
       return null;
     }
 
-    return new CardInventory(player.getAllCards());
+    return new PlayerOptions(player);
   }
 }
 
 export {
-  CardInventoryRequest
+  PlayerOptionsRequest
 };
-
