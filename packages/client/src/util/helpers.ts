@@ -1,6 +1,10 @@
 import i18next from 'i18next';
 import { CardTemplate } from '../template/CardTemplate';
 import { ColorSource, Graphics, groupD8, Rectangle, Texture, TextureSourceLike } from 'pixi.js';
+import { client } from '../client';
+
+const CURSOR_X = 8;
+const CURSOR_Y = 14;
 
 function cardNameComparator(a: CardTemplate, b: CardTemplate) {
   const name1 = i18next.t(`cards.${a.id}.name`);
@@ -73,9 +77,14 @@ function rotateTexture(rotate: number, source: Texture | TextureSourceLike): Tex
   return rotatedTexture;
 }
 
+function setCursorImage(mode: string, imagePath: string): void {
+  client.getApplication().renderer.events.cursorStyles[mode] = `url('${imagePath}') ${CURSOR_X} ${CURSOR_Y}, auto`;
+}
+
 export {
   cardNameComparator,
   createRect,
   getRequestProtocol,
-  rotateTexture
+  rotateTexture,
+  setCursorImage
 };

@@ -1,10 +1,11 @@
-import { initI18n } from './i18n';
+import { client } from './client';
 import { initAssets } from './handler/assetManager';
 import { addSuspendListener } from './handler/resumeSuspend';
+import { initI18n } from './i18n';
 import { getNavigator, setupNavigator } from './navigation';
-import './styles/main.scss';
 import LoginPage from './page/LoginPage';
-import { client } from './client';
+import './styles/main.scss';
+import { setCursorImage } from './util/helpers';
 
 // For HMR purposes
 if (!client.isApplicationStarted()) {
@@ -36,6 +37,9 @@ async function startApp() {
 
   const navigator = await setupNavigator(app, LoginPage);
   addSuspendListener();
+
+  setCursorImage('default', '/commons/cursor00.png');
+  setCursorImage('pointer', '/commons/cursor01.png');
 
   app.renderer.on('resize', (width, height) => {
     if (navigator.currentPage) {
