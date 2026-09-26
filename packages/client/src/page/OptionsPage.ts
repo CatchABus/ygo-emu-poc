@@ -1,13 +1,14 @@
 import { FancyButton, Slider } from '@pixi/ui';
-import { Howl, Howler } from 'howler';
+import { Howl } from 'howler';
+import log from 'loglevel';
 import { Assets, Graphics, Sprite } from 'pixi.js';
-import { HoverButtonContainer } from '../components/HoverButtonContainer';
-import { getCurrentLocale } from '../i18n';
-import storage from '../storage';
-import { BasePage } from './BasePage';
-import { SliderControls } from '../components/SliderControls';
 import { client } from '../client';
+import { HoverButtonContainer } from '../components/HoverButtonContainer';
+import { SliderControls } from '../components/SliderControls';
+import { getCurrentLocale } from '../i18n';
+import { SendablePacket } from '../network/SendablePacket';
 import { createRect } from '../util/helpers';
+import { BasePage } from './BasePage';
 
 class OptionsPage extends BasePage {
   private _windowModeButton: FancyButton;
@@ -35,7 +36,7 @@ class OptionsPage extends BasePage {
     this._drawForbiddenCardsControl();
   }
 
-  onNavigatedTo(): void {
+  async onNavigatedTo(): Promise<void> {
     document.onfullscreenchange = () => {
       this._updateWindowButtonState(!!document.fullscreenElement);
     };
@@ -76,15 +77,29 @@ class OptionsPage extends BasePage {
     await Assets.loadBundle(`${assetPrefix}/options`);
   }
 
+  private _onPlayerOptionsChanged(): void {
+    const sp = new SendablePacket();
+
+    sp.writeFloat(client.volume);
+    sp.writeInt8(Number(client.isForbiddenCardsEnabled));
+    sp.writeInt8(Number(client.isFullScreenEnabled));
+
+    try {
+      client.getSocket().emit('playerOptionsUpdateRequest', sp.buffer);
+    } catch (err) {
+      log.error(err instanceof Error ? err.message : err);
+    }
+  }
+
   private _drawVolumeBar(): void {
     const assetPrefix = client.gameMode;
-    const container = new SliderControls();
+    const controls = new SliderControls();
     const volumeSpritesheet = Assets.get(`${assetPrefix}/options/op_sound.json`);
     const leftHoverSprite: Sprite = Sprite.from(volumeSpritesheet.textures['item-1.png']);
     const rightHoverSprite: Sprite = Sprite.from(volumeSpritesheet.textures['item-2.png']);
 
-    container.x = 33;
-    container.y = 105;
+    controls.x = 33;
+    controls.y = 105;
 
     const leftButton = new HoverButtonContainer(leftHoverSprite);
 
@@ -94,13 +109,14 @@ class OptionsPage extends BasePage {
     const rightButton = new HoverButtonContainer(rightHoverSprite);
     rightButton.x = 336;
 
-    container.init({
+    controls.onSlideEnded = () => this._onPlayerOptionsChanged();
+    controls.init({
       decreaseView: leftButton,
       slider,
       increaseView: rightButton
     });
 
-    this.addChild(container);
+    this.addChild(controls);
   }
 
   private _createVolumeSlider(): Slider {
@@ -118,12 +134,14 @@ class OptionsPage extends BasePage {
       step: 0.01
     });
     slider.max = 1;
-    slider.value = Howler.volume();
+    slider.value = client.volume;
 
     slider.onUpdate.connect((value) => {
-      Howler.volume(value);
-      storage.setItem('volumeAll', value.toString());
+      client.volume = value;
     });
+
+    // Send packet to server when player stops dragging the slider
+    slider.onChange.connect(() => this._onPlayerOptionsChanged());
 
     return slider;
   }
@@ -176,6 +194,9 @@ class OptionsPage extends BasePage {
         this._updateWindowButtonState(false);
         document.exitFullscreen();
       }
+
+      client.isFullScreenEnabled = false;
+      this._onPlayerOptionsChanged();
     });
 
     const fullscreenButton = new FancyButton({
@@ -192,6 +213,9 @@ class OptionsPage extends BasePage {
         this._updateWindowButtonState(true);
         document.body.requestFullscreen();
       }
+
+      client.isFullScreenEnabled = true;
+      this._onPlayerOptionsChanged();
     });
 
     this._windowModeButton = windowModeButton;
@@ -233,7 +257,6 @@ class OptionsPage extends BasePage {
   private _drawForbiddenCardsControl(): void {
     const assetPrefix = client.gameMode;
 
-    const storedValue = storage.getItem('disableForbiddenCards');
     const tickSprite = Sprite.from(`${assetPrefix}/options/op_limited.png`);
     const tickHoverSprite = Sprite.from(`${assetPrefix}/options/op_limited.png`);
 
@@ -242,18 +265,18 @@ class OptionsPage extends BasePage {
       hoverView: tickHoverSprite
     });
 
-    let isForbiddenCardsDisabled = storedValue === 'true';
-
     button.x = 518;
     button.y = 215;
 
     button.onDown.connect(() => {
-      isForbiddenCardsDisabled = !isForbiddenCardsDisabled;
       this._clickSound.play();
-      this._toggleForbiddenCardState(button, isForbiddenCardsDisabled);
+      this._toggleForbiddenCardState(button, !client.isForbiddenCardsEnabled);
+      client.isForbiddenCardsEnabled = !client.isForbiddenCardsEnabled;
+
+      this._onPlayerOptionsChanged();
     });
 
-    this._toggleForbiddenCardState(button, isForbiddenCardsDisabled);
+    this._toggleForbiddenCardState(button, client.isForbiddenCardsEnabled);
     this.addChild(button);
   }
 
@@ -261,11 +284,9 @@ class OptionsPage extends BasePage {
     if (isForbiddenCardsDisabled) {
       button.defaultView.alpha = 1;
       button.hoverView.alpha = 1;
-      storage.setItem('disableForbiddenCards', 'true');
     } else {
       button.defaultView.alpha = 0;
       button.hoverView.alpha = 0.6;
-      storage.setItem('disableForbiddenCards', 'false');
     }
   }
 }

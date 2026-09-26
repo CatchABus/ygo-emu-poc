@@ -1,7 +1,6 @@
 import { Howl } from 'howler';
 import { Assets, Container, FederatedPointerEvent, Graphics, Sprite, Text } from 'pixi.js';
 import { getNavigator } from '../navigation';
-import storage from '../storage';
 import { BasePage } from './BasePage';
 import MenuPage from './MenuPage';
 import { Button, FancyButton, Input } from '@pixi/ui';
@@ -10,6 +9,7 @@ import i18next from 'i18next';
 import { client } from '../client';
 import * as log from 'loglevel';
 import { createRect, getRequestProtocol } from '../util/helpers';
+import { ReceivablePacket } from '../network/ReceivablePacket';
 
 class LoginPage extends BasePage {
   private _background: Sprite;
@@ -322,10 +322,15 @@ class LoginPage extends BasePage {
     return new Promise((resolve) => {
       socket.once('connect', async () => {
         client.sessionId = sessionId;
-  
-        storage.loadSettings();
+
+        const responseBuffer = await client.getSocket().emitWithAck('playerOptionsRequest', new ArrayBuffer(0));
+        const packet = new ReceivablePacket(responseBuffer);
   
         setTimeout(() => {
+          client.volume = packet.readFloat();
+          client.isForbiddenCardsEnabled = !!packet.readInt8();
+          client.isFullScreenEnabled = !!packet.readInt8();
+          
           getNavigator().navigate({
             createPage: () => new MenuPage(),
           });

@@ -175,6 +175,7 @@ class Navigator {
     await this.closeModal();
 
     this._currentModal = options.createPage();
+    this._currentModal.eventMode = 'static';
 
     if (this._currentModal) {
       this._currentModalOptions = options;

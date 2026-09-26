@@ -137,7 +137,7 @@ class CardListPage extends BasePage {
       for (let i = 0; i < length; i++) {
         const cardId = packet.readInt32();
         const cardTemplateId = packet.readInt32();
-        const isNew = packet.readInt8() === 1;
+        const isNew = !!packet.readInt8();
 
         this._ownedCards.push({
           id: cardId,

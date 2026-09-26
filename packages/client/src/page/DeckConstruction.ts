@@ -201,7 +201,7 @@ class DeckConstruction extends BasePage {
         this._cardSlotDataset.push({
           id,
           template,
-          isNew: packet.readInt8() === 1,
+          isNew: !!packet.readInt8(),
           count: packet.readInt32(),
           deckLimit: packet.readInt8()
         });

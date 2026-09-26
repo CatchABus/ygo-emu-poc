@@ -13,6 +13,7 @@ interface ClientToServerEvents {
   cardListRequest: (buffer: Buffer, callback: AcknowledgementCallback) => void;
   clearCardNewStateRequest: (buffer: Buffer) => void;
   playerOptionsRequest: (buffer: Buffer, callback: AcknowledgementCallback) => void;
+  playerOptionsUpdateRequest: (buffer: Buffer) => void;
 }
 
 interface InterServerEvents {

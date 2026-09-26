@@ -14,7 +14,7 @@ class Player extends BaseEntity {
   @Column({ type: 'bigint', unique: true })
   accountId: number;
 
-  @Column({ type: 'decimal', precision: 4, scale: 2, default: 1 })
+  @Column({ type: 'decimal', precision: 4, scale: 3, default: 0.5 })
   volume: number;
 
   @Column({ type: 'boolean', default: false })

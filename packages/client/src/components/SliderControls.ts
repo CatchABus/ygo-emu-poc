@@ -11,8 +11,9 @@ interface SliderControlOptions {
 }
 
 class SliderControls extends Container {
-  private _slider: Slider;
+  public onSlideEnded: () => void;
 
+  private _slider: Slider;
   private _sliderUpdateAnimation: AnimationWrapper = null;
 
   constructor(options?: SliderControlOptions) {
@@ -63,6 +64,10 @@ class SliderControls extends Container {
       if (this._sliderUpdateAnimation) {
         this._sliderUpdateAnimation.stop();
         this._sliderUpdateAnimation = null;
+      }
+
+      if (typeof this.onSlideEnded === 'function') {
+        this.onSlideEnded();
       }
     };
 

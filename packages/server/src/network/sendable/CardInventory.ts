@@ -16,7 +16,7 @@ class CardInventory extends AbstractSendablePacket {
     for (const [, card] of this._cards) {
       this.writeInt32(card.id);
       this.writeInt32(card.templateId);
-      this.writeInt8(card.isNew ? 1 : 0);
+      this.writeInt8(Number(card.isNew));
       this.writeInt32(card.count);
       this.writeInt8(card.template?.deckLimit ?? -1);
     }

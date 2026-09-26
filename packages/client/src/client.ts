@@ -1,56 +1,70 @@
+import { Howler } from 'howler';
 import * as log from 'loglevel';
 import { Application, ApplicationOptions } from 'pixi.js';
 import { io, ManagerOptions, Socket, SocketOptions } from 'socket.io-client';
 import { getRequestProtocol } from './util/helpers';
+
+const DEFAULT_VOLUME = 0.5;
 
 function onConnectionError(err: Error): void {
   log.error(err);
 }
 
 class Client {
-  private _application: Application;
-  private _socket: Socket;
-  private _sessionId: string;
-  private _gameMode: GameMode = 'joey'; // Default
+  private mApplication: Application;
+  private mSocket: Socket;
+  private mSessionId: string;
+  private mGameMode: GameMode = 'joey'; // Default
+  private mVolume: number = Howler.volume();
+  private mIsForbiddenCardsEnabled: boolean = false;
+  private mIsFullScreenEnabled: boolean = false;
   /**
    * This flag helps distinguish sign out disconnection from abnormal disconnection.
    */
-  private _isLogoutRequested: boolean = false;
+  private mIsLogoutRequested: boolean = false;
 
-  private _disconnectListener: (reason: Socket.DisconnectReason) => void = null;
+  private mDisconnectListener: (reason: Socket.DisconnectReason) => void = null;
+
+  constructor() {
+    const volumeStr = localStorage.getItem('volume');
+    const fullScreenStr = localStorage.getItem('fullScreenEnabled');
+
+    this.volume = volumeStr ? parseFloat(volumeStr) : DEFAULT_VOLUME;
+    this.isFullScreenEnabled = fullScreenStr === 'true';
+  }
 
   isApplicationStarted(): boolean {
-    return this._application != null;
+    return this.mApplication != null;
   }
 
   getApplication(): Application {
-    if (this._application == null) {
+    if (this.mApplication == null) {
       throw new Error('Application is not initialized!');
     }
-    return this._application;
+    return this.mApplication;
   }
 
   async start(options?: Partial<ApplicationOptions>): Promise<Application> {
-    if (this._application != null) {
+    if (this.mApplication != null) {
       throw new Error('Application is already initialized!');
     }
 
-    this._application = new Application();
+    this.mApplication = new Application();
 
-    await this._application.init(options);
+    await this.mApplication.init(options);
 
-    return this._application;
+    return this.mApplication;
   }
 
   getSocket(): Socket {
-    if (this._socket == null) {
+    if (this.mSocket == null) {
       throw new Error('Failed to request data from server. Client is not connected!');
     }
-    return this._socket;
+    return this.mSocket;
   }
 
   connect(options?: Partial<ManagerOptions & SocketOptions>): Socket {
-    if (this._socket != null) {
+    if (this.mSocket != null) {
       throw new Error('Client is already connected!');
     }
 
@@ -59,61 +73,92 @@ class Client {
       reconnection: false
     });
 
-    this._socket = socket;
+    this.mSocket = socket;
 
-    this._disconnectListener = (reason) => {
-      if (this._isLogoutRequested) {
-        this._isLogoutRequested = false;
+    this.mDisconnectListener = (reason) => {
+      if (this.mIsLogoutRequested) {
+        this.mIsLogoutRequested = false;
       } else {
-        log.warn(`Client session '${this._sessionId}' was disconnected abnormally! Reason: ${reason}`);
+        log.warn(`Client session '${this.mSessionId}' was disconnected abnormally! Reason: ${reason}`);
       }
 
       this.disconnect();
     };
 
     socket.on('connect_error', onConnectionError);
-    socket.on('disconnect', this._disconnectListener);
+    socket.on('disconnect', this.mDisconnectListener);
 
     return socket;
   }
 
   disconnect(): void {
-    if (this._socket == null) {
+    if (this.mSocket == null) {
       throw new Error('Client is not connected!');
     }
 
-    this._sessionId = null;
+    this.mSessionId = null;
 
-    this._socket.off('connection_error', onConnectionError);
-    this._socket.off('disconnect', this._disconnectListener);
-    this._disconnectListener = null;
+    this.mSocket.off('connection_error', onConnectionError);
+    this.mSocket.off('disconnect', this.mDisconnectListener);
+    this.mDisconnectListener = null;
     
-    this._socket.disconnect();
-    this._socket = null;
+    this.mSocket.disconnect();
+    this.mSocket = null;
   }
 
   get gameMode(): GameMode {
-    return this._gameMode;
+    return this.mGameMode;
   }
 
   set gameMode(val: GameMode) {
-    this._gameMode = val;
+    this.mGameMode = val;
   }
 
   get isLogoutRequested(): boolean {
-    return this._isLogoutRequested;
+    return this.mIsLogoutRequested;
   }
 
   set isLogoutRequested(val: boolean) {
-    this._isLogoutRequested = val;
+    this.mIsLogoutRequested = val;
   }
 
   get sessionId(): string {
-    return this._sessionId;
+    return this.mSessionId;
   }
 
   set sessionId(val: string) {
-    this._sessionId = val;
+    this.mSessionId = val;
+  }
+
+  get volume(): number {
+    return this.mVolume;
+  }
+
+  set volume(val: number) {
+    this.mVolume = val;
+
+    localStorage.setItem('volume', this.mVolume.toString());
+    Howler.volume(this.mVolume);
+  }
+
+  get isForbiddenCardsEnabled(): boolean {
+    return this.mIsForbiddenCardsEnabled;
+  }
+
+  set isForbiddenCardsEnabled(val: boolean) {
+    this.mIsForbiddenCardsEnabled = val;
+  }
+
+  /**
+   * Note: Let user decide this on browser since we have multiple tabs and enforcing full screen is annoying.
+   */
+  get isFullScreenEnabled(): boolean {
+    return this.mIsFullScreenEnabled;
+  }
+
+  set isFullScreenEnabled(val: boolean) {
+    this.mIsFullScreenEnabled = val;
+    localStorage.setItem('fullScreenEnabled', this.mIsFullScreenEnabled.toString());
   }
 }
 

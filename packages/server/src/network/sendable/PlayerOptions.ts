@@ -12,8 +12,8 @@ class PlayerOptions extends AbstractSendablePacket {
 
   write(): void {
     this.writeFloat(this._player.volume);
-    this.writeInt8(this._player.fullScreenEnabled ? 1 : 0);
-    this.writeInt8(this._player.forbiddenCardsEnabled ? 1 : 0);
+    this.writeInt8(Number(this._player.forbiddenCardsEnabled));
+    this.writeInt8(Number(this._player.fullScreenEnabled));
   }
 }
 

@@ -6,12 +6,14 @@ import { CardInventoryRequest } from './receivable/CardInventoryRequest';
 import { CardListRequest } from './receivable/CardListRequest';
 import { ClearCardNewStateRequest } from './receivable/ClearCardNewStateRequest';
 import { PlayerOptionsRequest } from './receivable/PlayerOptionsRequest';
+import { PlayerOptionsUpdateRequest } from './receivable/PlayerOptionsUpdateRequest';
 
 const PACKET_EVENT_MAP: Record<keyof ClientToServerEvents, typeof AbstractReceivablePacket> = {
   'cardInventoryRequest': CardInventoryRequest,
   'cardListRequest': CardListRequest,
   'clearCardNewStateRequest': ClearCardNewStateRequest,
-  'playerOptionsRequest': PlayerOptionsRequest
+  'playerOptionsRequest': PlayerOptionsRequest,
+  'playerOptionsUpdateRequest': PlayerOptionsUpdateRequest
 };
 
 for (const key in PACKET_EVENT_MAP) {
