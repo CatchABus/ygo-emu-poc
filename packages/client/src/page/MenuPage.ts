@@ -143,17 +143,15 @@ class MenuPage extends BasePage {
     const hoversheets = this._getHoverButtonSpritesheets();
     const buttonCount = this.mButtonCallbacks.length;
     const hoverSpritesCallback = (sheet: Spritesheet, index: number) => sheet.textures[`button${index + 1}-${i}.png`];
-    const containerX = 201;
-    const containerY = 320;
 
     let i: number;
 
     this.mButtonContainer = new Container();
-    this.mButtonContainer.position.set(containerX, containerY);
+    this.mButtonContainer.position.set(201, 320);
     this.mButtonContainer.alpha = 0;
 
     this.mBtnAnimContainer = new Container();
-    this.mBtnAnimContainer.position.set(containerX, containerY);
+    this.mBtnAnimContainer.position.copyFrom(this.mButtonContainer.position);
 
     for (i = 1; i <= buttonCount; i++) {
       const defaultSprite = Sprite.from(defaultsheets[0].textures[`button0-${i}.png`]);
