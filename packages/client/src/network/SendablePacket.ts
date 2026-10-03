@@ -9,7 +9,7 @@ class SendablePacket {
     this._dataView = new DataView(new ArrayBuffer(maxByteLength));
   }
 
-  get buffer(): ArrayBuffer {
+  get buffer(): ArrayBufferLike {
     if (this._currentOffset !== this._dataView.buffer.byteLength) {
       this._resizeBuffer();
     }

@@ -15,20 +15,20 @@ import LoginPage from './LoginPage';
 import OptionsPage from './OptionsPage';
 
 class MenuPage extends BasePage {
-  private _logoSprite: Sprite;
-  private _shinyEffectSprite: Sprite;
-  private _buttonContainer: Container;
-  private _btnAnimContainer: Container;
-  private _clickSound: Howl;
-  private _returnSound: Howl;
-  private _track: Howl;
+  private mLogoSprite: Sprite;
+  private mShinyEffectSprite: Sprite;
+  private mButtonContainer: Container;
+  private mBtnAnimContainer: Container;
+  private mClickSound: Howl;
+  private mReturnSound: Howl;
+  private mTrack: Howl;
 
-  private readonly _buttonCallbacks;
+  private readonly mButtonCallbacks: Array<() => void | Promise<void>>;
 
   constructor() {
     super();
 
-    this._buttonCallbacks = [
+    this.mButtonCallbacks = [
       () => {},
       async () => await this._onDeckConstructionButtonClicked(),
       async () => await this._onCardListButtonClicked(),
@@ -56,7 +56,7 @@ class MenuPage extends BasePage {
 
     await getNavigator().closeModal();
 
-    this._track.stop();
+    this.mTrack.stop();
   }
 
   onNavigatedFrom(): void | Promise<void> {
@@ -75,32 +75,32 @@ class MenuPage extends BasePage {
 
     const shinyEffectMask = Sprite.from(`${assetPrefix}/menu/joey_logo.png`);
 
-    this._logoSprite = Sprite.from(`${assetPrefix}/menu/joey_logo.png`);
-    this._logoSprite.alpha = 0;
+    this.mLogoSprite = Sprite.from(`${assetPrefix}/menu/joey_logo.png`);
+    this.mLogoSprite.alpha = 0;
 
-    this._shinyEffectSprite = Sprite.from(`${assetPrefix}/menu/glossy0.png`);
+    this.mShinyEffectSprite = Sprite.from(`${assetPrefix}/menu/glossy0.png`);
 
-    this._shinyEffectSprite.x = 560 + this._shinyEffectSprite.width;
-    this._shinyEffectSprite.anchor.set(1, 0);
-    this._shinyEffectSprite.mask = shinyEffectMask;
+    this.mShinyEffectSprite.x = 560 + this.mShinyEffectSprite.width;
+    this.mShinyEffectSprite.anchor.set(1, 0);
+    this.mShinyEffectSprite.mask = shinyEffectMask;
 
-    logoBoundsMask.rect(0, 0, this._logoSprite.width, this._logoSprite.height);
+    logoBoundsMask.rect(0, 0, this.mLogoSprite.width, this.mLogoSprite.height);
     logoBoundsMask.fill();
 
     logoContent.mask = logoBoundsMask;
 
-    this._clickSound = new Howl({
+    this.mClickSound = new Howl({
       src: 'commons/decide.ogg'
     });
-    this._returnSound = new Howl({
+    this.mReturnSound = new Howl({
       src: 'commons/return.ogg'
     });
-    this._track = new Howl({
+    this.mTrack = new Howl({
       src: `${assetPrefix}/menu/m_menu.ogg`,
       loop: true
     });
 
-    logoContent.addChild(this._logoSprite, this._shinyEffectSprite, shinyEffectMask, logoBoundsMask);
+    logoContent.addChild(this.mLogoSprite, this.mShinyEffectSprite, shinyEffectMask, logoBoundsMask);
 
     this.addChild(background, logoContent);
 
@@ -141,19 +141,19 @@ class MenuPage extends BasePage {
   private async _renderMenuItems(): Promise<void> {
     const defaultsheets = this._getDefaultButtonSpritesheets();
     const hoversheets = this._getHoverButtonSpritesheets();
-    const buttonCount = this._buttonCallbacks.length;
+    const buttonCount = this.mButtonCallbacks.length;
     const hoverSpritesCallback = (sheet: Spritesheet, index: number) => sheet.textures[`button${index + 1}-${i}.png`];
     const containerX = 201;
     const containerY = 320;
 
     let i: number;
 
-    this._buttonContainer = new Container();
-    this._buttonContainer.position.set(containerX, containerY);
-    this._buttonContainer.alpha = 0;
+    this.mButtonContainer = new Container();
+    this.mButtonContainer.position.set(containerX, containerY);
+    this.mButtonContainer.alpha = 0;
 
-    this._btnAnimContainer = new Container();
-    this._btnAnimContainer.position.set(containerX, containerY);
+    this.mBtnAnimContainer = new Container();
+    this.mBtnAnimContainer.position.set(containerX, containerY);
 
     for (i = 1; i <= buttonCount; i++) {
       const defaultSprite = Sprite.from(defaultsheets[0].textures[`button0-${i}.png`]);
@@ -182,21 +182,21 @@ class MenuPage extends BasePage {
       button.y = buttonY;
       pressedAnimSprite.y = buttonY;
 
-      this._buttonContainer.addChild(button);
-      this._btnAnimContainer.addChild(pressedAnimSprite);
+      this.mButtonContainer.addChild(button);
+      this.mBtnAnimContainer.addChild(pressedAnimSprite);
     }
 
-    this.addChild(this._buttonContainer, this._btnAnimContainer);
+    this.addChild(this.mButtonContainer, this.mBtnAnimContainer);
   }
 
   private _attachButtonListeners(): void {
-    const buttons = this._buttonContainer.children as FancyButton[];
+    const buttons = this.mButtonContainer.children as FancyButton[];
 
     if (!buttons.length) {
       return;
     }
     
-    const btnAnimSprites = this._btnAnimContainer.children as AnimatedSprite[];
+    const btnAnimSprites = this.mBtnAnimContainer.children as AnimatedSprite[];
     let isInteracting: boolean = false;
 
     const onBtnPointerDownCallback = (event: FederatedPointerEvent, button: FancyButton, sprite: AnimatedSprite) => {
@@ -208,7 +208,7 @@ class MenuPage extends BasePage {
       button.visible = false;
       sprite.visible = true;
       sprite.play();
-      this._clickSound.play();
+      this.mClickSound.play();
     };
 
     const onButtonPointerEnterCallback = function (this: FancyButton) {
@@ -225,7 +225,7 @@ class MenuPage extends BasePage {
       }
     };
 
-    for (let i = 0, length = this._buttonCallbacks.length; i < length; i++) {
+    for (let i = 0, length = this.mButtonCallbacks.length; i < length; i++) {
       const button = buttons[i];
       const btnAnimSprite = btnAnimSprites[i];
 
@@ -234,7 +234,7 @@ class MenuPage extends BasePage {
         btnAnimSprite.visible = false;
         button.visible = true;
         isInteracting = false;
-        this._buttonCallbacks[i]();
+        this.mButtonCallbacks[i]();
       };
       button.onmousedown = (event: FederatedPointerEvent) => onBtnPointerDownCallback(event, button, btnAnimSprite);
       button.onpointerenter = onButtonPointerEnterCallback;
@@ -279,7 +279,7 @@ class MenuPage extends BasePage {
       x: 40,
       y: 300,
       closeOnClickOutside: true,
-      onClose: () => this._returnSound.play()
+      onClose: () => this.mReturnSound.play()
     });
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -320,11 +320,11 @@ class MenuPage extends BasePage {
   private _runAllAnimations(): Promise<void> {
     return new Promise((resolve) => {
       this.animate({
-        from: this._shinyEffectSprite.x,
+        from: this.mShinyEffectSprite.x,
         to: 0,
         duration: 1200,
         onUpdate: (value: number) => {
-          this._shinyEffectSprite.x = value;
+          this.mShinyEffectSprite.x = value;
         }
       });
 
@@ -334,7 +334,7 @@ class MenuPage extends BasePage {
         duration: 400,
         elapsed: -1200,
         onUpdate: (value: number) => {
-          this._logoSprite.alpha = value;
+          this.mLogoSprite.alpha = value;
         }
       });
 
@@ -344,7 +344,7 @@ class MenuPage extends BasePage {
         duration: 700,
         elapsed: -1600,
         onUpdate: (value: number) => {
-          this._buttonContainer.alpha = value;
+          this.mButtonContainer.alpha = value;
         },
         onComplete: resolve
       });
@@ -352,7 +352,7 @@ class MenuPage extends BasePage {
   }
 
   private _playAudio(): void {
-    this._track.play();
+    this.mTrack.play();
   }
 }
 

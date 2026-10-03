@@ -3,7 +3,7 @@ import { Howl } from 'howler';
 import i18next from 'i18next';
 import * as log from 'loglevel';
 import { AdjustmentFilter } from 'pixi-filters';
-import { AnimatedSprite, Assets, BitmapText, Container, FederatedEvent, Graphics, Sprite, Spritesheet, Text, TextStyleOptions, Texture } from 'pixi.js';
+import { AnimatedSprite, Assets, BitmapText, Container, FederatedEvent, Graphics, PointData, Sprite, Spritesheet, Text, TextStyleOptions, Texture } from 'pixi.js';
 import { linear } from 'popmotion';
 import { client } from '../client';
 import { HoverButtonContainer } from '../components/HoverButtonContainer';
@@ -241,8 +241,9 @@ class CardListPage extends BasePage {
     const scrollBarSlider = this._previewCardScrollBar.slider;
 
     // Scroll handling
-    this._previewCardScrollView.onScroll.connect((value: number) => {
-      scrollBarSlider.value = -value;
+    this._previewCardScrollView.onScroll.connect((value: number | PointData) => {
+      const val = typeof value === 'number' ? value : value.y;
+      scrollBarSlider.value = -val;
     });
     scrollBarSlider.onUpdate.connect((value: number) => {
       this._previewCardScrollView.scrollToPosition({

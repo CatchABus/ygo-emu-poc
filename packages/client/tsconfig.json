@@ -5,6 +5,12 @@
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "jsx-standalone",
+    "paths": {
+      "jsx-standalone/jsx-runtime": ["./src/runtime/jsx-runtime"],
+      "jsx-standalone/jsx-dev-runtime": ["./src/runtime/jsx-dev-runtime"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",
