@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "setup": "node cleanup.mjs && npm install",
-    "start": "cross-env NX_LOAD_DOT_ENV_FILES=false nx run-many -t dev --projects=client,server"
+    "start": "cross-env NX_LOAD_DOT_ENV_FILES=false nx run-many -t dev --projects=server,client"
   },
   "private": true,
   "devDependencies": {

@@ -86,8 +86,8 @@ class CardListPage extends BasePage {
     this._cardTemplates = Array.from(cardData);
     this._cardTemplates.sort(cardNameComparator);
 
-    this._cardAttributeSheet = Assets.get('cards/icon_attribute.json');
-    this._cardRaceSheet = Assets.get('cards/icon_race.json');
+    this._cardAttributeSheet = Assets.get('commons/icon_attribute.json');
+    this._cardRaceSheet = Assets.get('commons/icon_race.json');
     this._newIndicatorSheet = Assets.get(`${assetPrefix}/card_list/new_anime_${locale}.json`);
   }
 

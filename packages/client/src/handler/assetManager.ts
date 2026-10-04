@@ -1,15 +1,25 @@
 import { Assets } from 'pixi.js';
 import { client } from '../client';
 
+
 async function initAssets() {
   const assetPrefix = client.gameMode;
 
-  // Init PixiJS assets with this asset manifest
-  await Assets.init({
-    manifest: 'manifest.json'
+  const manifest = await Assets.load({
+    src: 'manifest.json'
   });
 
-  await Assets.loadBundle(['default', 'login']);
+  for (const bundle of manifest.bundles) {
+    if (bundle.name !== 'cards') {
+      for (const asset of bundle.assets) {
+        asset.data.resolution = 2;
+      }
+    }
+  }
+  
+  Assets.resolver.addManifest(manifest);
+
+  await Assets.loadBundle(['default', 'joey']);
 
   // Start loading all bundles in the background
   Assets.backgroundLoadBundle([

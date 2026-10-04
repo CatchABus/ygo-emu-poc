@@ -25,8 +25,10 @@ async function startApp() {
   const app = await client.start({
     // Light color is better for making sprites more distinct and positioning easier
     background: '#fff',
-    resizeTo: appElement,
+    resizeTo: appElement
   });
+
+  app.stage.scale = 2;
 
   await initAssets();
   await initI18n();

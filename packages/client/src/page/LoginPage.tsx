@@ -2,15 +2,16 @@ import { Input } from '@pixi/ui';
 import { Howl } from 'howler';
 import i18next from 'i18next';
 import * as log from 'loglevel';
+import { atom } from 'nanostores';
 import { AdjustmentFilter } from 'pixi-filters';
 import { Assets, Container, Graphics, Text, Texture } from 'pixi.js';
 import { client } from '../client';
+import { getCurrentLocale } from '../i18n';
 import { getNavigator } from '../navigation';
 import { ReceivablePacket } from '../network/ReceivablePacket';
 import { createRect, getRequestProtocol } from '../util/helpers';
 import { BasePage } from './BasePage';
 import MenuPage from './MenuPage';
-import { atom } from 'nanostores';
 
 const FORM_WIDTH = 200;
 const FORM_HEIGHT = 180;
@@ -24,7 +25,7 @@ class LoginPage extends BasePage {
   private mResponseMsg = atom(i18next.t('game_desc'));
 
   async preload(): Promise<void> {
-    await Assets.loadBundle('login');
+    await Assets.loadBundle(['default', 'joey']);
   }
 
   onNavigatingFrom(): void {
@@ -39,10 +40,12 @@ class LoginPage extends BasePage {
   }
 
   async onNavigatingTo(): Promise<void> {
+    const assetPrefix = client.gameMode;
+    const locale = getCurrentLocale();
     const filters = [new AdjustmentFilter({
       brightness: 0.7
     })];
-    const bg = (<sprite texture={Texture.from('login/background.png')} filters={filters}></sprite>);
+    const bg = (<sprite texture={Texture.from(`${assetPrefix}/title_1_${locale}.png`)} filters={filters}></sprite>);
     const footerHeight = 40;
 
     this.mClickSound = new Howl({
@@ -73,7 +76,7 @@ class LoginPage extends BasePage {
       }}>
         <graphics afterCreate={afterGraphCreate}>
         </graphics>
-        <text x={centerX} y={24} text={i18next.t('login.title')} style={{
+        <text x={centerX} y={24} text={import.meta.env.YGO_TITLE ?? ''} style={{
           fill: '#fefefe',
           fontSize: 20
         }} anchor={{

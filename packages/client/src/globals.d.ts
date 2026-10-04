@@ -8,6 +8,7 @@ declare namespace globalThis {
 declare const __SUPPORTED_GAME_MODES__: GameMode[];
 
 interface ImportMetaEnv {
+  readonly YGO_TITLE: string;
   readonly YGO_HOST: string;
   readonly YGO_SECURE_CONNECTION: string;
   readonly YGO_FULL_CARD_SET_ENABLED: string;

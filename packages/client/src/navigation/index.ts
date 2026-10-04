@@ -67,7 +67,10 @@ class Navigator {
       child.visible = false;
     }
 
-    const texture = this._app.renderer.extract.texture(stage);
+    const texture = this._app.renderer.extract.texture({
+      target: stage,
+      resolution: 2
+    });
 
     for (const child of childrenToExclude) {
       child.visible = true;
