@@ -1,6 +1,6 @@
-import { Application, ColorSource, Container, Filter, Graphics, Sprite } from 'pixi.js';
-import { BasePage } from '../page/BasePage';
+import { Application, ColorSource, Container, Filter, Graphics } from 'pixi.js';
 import { animate } from '../animation';
+import { BasePage } from '../page/BasePage';
 
 type PageConstructor = new () => BasePage;
 
@@ -59,26 +59,6 @@ class Navigator {
     return this._modalContainer;
   }
 
-  private _getScreenSprite(page: BasePage): Sprite {
-    const { stage } = this._app;
-    const childrenToExclude = stage.children.filter(child => child !== page);
-
-    for (const child of childrenToExclude) {
-      child.visible = false;
-    }
-
-    const texture = this._app.renderer.extract.texture({
-      target: stage,
-      resolution: 2
-    });
-
-    for (const child of childrenToExclude) {
-      child.visible = true;
-    }
-
-    return Sprite.from(texture);
-  }
-
   private _startPageTransition(view: Container, transitionOptions: TransitionOptions): Promise<void> {
     const { duration, filter } = transitionOptions;
 
@@ -107,7 +87,7 @@ class Navigator {
         
     const { width, height } = this._app.renderer;
     const newPage = options.createPage();
-    let bitmapToAnimate: Container = null;
+    const oldPage = this._currentPage;
 
     options = {
       ...this._getPageDefaultOptions(),
@@ -115,27 +95,10 @@ class Navigator {
     };
 
     if (this._currentPage) {
-      const oldPage = this._currentPage;
-
       // Unset early to prevent issues from multiple navigate calls
       this._currentPage = null;
 
-      if (options.transition.filter) {
-        bitmapToAnimate = this._getScreenSprite(oldPage);
-        this._app.stage.addChild(bitmapToAnimate);
-      }
-
       await oldPage.onNavigatingFrom();
-
-      this._app.stage.removeChild(oldPage);
-
-      if (newPage !== oldPage) {
-        oldPage.destroy({
-          children: true
-        });
-      }
-
-      await oldPage.onNavigatedFrom();
     }
 
     this._currentPage = newPage;
@@ -147,14 +110,30 @@ class Navigator {
       // This will scale entire page based on background bounds
       this._currentPage.setSize(width, height);
 
-      this._app.stage.addChild(this._currentPage);
+      if (oldPage) {
+        this._app.stage.addChildAt(this._currentPage, this._app.stage.getChildIndex(oldPage));
 
-      if (bitmapToAnimate) {
-        this._app.stage.swapChildren(bitmapToAnimate, this._currentPage);
-        await this._startPageTransition(bitmapToAnimate, options.transition);
-        this._app.stage.removeChild(bitmapToAnimate);
+        if (options.transition?.filter) {
+          await this._startPageTransition(oldPage, options.transition);
+        }
+      } else {
+        this._app.stage.addChild(this._currentPage);
+      }
+    }
+
+    if (oldPage) {
+      this._app.stage.removeChild(oldPage);
+
+      if (newPage !== oldPage) {
+        oldPage.destroy({
+          children: true
+        });
       }
 
+      await oldPage.onNavigatedFrom();
+    }
+
+    if (newPage) {
       await this._currentPage.onNavigatedTo();
     }
 
@@ -299,7 +278,5 @@ function getNavigator(): Navigator {
 
 
 export {
-  setupNavigator,
-  Navigator,
-  getNavigator
+  getNavigator, Navigator, setupNavigator
 };

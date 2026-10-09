@@ -217,7 +217,7 @@ class CardListPage extends BasePage {
       style: {
         fontFamily: 'CardListCount',
         align: 'left',
-      },
+      }
     });
     counter.x = 700;
     counter.y = 30;
@@ -564,10 +564,10 @@ class CardListPage extends BasePage {
     const totalPages = this._cardTemplates.length / CARDS_PER_PAGE;
     let isNavigating = false;
 
-    this._backButton.onclick = async () => {
+    this._backButton.once('click', async () => {
       this._clickSound.play();
       await this._goBack();
-    };
+    });
 
     const pageClickCallback = async (event: FederatedEvent) => {
       if (isNavigating) {

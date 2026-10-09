@@ -1,18 +1,17 @@
 import { Container, ContainerChild, ContainerOptions } from 'pixi.js';
 import { AnimationWrapper, animate } from '../animation';
 import { AnimationOptions } from 'popmotion';
-import { createRect } from '../util/helpers';
-
-const WIDTH = parseFloat(import.meta.env.YGO_WINDOW_WIDTH);
-const HEIGHT = parseFloat(import.meta.env.YGO_WINDOW_HEIGHT);
+import { createRect, SCREEN_HEIGHT, SCREEN_WIDTH } from '../util/helpers';
 
 abstract class BasePage extends Container {
   private readonly _runningAnimations: AnimationWrapper[] = [];
 
-  constructor(options?: ContainerOptions<ContainerChild>) {
+  constructor(options?: ContainerOptions<ContainerChild>, fitsWindow: boolean = true) {
     super(options);
 
-    this.addChild(createRect(0, 0, WIDTH, HEIGHT));
+    if (fitsWindow) {
+      this.addChild(createRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
+    }
   }
 
   resize(width: number, height: number): void {

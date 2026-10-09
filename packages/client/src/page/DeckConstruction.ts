@@ -770,10 +770,10 @@ class DeckConstruction extends BasePage {
   private _attachInteractionListeners(): void {
     let isOpeningBag = false;
 
-    this._backButton.onclick = async () => {
+    this._backButton.once('click', async () => {
       this._clickSound.play();
       await this._goBack();
-    };
+    });
 
 
     this.onwheel = (event: WheelEvent) => {

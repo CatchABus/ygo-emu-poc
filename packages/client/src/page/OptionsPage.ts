@@ -17,7 +17,7 @@ class OptionsPage extends BasePage {
   private readonly _clickSound: Howl;
 
   constructor() {
-    super();
+    super(undefined, false);
     this.alpha = 0;
     this._clickSound = new Howl({
       src: 'commons/decide.ogg'
