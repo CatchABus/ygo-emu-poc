@@ -32,7 +32,7 @@ class OptionsPage extends BasePage {
 
     this._drawVolumeBar();
     this._drawCardsetSwitch();
-    this._drawWindowControls();
+    this._drawFullscreenSwitch();
     this._drawForbiddenCardsControl();
   }
 
@@ -165,11 +165,6 @@ class OptionsPage extends BasePage {
     this.addChild(cardsetSprite);
   }
 
-  private _drawWindowControls(): void {
-    this._drawFullscreenSwitch();
-    this._drawWindowBitControl();
-  }
-
   private _drawFullscreenSwitch(): void {
     const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
@@ -224,18 +219,6 @@ class OptionsPage extends BasePage {
     this._updateWindowButtonState(!!document.fullscreenElement);
 
     this.addChild(windowModeButton, fullscreenButton);
-  }
-
-  private _drawWindowBitControl(): void {
-    const assetPrefix = client.gameMode;
-    const locale = getCurrentLocale();
-
-    // This is the default
-    const windowBit32Sprite = Sprite.from(`${assetPrefix}/options/op_${locale}_win_32.png`);
-    windowBit32Sprite.x = 245;
-    windowBit32Sprite.y = 235;
-
-    this.addChild(windowBit32Sprite);
   }
 
   private _updateWindowButtonState(isFullscreen: boolean): void {
