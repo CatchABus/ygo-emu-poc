@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <font>
   <info face="CardPoints" size="30" bold="0" italic="0" charset="" unicode="1" stretchH="200" smooth="1" aa="1" padding="0,0,0,0" spacing="1,1" />
-  <common lineHeight="30" base="30" scaleW="172" scaleH="30" pages="1" packed="0" />
+  <common lineHeight="30" base="30" scaleW="132" scaleH="30" pages="1" packed="0" />
   <pages>
     <page id="0" file="font_k_cardpoints.png" />
   </pages>
