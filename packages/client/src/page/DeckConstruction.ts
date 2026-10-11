@@ -66,42 +66,42 @@ enum SortBy {
 }
 
 class DeckConstruction extends BasePage {
-  private readonly _cardSlotDataset: CardSlot[] = [];
-  private readonly _pointerMoveHandlers: Set<(event: FederatedPointerEvent) => void> = new Set();
+  private readonly mCardSlotDataset: CardSlot[] = [];
+  private readonly mPointerMoveHandlers: Set<(event: FederatedPointerEvent) => void> = new Set();
 
-  private _filteredCardSlotDataset: CardSlot[];
+  private mFilterCardSlotDataset: CardSlot[];
 
-  private _backButton: FancyButton;
+  private mBackBtn: FancyButton;
 
-  private _bagContainer: Container;
-  private _bagButton: FancyButton;
-  private _bagSlider: Slider;
-  private _bagControls: Container;
-  private _bagSlots: Container[];
-  private _bagFilterLabel: Sprite;
-  private _bagSortButton: FancyButton;
-  private _isBagFilterLabelVisible: boolean = true;
+  private mBagContainer: Container;
+  private mBagButton: FancyButton;
+  private mBagSlider: Slider;
+  private mBagControls: Container;
+  private mBagSlots: Container[];
+  private mBagFilterLabel: Sprite;
+  private mBagSortButton: FancyButton;
+  private mIsBagFilterLabelVisible: boolean = true;
 
-  private _clickSound: Howl;
-  private _bagOpenSound: Howl;
-  private _track: Howl;
+  private mClickSound: Howl;
+  private mBagOpenSound: Howl;
+  private mTrack: Howl;
 
-  private _cardTemplates: ReadonlyArray<CardTemplate>;
-  private _bagFilterLabelSheet: Spritesheet;
-  private _bagSortLabelSheet: Spritesheet;
-  private _cardAttributeSheet: Spritesheet;
-  private _cardRaceSheet: Spritesheet;
-  private _spellTrapTypeSheet: Spritesheet;
-  private _deckCardLimitSheet: Spritesheet;
-  private _newIndicatorSheet: Spritesheet;
+  private mCardTemplates: ReadonlyArray<CardTemplate>;
+  private mBagFilterLabelSheet: Spritesheet;
+  private mBagSortLabelSheet: Spritesheet;
+  private mCardAttributeSheet: Spritesheet;
+  private mCardRaceSheet: Spritesheet;
+  private mSpellTrapTypeSheet: Spritesheet;
+  private mDeckCardLimitSheet: Spritesheet;
+  private mNewIndiSheet: Spritesheet;
 
-  private _isBagOpen: boolean = false;
-  private _currentBagIndex: number = 0;
+  private mIsBagOpen: boolean = false;
+  private mCurBagIdx: number = 0;
 
-  private _bagFilterBy: FilterBy = FilterBy.ALL;
-  private _bagSortBy: SortBy = SortBy.NAME;
+  private mBagFilterBy: FilterBy = FilterBy.ALL;
+  private mBagSortBy: SortBy = SortBy.NAME;
 
-  private _newIndicatorsUpdateInterval: ReturnType<typeof setInterval>;
+  private mNewIndisUpdateInterval: ReturnType<typeof setInterval>;
 
   constructor() {
     super();
@@ -117,19 +117,19 @@ class DeckConstruction extends BasePage {
 
     const { default: cardData } = await import('../data/cardData.json');
 
-    this._cardTemplates = cardData;
+    this.mCardTemplates = cardData;
 
-    this._bagFilterLabelSheet = Assets.get(`${assetPrefix}/deck_c/icon/icon_filter_${locale}.json`);
-    this._bagSortLabelSheet = Assets.get(`${assetPrefix}/deck_c/icon/icon_sort.json`);
-    this._cardAttributeSheet = Assets.get('commons/icon_attribute.json');
-    this._cardRaceSheet = Assets.get('commons/icon_race.json');
-    this._spellTrapTypeSheet = Assets.get(`${assetPrefix}/deck_c/icon/icon_spelltrap.json`);
-    this._deckCardLimitSheet = Assets.get(`${assetPrefix}/deck_c/icon/icon_limit.json`);
-    this._newIndicatorSheet = Assets.get(`${assetPrefix}/deck_c/background/new_anime_${locale}.json`);
+    this.mBagFilterLabelSheet = Assets.get(`${assetPrefix}/deck_c/icon/icon_filter_${locale}.json`);
+    this.mBagSortLabelSheet = Assets.get(`${assetPrefix}/deck_c/icon/icon_sort.json`);
+    this.mCardAttributeSheet = Assets.get('commons/icon_attribute.json');
+    this.mCardRaceSheet = Assets.get('commons/icon_race.json');
+    this.mSpellTrapTypeSheet = Assets.get(`${assetPrefix}/deck_c/icon/icon_spelltrap.json`);
+    this.mDeckCardLimitSheet = Assets.get(`${assetPrefix}/deck_c/icon/icon_limit.json`);
+    this.mNewIndiSheet = Assets.get(`${assetPrefix}/deck_c/background/new_anime_${locale}.json`);
   }
 
   async onNavigatedTo(): Promise<void> {
-    const hasNewCards = this._cardSlotDataset.some((slotData) => slotData.isNew);
+    const hasNewCards = this.mCardSlotDataset.some((slotData) => slotData.isNew);
 
     this._addEscapeKeyListener();
     this._playAudio();
@@ -151,12 +151,12 @@ class DeckConstruction extends BasePage {
   async onNavigatingFrom(): Promise<void> {
     this.stopAllAnimations();
 
-    if (this._newIndicatorsUpdateInterval != null) {
-      clearInterval(this._newIndicatorsUpdateInterval);
-      this._newIndicatorsUpdateInterval = null;
+    if (this.mNewIndisUpdateInterval != null) {
+      clearInterval(this.mNewIndisUpdateInterval);
+      this.mNewIndisUpdateInterval = null;
     }
 
-    this._track.stop();
+    this.mTrack.stop();
   }
 
   onNavigatedFrom(): void {
@@ -170,13 +170,13 @@ class DeckConstruction extends BasePage {
     this._drawBag();
     this._drawBagScrollbar();
 
-    this._clickSound = new Howl({
+    this.mClickSound = new Howl({
       src: 'commons/decide.ogg'
     });
-    this._bagOpenSound = new Howl({
+    this.mBagOpenSound = new Howl({
       src: 'commons/card_open.ogg'
     });
-    this._track = new Howl({
+    this.mTrack = new Howl({
       src: `${assetPrefix}/deck_c/m_deck.ogg`,
       loop: true
     });
@@ -191,14 +191,14 @@ class DeckConstruction extends BasePage {
       for (let i = 0; i < length; i++) {
         const id = packet.readInt32();
         const templateId = packet.readInt32();
-        const template = this._cardTemplates.find((template) => template.id === templateId);
+        const template = this.mCardTemplates.find((template) => template.id === templateId);
 
         if (!template) {
           log.warn(`Failed to find card template for ID ${templateId}!`);
           continue;
         }
 
-        this._cardSlotDataset.push({
+        this.mCardSlotDataset.push({
           id,
           template,
           isNew: !!packet.readInt8(),
@@ -213,9 +213,9 @@ class DeckConstruction extends BasePage {
 
   private _updateCardBagState(): void {
     // Filter based on player preferences
-    const cardSlotDataset = this._cardSlotDataset.filter(filterCallbacks[this._bagFilterBy]);
+    const cardSlotDataset = this.mCardSlotDataset.filter(filterCallbacks[this.mBagFilterBy]);
     const cardCount = cardSlotDataset.length;
-    const comparator = this[`_bagSortComparator${this._bagSortBy}`];
+    const comparator = this[`_bagSortComparator${this.mBagSortBy}`];
 
     // Sort based on player preferences
     if (comparator) {
@@ -223,25 +223,25 @@ class DeckConstruction extends BasePage {
     }
 
     // Reset scrolling
-    this._bagSlider.value = 0;
-    this._bagSlider.max = cardCount <= BAG_SLOTS ? 0 : cardCount - BAG_SLOTS;
+    this.mBagSlider.value = 0;
+    this.mBagSlider.max = cardCount <= BAG_SLOTS ? 0 : cardCount - BAG_SLOTS;
 
     // Update filter and sorting indicators
-    this._bagFilterLabel.texture = this._bagFilterLabelSheet.textures[`bag-filter-${this._bagFilterBy}`];
+    this.mBagFilterLabel.texture = this.mBagFilterLabelSheet.textures[`bag-filter-${this.mBagFilterBy}`];
 
-    if (this._bagSortButton.defaultView instanceof Sprite) {
-      this._bagSortButton.defaultView.texture = this._bagSortLabelSheet.textures[`bag-sort-${this._bagSortBy}`];
+    if (this.mBagSortButton.defaultView instanceof Sprite) {
+      this.mBagSortButton.defaultView.texture = this.mBagSortLabelSheet.textures[`bag-sort-${this.mBagSortBy}`];
     }
-    if (this._bagSortButton.pressedView instanceof Sprite) {
-      this._bagSortButton.pressedView.texture = this._bagSortLabelSheet.textures[`bag-sort-${this._bagSortBy}-pressed`];
+    if (this.mBagSortButton.pressedView instanceof Sprite) {
+      this.mBagSortButton.pressedView.texture = this.mBagSortLabelSheet.textures[`bag-sort-${this.mBagSortBy}-pressed`];
     }
 
-    this._filteredCardSlotDataset = cardSlotDataset;
+    this.mFilterCardSlotDataset = cardSlotDataset;
   }
 
   private _updateCardBagContent(): void {
-    const slots = this._bagSlots;
-    const cardSlotDataset = this._filteredCardSlotDataset;
+    const slots = this.mBagSlots;
+    const cardSlotDataset = this.mFilterCardSlotDataset;
     const dataCount = cardSlotDataset.length;
 
     for (let i = 0, length = slots.length; i < length; i++) {
@@ -254,7 +254,7 @@ class DeckConstruction extends BasePage {
       const [basicAtkPoints, basicDefPoints] = basicDetails.children;
       const [cardName, advancedAtkPoints, divider, advancedDefPoints, cardAttribute, cardType, starIcon, starCount] = advancedDetails.children as [Text, BitmapText, BitmapText, BitmapText, Sprite, Sprite, Sprite, BitmapText];
 
-      const slotData = cardSlotDataset[this._currentBagIndex + i];
+      const slotData = cardSlotDataset[this.mCurBagIdx + i];
 
       // We have data
       if (dataCount > i) {
@@ -262,9 +262,9 @@ class DeckConstruction extends BasePage {
 
         cardImage.texture = Assets.get(`cards/images/${slotData.template.id}.png`);
         cardCount.text = slotData.count;
-        cardLimit.texture = this._deckCardLimitSheet.textures[`decklimit-${slotData.deckLimit}`];
+        cardLimit.texture = this.mDeckCardLimitSheet.textures[`decklimit-${slotData.deckLimit}`];
         cardName.text = i18next.t(`cards.${slotData.template.id}.name`);
-        cardAttribute.texture = attributeIndex >= 0 ? this._cardAttributeSheet.textures[`attr-${attributeIndex}`] : null;
+        cardAttribute.texture = attributeIndex >= 0 ? this.mCardAttributeSheet.textures[`attr-${attributeIndex}`] : null;
 
         if (slotData.isNew) {
           newIndicator.visible = true;
@@ -283,7 +283,7 @@ class DeckConstruction extends BasePage {
           basicDefPoints.text = slotData.template.def;
           starCount.text = slotData.template.level;
 
-          cardType.texture = raceIndex >= 0 ? this._cardRaceSheet.textures[`race-${raceIndex}`] : null;
+          cardType.texture = raceIndex >= 0 ? this.mCardRaceSheet.textures[`race-${raceIndex}`] : null;
 
           divider.visible = true;
           starIcon.visible = true;
@@ -294,7 +294,7 @@ class DeckConstruction extends BasePage {
           basicDefPoints.text = '';
           starCount.text = '';
 
-          cardType.texture = this._spellTrapTypeSheet.textures[`spelltrap-${getSpellTrapType(slotData.template)}`];
+          cardType.texture = this.mSpellTrapTypeSheet.textures[`spelltrap-${getSpellTrapType(slotData.template)}`];
 
           divider.visible = false;
           starIcon.visible = false;
@@ -326,7 +326,7 @@ class DeckConstruction extends BasePage {
   }
 
   private _playAudio(): void {
-    this._track.play();
+    this.mTrack.play();
   }
 
   private _drawBackground(): void {
@@ -361,7 +361,7 @@ class DeckConstruction extends BasePage {
     backButton.position.set(61, 548);
 
     this.addChild(backButton);
-    this._backButton = backButton;
+    this.mBackBtn = backButton;
   }
 
   private _drawBag(): void {
@@ -392,10 +392,10 @@ class DeckConstruction extends BasePage {
     container.addChild(bag, bagToggleButton, bagControls, bagSlotContainer);
     this.addChild(container, bagMask);
 
-    this._bagContainer = container;
-    this._bagButton = bagToggleButton;
-    this._bagControls = bagControls;
-    this._bagSlots = bagSlotContainer.children;
+    this.mBagContainer = container;
+    this.mBagButton = bagToggleButton;
+    this.mBagControls = bagControls;
+    this.mBagSlots = bagSlotContainer.children;
   }
 
   private _createBagControlButton(textureSources: TextureSourceLike[]): FancyButton {
@@ -424,22 +424,22 @@ class DeckConstruction extends BasePage {
 
     const buttons = this._createBagFilterButtons();
 
-    const filterLabel = Sprite.from(this._bagFilterLabelSheet.textures[`bag-filter-${this._bagFilterBy}`]);
+    const filterLabel = Sprite.from(this.mBagFilterLabelSheet.textures[`bag-filter-${this.mBagFilterBy}`]);
     filterLabel.eventMode = 'none';
     filterLabel.anchor.set(0.5, 0.5);
     filterLabel.position.set(57, 20);
 
     const bagSortButton = new FancyButton({
-      defaultView: Sprite.from(this._bagSortLabelSheet.textures[`bag-sort-${this._bagSortBy}`]),
-      pressedView: Sprite.from(this._bagSortLabelSheet.textures[`bag-sort-${this._bagSortBy}-pressed`])
+      defaultView: Sprite.from(this.mBagSortLabelSheet.textures[`bag-sort-${this.mBagSortBy}`]),
+      pressedView: Sprite.from(this.mBagSortLabelSheet.textures[`bag-sort-${this.mBagSortBy}-pressed`])
     });
     bagSortButton.position.set(114, 8);
     bagSortButton.onclick = (event: FederatedPointerEvent) => this._onCardBagSortClick(event);
 
-    this._pointerMoveHandlers.add((event: FederatedPointerEvent) => this._toggleBagFilterLabelVisibility(event));
+    this.mPointerMoveHandlers.add((event: FederatedPointerEvent) => this._toggleBagFilterLabelVisibility(event));
 
-    this._bagFilterLabel = filterLabel;
-    this._bagSortButton = bagSortButton;
+    this.mBagFilterLabel = filterLabel;
+    this.mBagSortButton = bagSortButton;
 
     container.addChild(...buttons, filterLabel, bagSortButton);
 
@@ -474,19 +474,19 @@ class DeckConstruction extends BasePage {
     const button = event.currentTarget;
     const filterBy = parseInt(button.label.split('_')[1]);
 
-    this._clickSound.play();
+    this.mClickSound.play();
 
-    if (this._bagFilterBy !== filterBy) {
-      this._bagFilterBy = filterBy;
+    if (this.mBagFilterBy !== filterBy) {
+      this.mBagFilterBy = filterBy;
 
-      switch (this._bagFilterBy) {
+      switch (this.mBagFilterBy) {
         case FilterBy.ALL:
         case FilterBy.SPELL:
         case FilterBy.TRAP:
-          this._bagSortBy = SortBy.NAME;
+          this.mBagSortBy = SortBy.NAME;
           break;
         default:
-          this._bagSortBy = SortBy.ATTACK;
+          this.mBagSortBy = SortBy.ATTACK;
           break;
       }
     } else {
@@ -498,19 +498,19 @@ class DeckConstruction extends BasePage {
   }
 
   private _onCardBagSortClick(_event: FederatedPointerEvent): void {
-    this._clickSound.play();
+    this.mClickSound.play();
     this._incrementSorting();
     this._updateCardBagState();
     this._updateCardBagContent();
   }
 
   private _incrementSorting(): void {
-    switch (this._bagFilterBy) {
+    switch (this.mBagFilterBy) {
       case FilterBy.SPELL:
       case FilterBy.TRAP:
         break;
       default:
-        this._bagSortBy = this._bagSortBy >= SortBy.TYPE ? 0 : this._bagSortBy + 1;
+        this.mBagSortBy = this.mBagSortBy >= SortBy.TYPE ? 0 : this.mBagSortBy + 1;
         break;
     }
   }
@@ -663,32 +663,32 @@ class DeckConstruction extends BasePage {
    * @param hidden 
    */
   private _toggleBagFilterLabelVisibility(event: FederatedPointerEvent) {
-    const eventPoint = this._bagControls.toLocal(event.global);
+    const eventPoint = this.mBagControls.toLocal(event.global);
     const hidden = eventPoint.x >= 3 && eventPoint.x <= 111 && eventPoint.y >= 0 && eventPoint.y <= 35;
 
     if (hidden) {
-      if (this._isBagFilterLabelVisible) {
-        this._isBagFilterLabelVisible = false;
+      if (this.mIsBagFilterLabelVisible) {
+        this.mIsBagFilterLabelVisible = false;
 
         this.animate({
           from: 1,
           to: 0,
           duration: 400,
           onUpdate: (value: number) => {
-            this._bagFilterLabel.scale.set(value, value);
+            this.mBagFilterLabel.scale.set(value, value);
           }
         });
       }
     } else {
-      if (!this._isBagFilterLabelVisible) {
-        this._isBagFilterLabelVisible = true;
+      if (!this.mIsBagFilterLabelVisible) {
+        this.mIsBagFilterLabelVisible = true;
 
         this.animate({
           from: 0,
           to: 1,
           duration: 400,
           onUpdate: (value: number) => {
-            this._bagFilterLabel.scale.set(value, value);
+            this.mBagFilterLabel.scale.set(value, value);
           }
         });
       }
@@ -696,7 +696,7 @@ class DeckConstruction extends BasePage {
   }
 
   private _createNewIndicator(): AnimatedSprite {
-    const indicator = new AnimatedSprite(this._newIndicatorSheet.animations.news);
+    const indicator = new AnimatedSprite(this.mNewIndiSheet.animations.news);
     indicator.animationSpeed = 0.1;
     indicator.eventMode = 'none';
 
@@ -748,11 +748,11 @@ class DeckConstruction extends BasePage {
     });
 
     slider.onUpdate.connect((value: number) => {
-      this._currentBagIndex = value;
+      this.mCurBagIdx = value;
       this._updateCardBagContent();
     });
 
-    this._bagSlider = slider;
+    this.mBagSlider = slider;
 
     this.addChild(scrollBar);
   }
@@ -770,56 +770,56 @@ class DeckConstruction extends BasePage {
   private _attachInteractionListeners(): void {
     let isOpeningBag = false;
 
-    this._backButton.once('click', async () => {
-      this._clickSound.play();
+    this.mBackBtn.once('click', async () => {
+      this.mClickSound.play();
       await this._goBack();
     });
 
 
     this.onwheel = (event: WheelEvent) => {
       if (event.deltaY < 0) {
-        this._bagSlider.value = this._bagSlider.value - 1;
+        this.mBagSlider.value = this.mBagSlider.value - 1;
       } else {
-        this._bagSlider.value = this._bagSlider.value + 1;
+        this.mBagSlider.value = this.mBagSlider.value + 1;
       }
     };
 
     this.onglobalpointermove = (event: FederatedPointerEvent) => {
-      for (const handler of this._pointerMoveHandlers) {
+      for (const handler of this.mPointerMoveHandlers) {
         handler(event);
       }
     };
 
-    this._bagButton.onclick = async () => {
+    this.mBagButton.onclick = async () => {
       if (isOpeningBag) {
         return;
       }
 
       isOpeningBag = true;
 
-      this._bagOpenSound.play();
+      this.mBagOpenSound.play();
 
-      if (this._isBagOpen) {
+      if (this.mIsBagOpen) {
         await this._toggleShowBagFilters(true);
       } else {
         // Expanding bag makes slots more detailed
-        for (const slot of this._bagSlots) {
+        for (const slot of this.mBagSlots) {
           slot.children[1].visible = false;
           slot.children[2].visible = true;
         }
       }
 
       this.animate({
-        from: this._bagContainer.x,
-        to: this._isBagOpen ? 580 : 481,
+        from: this.mBagContainer.x,
+        to: this.mIsBagOpen ? 580 : 481,
         duration: 300,
         onUpdate: (value: number) => {
-          this._bagContainer.x = value;
+          this.mBagContainer.x = value;
         },
         onComplete: async () => {
-          if (this._isBagOpen) {
+          if (this.mIsBagOpen) {
             // Collapsing back makes slots less detailed
-            for (const slot of this._bagSlots) {
+            for (const slot of this.mBagSlots) {
               slot.children[1].visible = true;
               slot.children[2].visible = false;
             }
@@ -827,7 +827,7 @@ class DeckConstruction extends BasePage {
             await this._toggleShowBagFilters(false);
           }
 
-          this._isBagOpen = !this._isBagOpen;
+          this.mIsBagOpen = !this.mIsBagOpen;
           isOpeningBag = false;
         }
       });
@@ -839,9 +839,9 @@ class DeckConstruction extends BasePage {
 
     if (isBagOpen) {
       from = 0;
-      to = -this._bagControls.height;
+      to = -this.mBagControls.height;
     } else {
-      from = -this._bagControls.height;
+      from = -this.mBagControls.height;
       to = 0;
     }
 
@@ -850,7 +850,7 @@ class DeckConstruction extends BasePage {
       to,
       duration: 200,
       onUpdate: (value: number) => {
-        this._bagControls.y = value;
+        this.mBagControls.y = value;
       },
       onComplete: () => {
         const pointer = client.getApplication().renderer.events.pointer;
@@ -862,12 +862,12 @@ class DeckConstruction extends BasePage {
   }
 
   private _animateNewCardIndicators(): void {
-    if (this._newIndicatorsUpdateInterval != null) {
-      clearInterval(this._newIndicatorsUpdateInterval);
-      this._newIndicatorsUpdateInterval = null;
+    if (this.mNewIndisUpdateInterval != null) {
+      clearInterval(this.mNewIndisUpdateInterval);
+      this.mNewIndisUpdateInterval = null;
     }
 
-    this._newIndicatorsUpdateInterval = setInterval(() => {
+    this.mNewIndisUpdateInterval = setInterval(() => {
       this.animate({
         from: 1,
         to: 0,
@@ -875,7 +875,7 @@ class DeckConstruction extends BasePage {
         repeatType: 'reverse',
         duration: 400,
         onUpdate: (value: number) => {
-          for (const slot of this._bagSlots) {
+          for (const slot of this.mBagSlots) {
             const cardInfo = slot.children[0];
             const newIndicator = cardInfo.children[3] as AnimatedSprite;
 
