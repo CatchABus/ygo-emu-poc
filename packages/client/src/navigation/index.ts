@@ -62,7 +62,7 @@ class Navigator {
   private _startPageTransition(view: Container, transitionOptions: TransitionOptions): Promise<void> {
     const { duration, filter } = transitionOptions;
 
-    view.filters = [filter];
+    view.filters = filter;
 
     return new Promise((resolve) => {
       animate({

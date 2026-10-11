@@ -700,7 +700,7 @@ class CardListPage extends BasePage {
         def = '';
       }
 
-      cardImage.filters = [this._hoverCardFilter];
+      cardImage.filters = this._hoverCardFilter;
       this._hoverCardSprite.visible = true;
       this._hoverCardSprite.position.set(x + cardView.x, (y + cardView.y) - 4);
 
