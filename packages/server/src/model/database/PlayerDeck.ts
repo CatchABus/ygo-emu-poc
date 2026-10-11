@@ -16,9 +16,6 @@ class PlayerDeck extends BaseEntity {
   @Column({ type: 'bigint' })
   playerId: number;
 
-  @Column({ type: 'boolean', default: false })
-  isEquipped: boolean;
-
   public static DEFAULT_DECK_NAME = 'default';
 
   private _owner: Player;

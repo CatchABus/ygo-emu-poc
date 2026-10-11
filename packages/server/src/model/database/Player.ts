@@ -14,6 +14,9 @@ class Player extends BaseEntity {
   @Column({ type: 'bigint', unique: true })
   accountId: number;
 
+  @Column({ type: 'smallint', default: 0 })
+  curDeckIndex: number;
+
   @Column({ type: 'decimal', precision: 4, scale: 3, default: 0.5 })
   volume: number;
 
@@ -93,8 +96,6 @@ class Player extends BaseEntity {
       const deck = new PlayerDeck();
       deck.name = PlayerDeck.DEFAULT_DECK_NAME;
       deck.playerId = this.id;
-      // Set deck to be player's current deck
-      deck.isEquipped = true;
       await deck.save();
 
       // Create deck slots
@@ -108,6 +109,10 @@ class Player extends BaseEntity {
       await this.save();
 
       this._currentDeck = deck;
+
+      if (this.curDeckIndex !== 0) {
+        log.warn(`Incorrect active deck index '${this.curDeckIndex} for player '${this.id}'`)
+      }
     } catch (err) {
       log.error(err);
     }
@@ -133,19 +138,27 @@ class Player extends BaseEntity {
 
   private async _restoreDecks(): Promise<void> {
     try {
-      const decks = await PlayerDeck.findBy<PlayerDeck>({
-        playerId: this.id
+      const decks = await PlayerDeck.find<PlayerDeck>({
+        where: {
+          playerId: this.id
+        },
+        order: {
+          id: 'DESC',
+        }
       });
+      const decksLen = decks.length;
 
-      if (decks.length) {
-        for (const deck of decks) {
+      if (decksLen > 0) {
+        for (let i = 0; i < decksLen; i++) {
+          const deck = decks[i];
+
           deck.owner = this;
           deck.restore();
 
           this._decks.set(deck.name, deck);
 
           // Set current deck
-          if (deck.isEquipped) {
+          if (this.curDeckIndex === i) {
             this._currentDeck = deck;
           }
         }
