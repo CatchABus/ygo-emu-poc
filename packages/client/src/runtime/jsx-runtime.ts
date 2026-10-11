@@ -17,9 +17,34 @@ const registry: Record<string, new (...args) => PixiElement> = {
   'fancyButton': FancyButton
 };
 
+class FragmentElement {
+  public readonly mChildren: PixiElement | [PixiElement, ...PixiElement[]];
+
+  constructor(children: PixiElement | [PixiElement, ...PixiElement[]]) {
+    this.mChildren = children;
+  }
+
+  *[Symbol.iterator]() {
+    const children = this.mChildren;
+
+    if (Array.isArray(children)) {
+      for (const item of children) {
+        yield item;
+      }
+    } else {
+      yield children;
+    }
+  }
+}
+
+export const Fragment = Symbol.for('jsx.fragment');
 export const jsxs = jsx;
 
-export function jsx(elementType: string, props: ContainerProps): PixiElement {
+export function jsx(elementType: string | typeof Fragment, props: ContainerProps): PixiElement | FragmentElement {
+  if (elementType === Fragment) {
+    return new FragmentElement(props.children);
+  }
+
   const elClass = registry[elementType];
 
   if (!elClass) {
@@ -92,7 +117,7 @@ export function jsx(elementType: string, props: ContainerProps): PixiElement {
     }
 
     if (children != null) {
-      if (Array.isArray(children)) {
+      if (Array.isArray(children) || children instanceof FragmentElement) {
         element.addChild(...children);
       } else {
         element.addChild(children);

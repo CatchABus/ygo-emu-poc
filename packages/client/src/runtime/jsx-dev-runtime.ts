@@ -1,1 +1,1 @@
-export { jsx as jsxDEV, jsxs as jsxsDEV } from './jsx-runtime';
+export { jsx as jsxDEV, jsxs as jsxsDEV, Fragment } from './jsx-runtime';

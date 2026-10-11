@@ -4,7 +4,7 @@ import { AnimationOptions } from 'popmotion';
 import { createRect, SCREEN_HEIGHT, SCREEN_WIDTH } from '../util/helpers';
 
 abstract class BasePage extends Container {
-  private readonly _runningAnimations: AnimationWrapper[] = [];
+  private readonly mRunningAnimations: AnimationWrapper[] = [];
 
   constructor(options?: ContainerOptions<ContainerChild>, fitsWindow: boolean = true) {
     super(options);
@@ -37,21 +37,21 @@ abstract class BasePage extends Container {
       }
     });
 
-    this._runningAnimations.push(animation);
+    this.mRunningAnimations.push(animation);
 
     return animation;
   }
 
   removeAnimation(animation: AnimationWrapper): void {
-    const index = this._runningAnimations.indexOf(animation);
+    const index = this.mRunningAnimations.indexOf(animation);
     if (index >= 0) {
-      this._runningAnimations.splice(index, 1);
+      this.mRunningAnimations.splice(index, 1);
     }
   }
 
   stopAllAnimations(): void {
     // Keep a copy of the original array to avoid modifications during for loop
-    const animationsCopy = [...this._runningAnimations];
+    const animationsCopy = [...this.mRunningAnimations];
 
     for (const animation of animationsCopy) {
       animation.stop();

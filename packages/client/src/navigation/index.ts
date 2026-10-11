@@ -103,21 +103,21 @@ class Navigator {
 
     this._currentPage = newPage;
 
-    if (this._currentPage) {
-      await this._currentPage.preload();
-      await this._currentPage.onNavigatingTo();
+    if (newPage) {
+      await newPage.preload();
+      await newPage.onNavigatingTo();
 
       // This will scale entire page based on background bounds
-      this._currentPage.setSize(width, height);
+      newPage.setSize(width, height);
 
       if (oldPage) {
-        this._app.stage.addChildAt(this._currentPage, this._app.stage.getChildIndex(oldPage));
+        this._app.stage.addChildAt(newPage, this._app.stage.getChildIndex(oldPage));
 
         if (options.transition?.filter) {
           await this._startPageTransition(oldPage, options.transition);
         }
       } else {
-        this._app.stage.addChild(this._currentPage);
+        this._app.stage.addChild(newPage);
       }
     }
 
@@ -134,7 +134,7 @@ class Navigator {
     }
 
     if (newPage) {
-      await this._currentPage.onNavigatedTo();
+      await newPage.onNavigatedTo();
     }
 
     this._isNavigating = false;
