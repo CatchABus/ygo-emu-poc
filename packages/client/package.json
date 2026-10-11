@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite --force",
+    "dev": "vite",
     "build": "tsc && vite build",
     "assets:build": "assetpack -c .assetpack.js",
     "assets:watch": "assetpack -w .assetpack.js",

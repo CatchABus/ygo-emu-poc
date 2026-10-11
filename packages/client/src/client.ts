@@ -1,10 +1,13 @@
 import { Howler } from 'howler';
 import * as log from 'loglevel';
-import { Application, ApplicationOptions } from 'pixi.js';
+import { Application, ApplicationOptions, Assets } from 'pixi.js';
 import { io, ManagerOptions, Socket, SocketOptions } from 'socket.io-client';
-import { getRequestProtocol } from './util/helpers';
+import { getRequestProtocol, SCREEN_SCALE } from './util/helpers';
 
 const DEFAULT_VOLUME = 0.5;
+const onVisibilityChange = () => {
+  Howler.mute(document.hidden);
+};
 
 function onConnectionError(err: Error): void {
   log.error(err);
@@ -31,6 +34,9 @@ class Client {
 
     this.volume = volumeStr ? parseFloat(volumeStr) : DEFAULT_VOLUME;
     this.isFullScreenEnabled = fullScreenStr === 'true';
+
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+    document.addEventListener('visibilitychange', onVisibilityChange);
   }
 
   isApplicationStarted(): boolean {
@@ -54,6 +60,36 @@ class Client {
     await this.mApplication.init(options);
 
     return this.mApplication;
+  }
+
+  async loadAssets(): Promise<void> {
+    const assetPrefix = this.gameMode;
+    const manifest = await Assets.load({
+      src: 'manifest.json'
+    });
+
+    for (const bundle of manifest.bundles) {
+      if (bundle.name !== 'cards') {
+        for (const asset of bundle.assets) {
+          if (asset.src?.length && !asset.src[0].includes('font/')) {
+            asset.data.resolution = SCREEN_SCALE;
+          }
+        }
+      }
+    }
+
+    Assets.resolver.addManifest(manifest);
+
+    await Assets.loadBundle(['default', 'joey']);
+
+    // Start loading all bundles in the background
+    Assets.backgroundLoadBundle([
+      `${assetPrefix}/menu`,
+      `${assetPrefix}/options`,
+      `${assetPrefix}/card_list`,
+      `${assetPrefix}/deck_c`,
+      'cards'
+    ]);
   }
 
   getSocket(): Socket {
@@ -101,7 +137,7 @@ class Client {
     this.mSocket.off('connection_error', onConnectionError);
     this.mSocket.off('disconnect', this.mDisconnectListener);
     this.mDisconnectListener = null;
-    
+
     this.mSocket.disconnect();
     this.mSocket = null;
   }

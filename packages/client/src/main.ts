@@ -1,11 +1,10 @@
+import { Filter } from 'pixi.js';
 import { client } from './client';
-import { initAssets } from './handler/assetManager';
-import { addSuspendListener } from './handler/resumeSuspend';
 import { initI18n } from './i18n';
 import { getNavigator, setupNavigator } from './navigation';
 import LoginPage from './page/LoginPage';
 import './styles/main.scss';
-import { setCursorImage } from './util/helpers';
+import { SCREEN_SCALE, setCursorImage } from './util/helpers';
 
 // For HMR purposes
 if (!client.isApplicationStarted()) {
@@ -26,9 +25,12 @@ async function startApp() {
     // Light color is better for making sprites more distinct and positioning easier
     background: '#fff',
     resizeTo: appElement,
+    resolution: window.devicePixelRatio + (SCREEN_SCALE - window.devicePixelRatio)
   });
 
-  await initAssets();
+  Filter.defaultOptions.resolution = SCREEN_SCALE;
+
+  await client.loadAssets();
   await initI18n();
 
   // The application will create a canvas element for you that you
@@ -36,8 +38,6 @@ async function startApp() {
   appElement.appendChild(app.canvas);
 
   const navigator = await setupNavigator(app, LoginPage);
-
-  addSuspendListener();
 
   setCursorImage('default', '/commons/cursor00.png');
   setCursorImage('pointer', '/commons/cursor01.png');
@@ -55,11 +55,13 @@ async function startApp() {
     globalThis.__PIXI_APP__ = app;
     globalThis.__onLiveSync = (newModule) => {
       const currentPage = getNavigator().currentPage;
-      const newPage = newModule.default && currentPage.constructor.name === newModule.default.name ? new newModule.default() : currentPage;
+      const newPage = newModule.default && currentPage && currentPage.constructor.name === newModule.default.name ? new newModule.default() : currentPage;
 
-      getNavigator().navigate({
-        createPage: () => newPage
-      });
+      if (newPage) {
+        getNavigator().navigate({
+          createPage: () => newPage
+        });
+      }
     }
   }
 }

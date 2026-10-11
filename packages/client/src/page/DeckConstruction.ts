@@ -121,8 +121,8 @@ class DeckConstruction extends BasePage {
 
     this._bagFilterLabelSheet = Assets.get(`${assetPrefix}/deck_c/icon/icon_filter_${locale}.json`);
     this._bagSortLabelSheet = Assets.get(`${assetPrefix}/deck_c/icon/icon_sort.json`);
-    this._cardAttributeSheet = Assets.get('cards/icon_attribute.json');
-    this._cardRaceSheet = Assets.get('cards/icon_race.json');
+    this._cardAttributeSheet = Assets.get('commons/icon_attribute.json');
+    this._cardRaceSheet = Assets.get('commons/icon_race.json');
     this._spellTrapTypeSheet = Assets.get(`${assetPrefix}/deck_c/icon/icon_spelltrap.json`);
     this._deckCardLimitSheet = Assets.get(`${assetPrefix}/deck_c/icon/icon_limit.json`);
     this._newIndicatorSheet = Assets.get(`${assetPrefix}/deck_c/background/new_anime_${locale}.json`);
@@ -770,10 +770,10 @@ class DeckConstruction extends BasePage {
   private _attachInteractionListeners(): void {
     let isOpeningBag = false;
 
-    this._backButton.onclick = async () => {
+    this._backButton.once('click', async () => {
       this._clickSound.play();
       await this._goBack();
-    };
+    });
 
 
     this.onwheel = (event: WheelEvent) => {

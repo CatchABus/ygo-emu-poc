@@ -3,6 +3,11 @@ import { CardTemplate } from '../template/CardTemplate';
 import { ColorSource, Graphics, groupD8, Rectangle, Texture, TextureSourceLike } from 'pixi.js';
 import { client } from '../client';
 
+const SCREEN_WIDTH = parseFloat(import.meta.env.YGO_WINDOW_WIDTH);
+const SCREEN_HEIGHT = parseFloat(import.meta.env.YGO_WINDOW_HEIGHT);
+const WORLD_WIDTH = 800;
+const WORLD_HEIGHT = 600;
+const SCREEN_SCALE = SCREEN_WIDTH / WORLD_WIDTH;
 const CURSOR_X = 8;
 const CURSOR_Y = 14;
 
@@ -82,6 +87,11 @@ function setCursorImage(mode: string, imagePath: string): void {
 }
 
 export {
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  WORLD_WIDTH,
+  WORLD_HEIGHT,
+  SCREEN_SCALE,
   cardNameComparator,
   createRect,
   getRequestProtocol,

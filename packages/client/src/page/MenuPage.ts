@@ -66,7 +66,7 @@ class MenuPage extends BasePage {
     const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
 
-    const background = Sprite.from(`${assetPrefix}/menu/title_1_${locale}.png`);
+    const background = Sprite.from(`${assetPrefix}/title_1_${locale}.png`);
     const logoBoundsMask = new Graphics();
 
     const logoContent = new Container();

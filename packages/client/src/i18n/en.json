@@ -4,7 +4,6 @@
         "an_error_has_occured_please_contact_admin": "An error has occured! Please contact administrator."
     },
     "login": {
-        "title": "YGO PoC EMU",
         "id": "ID",
         "password": "Password",
         "insert_id": "Please insert your ID.",

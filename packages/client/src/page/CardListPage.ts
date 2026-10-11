@@ -86,8 +86,8 @@ class CardListPage extends BasePage {
     this._cardTemplates = Array.from(cardData);
     this._cardTemplates.sort(cardNameComparator);
 
-    this._cardAttributeSheet = Assets.get('cards/icon_attribute.json');
-    this._cardRaceSheet = Assets.get('cards/icon_race.json');
+    this._cardAttributeSheet = Assets.get('commons/icon_attribute.json');
+    this._cardRaceSheet = Assets.get('commons/icon_race.json');
     this._newIndicatorSheet = Assets.get(`${assetPrefix}/card_list/new_anime_${locale}.json`);
   }
 
@@ -217,7 +217,7 @@ class CardListPage extends BasePage {
       style: {
         fontFamily: 'CardListCount',
         align: 'left',
-      },
+      }
     });
     counter.x = 700;
     counter.y = 30;
@@ -564,10 +564,10 @@ class CardListPage extends BasePage {
     const totalPages = this._cardTemplates.length / CARDS_PER_PAGE;
     let isNavigating = false;
 
-    this._backButton.onclick = async () => {
+    this._backButton.once('click', async () => {
       this._clickSound.play();
       await this._goBack();
-    };
+    });
 
     const pageClickCallback = async (event: FederatedEvent) => {
       if (isNavigating) {

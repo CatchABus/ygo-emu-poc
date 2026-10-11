@@ -2,92 +2,92 @@
     "frames": {
         "list-new-1.png": {
             "frame": {
-                "x": 2,
-                "y": 1,
-                "w": 38,
-                "h": 16
+                "x": 4,
+                "y": 2,
+                "w": 76,
+                "h": 32
             },
             "sourceSize": {
-                "w": 38,
-                "h": 16
+                "w": 76,
+                "h": 32
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 38,
-                "h": 16
+                "w": 76,
+                "h": 32
             }
         },
         "list-new-2.png": {
             "frame": {
-                "x": 2,
-                "y": 19,
-                "w": 38,
-                "h": 16
+                "x": 4,
+                "y": 38,
+                "w": 76,
+                "h": 32
             },
             "sourceSize": {
-                "w": 38,
-                "h": 16
+                "w": 76,
+                "h": 32
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 38,
-                "h": 16
+                "w": 76,
+                "h": 32
             }
         },
         "list-new-3.png": {
             "frame": {
-                "x": 2,
-                "y": 37,
-                "w": 38,
-                "h": 16
+                "x": 4,
+                "y": 74,
+                "w": 76,
+                "h": 32
             },
             "sourceSize": {
-                "w": 38,
-                "h": 16
+                "w": 76,
+                "h": 32
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 38,
-                "h": 16
+                "w": 76,
+                "h": 32
             }
         },
         "list-new-4.png": {
             "frame": {
-                "x": 2,
-                "y": 55,
-                "w": 38,
-                "h": 16
+                "x": 4,
+                "y": 110,
+                "w": 76,
+                "h": 32
             },
             "sourceSize": {
-                "w": 38,
-                "h": 16
+                "w": 76,
+                "h": 32
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 38,
-                "h": 16
+                "w": 76,
+                "h": 32
             }
         },
         "list-new-5.png": {
             "frame": {
-                "x": 2,
-                "y": 73,
-                "w": 38,
-                "h": 16
+                "x": 4,
+                "y": 146,
+                "w": 76,
+                "h": 32
             },
             "sourceSize": {
-                "w": 38,
-                "h": 16
+                "w": 76,
+                "h": 32
             },
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 38,
-                "h": 16
+                "w": 76,
+                "h": 32
             }
         }
     },
@@ -95,10 +95,9 @@
         "image": "new_anime_en.png",
         "format": "RGBA8888",
         "size": {
-            "w": 41,
-            "h": 90
-        },
-        "scale": 1
+            "w": 82,
+            "h": 180
+        }
     },
     "animations": {
         "news": [

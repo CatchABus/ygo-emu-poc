@@ -4,252 +4,252 @@
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-1": {
       "frame": {
-        "x": 22,
+        "x": 44,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-2": {
       "frame": {
-        "x": 44,
+        "x": 88,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-3": {
       "frame": {
-        "x": 66,
+        "x": 132,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-4": {
       "frame": {
-        "x": 88,
+        "x": 176,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-5": {
       "frame": {
-        "x": 110,
+        "x": 220,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-6": {
       "frame": {
-        "x": 132,
+        "x": 264,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-0-pressed": {
       "frame": {
-        "x": 154,
+        "x": 308,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-1-pressed": {
       "frame": {
-        "x": 176,
+        "x": 352,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-2-pressed": {
       "frame": {
-        "x": 198,
+        "x": 396,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-3-pressed": {
       "frame": {
-        "x": 220,
+        "x": 440,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-4-pressed": {
       "frame": {
-        "x": 242,
+        "x": 484,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-5-pressed": {
       "frame": {
-        "x": 264,
+        "x": 528,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     },
     "bag-sort-6-pressed": {
       "frame": {
-        "x": 286,
+        "x": 572,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "sourceSize": {
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 22,
-        "h": 21
+        "w": 44,
+        "h": 42
       }
     }
   },
@@ -257,9 +257,8 @@
     "image": "icon_sort.png",
     "format": "RGBA8888",
     "size": {
-      "w": 308,
-      "h": 21
-    },
-    "scale": 1
+      "w": 616,
+      "h": 42
+    }
   }
 }
