@@ -91,8 +91,7 @@ class LoginPage extends BasePage {
 
   private _createLoginControls(): Container {
     const inputWidth = 160;
-    const loginBg = new Graphics().roundRect(0, 0, inputWidth, 30, 5).fill('#fefefe');
-    const pwdBg = new Graphics().roundRect(0, 0, inputWidth, 30, 5).fill('#fefefe');
+    const inputBg = new Graphics().roundRect(0, 0, inputWidth, 30, 5).fill('#fefefe');
     const inputPivotPoint = {
       x: inputWidth / 2,
       y: 0
@@ -100,9 +99,9 @@ class LoginPage extends BasePage {
 
     return (
       <container y={48}>
-        <input x={(FORM_WIDTH / 2)} y={0} pivot={inputPivotPoint} bg={loginBg} placeholder={i18next.t('login.id')} textStyle={{ fontSize: 16 }} padding={[0, 8]} addMask={true}>
+        <input x={(FORM_WIDTH / 2)} y={0} pivot={inputPivotPoint} bg={inputBg} placeholder={i18next.t('login.id')} textStyle={{ fontSize: 16 }} padding={[0, 8]} addMask={true}>
         </input>
-        <input x={(FORM_WIDTH / 2)} y={40} pivot={inputPivotPoint} bg={pwdBg} placeholder={i18next.t('login.password')} textStyle={{ fontSize: 16 }} padding={[0, 8]} addMask={true} secure={true}>
+        <input x={(FORM_WIDTH / 2)} y={40} pivot={inputPivotPoint} bg={inputBg.clone()} placeholder={i18next.t('login.password')} textStyle={{ fontSize: 16 }} padding={[0, 8]} addMask={true} secure={true}>
         </input>
         <fancyButton x={FORM_WIDTH / 2} y={92} text={i18next.t('login.submit_button')} padding={4} anchorX={0.5} defaultView={createRect(0, 0, 100, 30, 'rgb(0, 180, 216)', 8)}
           hoverView={createRect(0, 0, 100, 30, 'rgb(77, 225, 255)', 8)} pressedView={createRect(0, 0, 100, 30, 'rgb(0, 180, 216)', 8)}
