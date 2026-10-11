@@ -71,16 +71,14 @@ class DeckConstruction extends BasePage {
 
   private mFilterCardSlotDataset: CardSlot[];
 
-  private mBackBtn: FancyButton;
-
   private mBagContainer: Container;
-  private mBagButton: FancyButton;
   private mBagSlider: Slider;
   private mBagControls: Container;
   private mBagSlots: Container[];
   private mBagFilterLabel: Sprite;
   private mBagSortButton: FancyButton;
   private mIsBagFilterLabelVisible: boolean = true;
+  private mIsOpeningBag: boolean = false;
 
   private mClickSound: Howl;
   private mBagOpenSound: Howl;
@@ -105,8 +103,7 @@ class DeckConstruction extends BasePage {
 
   constructor() {
     super();
-
-    this.eventMode = 'static';
+    this.eventMode = 'none';
   }
 
   async preload(): Promise<void> {
@@ -128,24 +125,25 @@ class DeckConstruction extends BasePage {
     this.mNewIndiSheet = Assets.get(`${assetPrefix}/deck_c/background/new_anime_${locale}.json`);
   }
 
-  async onNavigatedTo(): Promise<void> {
-    const hasNewCards = this.mCardSlotDataset.some((slotData) => slotData.isNew);
-
-    this._addEscapeKeyListener();
-    this._playAudio();
-    this._attachInteractionListeners();
-
-    if (hasNewCards) {
-      this._animateNewCardIndicators();
-    }
-  }
-
   async onNavigatingTo(): Promise<void> {
     await this._init();
     await this._requestCardInventory();
 
     this._updateCardBagState();
     this._updateCardBagContent();
+  }
+
+  async onNavigatedTo(): Promise<void> {
+    const hasNewCards = this.mCardSlotDataset.some((slotData) => slotData.isNew);
+
+    this.eventMode = 'static';
+
+    this._playAudio();
+    this._attachInteractionListeners();
+
+    if (hasNewCards) {
+      this._animateNewCardIndicators();
+    }
   }
 
   async onNavigatingFrom(): Promise<void> {
@@ -164,9 +162,23 @@ class DeckConstruction extends BasePage {
 
   private async _init(): Promise<void> {
     const assetPrefix = client.gameMode;
+    const locale = getCurrentLocale();
 
-    this._drawBackground();
-    this._drawBackButton();
+    this.addChild(
+      ...<>
+        <sprite texture={Texture.from(`${assetPrefix}/deck_c/background/background_l_${getCurrentLocale()}.png`)}></sprite>
+        <sprite x={217} texture={Texture.from(`${assetPrefix}/deck_c/background/background_c.png`)}></sprite>
+        <sprite x={583} texture={Texture.from(`${assetPrefix}/deck_c/background/above.png`)}></sprite>
+        <sprite x={583} y={597} texture={Texture.from(`${assetPrefix}/deck_c/background/down.png`)}></sprite>
+        <fancyButton afterCreate={(el: FancyButton) => el.once('click', () => {
+          this.mClickSound.play();
+          this._goBack();
+        })} x={61} y={548} defaultView={<sprite alpha={0} texture={Texture.from(`${assetPrefix}/deck_c/background/back_1_${locale}.png`)}></sprite>}
+        hoverView={`${assetPrefix}/deck_c/background/back_1_${locale}.png`} pressedView={`${assetPrefix}/deck_c/background/back_2_${locale}.png`}></fancyButton>
+      </>
+    );
+
+
     this._drawBag();
     this._drawBagScrollbar();
 
@@ -329,41 +341,6 @@ class DeckConstruction extends BasePage {
     this.mTrack.play();
   }
 
-  private _drawBackground(): void {
-    const assetPrefix = client.gameMode;
-
-    const bgLeft = Sprite.from(`${assetPrefix}/deck_c/background/background_l_${getCurrentLocale()}.png`);
-
-    const bgCenter = Sprite.from(`${assetPrefix}/deck_c/background/background_c.png`);
-    bgCenter.x = 217;
-
-    const bagAbove = Sprite.from(`${assetPrefix}/deck_c/background/above.png`);
-    bagAbove.x = 583;
-
-    const bagBelow = Sprite.from(`${assetPrefix}/deck_c/background/down.png`);
-    bagBelow.position.set(583, 597);
-
-    this.addChild(bgLeft, bgCenter, bagAbove, bagBelow);
-  }
-
-  private _drawBackButton(): void {
-    const assetPrefix = client.gameMode;
-    const locale = getCurrentLocale();
-
-    const defaultView = Sprite.from(`${assetPrefix}/deck_c/background/back_1_${locale}.png`);
-    defaultView.alpha = 0;
-
-    const backButton = new FancyButton({
-      defaultView,
-      hoverView: `${assetPrefix}/deck_c/background/back_1_${locale}.png`,
-      pressedView: `${assetPrefix}/deck_c/background/back_2_${locale}.png`
-    });
-    backButton.position.set(61, 548);
-
-    this.addChild(backButton);
-    this.mBackBtn = backButton;
-  }
-
   private _drawBag(): void {
     const assetPrefix = client.gameMode;
 
@@ -381,6 +358,7 @@ class DeckConstruction extends BasePage {
       `${assetPrefix}/deck_c/background/arrow_2.png`
     ]);
     bagToggleButton.position.set(107, 8);
+    bagToggleButton.onclick = () => this._onBagButtonClick();
 
     const bagControls = this._createBagControls();
     bagControls.x = 139;
@@ -393,7 +371,6 @@ class DeckConstruction extends BasePage {
     this.addChild(container, bagMask);
 
     this.mBagContainer = container;
-    this.mBagButton = bagToggleButton;
     this.mBagControls = bagControls;
     this.mBagSlots = bagSlotContainer.children;
   }
@@ -768,14 +745,6 @@ class DeckConstruction extends BasePage {
   }
 
   private _attachInteractionListeners(): void {
-    let isOpeningBag = false;
-
-    this.mBackBtn.once('click', async () => {
-      this.mClickSound.play();
-      await this._goBack();
-    });
-
-
     this.onwheel = (event: WheelEvent) => {
       if (event.deltaY < 0) {
         this.mBagSlider.value = this.mBagSlider.value - 1;
@@ -790,48 +759,55 @@ class DeckConstruction extends BasePage {
       }
     };
 
-    this.mBagButton.onclick = async () => {
-      if (isOpeningBag) {
-        return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.code === 'Escape') {
+        window.removeEventListener('keydown', onKeyDown);
+        this._goBack();
       }
-
-      isOpeningBag = true;
-
-      this.mBagOpenSound.play();
-
-      if (this.mIsBagOpen) {
-        await this._toggleShowBagFilters(true);
-      } else {
-        // Expanding bag makes slots more detailed
-        for (const slot of this.mBagSlots) {
-          slot.children[1].visible = false;
-          slot.children[2].visible = true;
-        }
-      }
-
-      this.animate({
-        from: this.mBagContainer.x,
-        to: this.mIsBagOpen ? 580 : 481,
-        duration: 300,
-        onUpdate: (value: number) => {
-          this.mBagContainer.x = value;
-        },
-        onComplete: async () => {
-          if (this.mIsBagOpen) {
-            // Collapsing back makes slots less detailed
-            for (const slot of this.mBagSlots) {
-              slot.children[1].visible = true;
-              slot.children[2].visible = false;
-            }
-          } else {
-            await this._toggleShowBagFilters(false);
-          }
-
-          this.mIsBagOpen = !this.mIsBagOpen;
-          isOpeningBag = false;
-        }
-      });
     };
+    window.addEventListener('keydown', onKeyDown);
+  }
+
+  private async _onBagButtonClick(): Promise<void> {
+    if (this.mIsOpeningBag) {
+      return;
+    }
+
+    this.mIsOpeningBag = true;
+    this.mBagOpenSound.play();
+
+    if (this.mIsBagOpen) {
+      await this._toggleShowBagFilters(true);
+    } else {
+      // Expanding bag makes slots more detailed
+      for (const slot of this.mBagSlots) {
+        slot.children[1].visible = false;
+        slot.children[2].visible = true;
+      }
+    }
+
+    this.animate({
+      from: this.mBagContainer.x,
+      to: this.mIsBagOpen ? 580 : 481,
+      duration: 300,
+      onUpdate: (value: number) => {
+        this.mBagContainer.x = value;
+      },
+      onComplete: async () => {
+        if (this.mIsBagOpen) {
+          // Collapsing back makes slots less detailed
+          for (const slot of this.mBagSlots) {
+            slot.children[1].visible = true;
+            slot.children[2].visible = false;
+          }
+        } else {
+          await this._toggleShowBagFilters(false);
+        }
+
+        this.mIsBagOpen = !this.mIsBagOpen;
+        this.mIsOpeningBag = false;
+      }
+    });
   }
 
   private _toggleShowBagFilters(isBagOpen: boolean): Promise<void> {
@@ -886,16 +862,6 @@ class DeckConstruction extends BasePage {
         }
       });
     }, 2500);
-  }
-
-  private _addEscapeKeyListener(): void {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.code === 'Escape') {
-        window.removeEventListener('keydown', onKeyDown);
-        this._goBack();
-      }
-    };
-    window.addEventListener('keydown', onKeyDown);
   }
 
   private _bagSortComparator0(a: CardSlot, b: CardSlot): number {

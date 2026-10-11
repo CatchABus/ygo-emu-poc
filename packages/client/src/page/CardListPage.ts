@@ -38,7 +38,6 @@ class CardListPage extends BasePage {
   private readonly _ownedCards: CardInfo[] = [];
 
   private _cardContainer: Container<Container>;
-  private _backButton: FancyButton;
   private _cardCounter: BitmapText;
 
   private _currenPageNum: number = 1;
@@ -75,6 +74,13 @@ class CardListPage extends BasePage {
   private _rightPageButton: HoverButtonContainer;
   private _currentPageIndicator: BitmapText;
 
+  private mIsNavigatingPages: boolean = false;
+
+  constructor() {
+    super();
+    this.eventMode = 'none';
+  }
+
   async preload(): Promise<void> {
     const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
@@ -102,7 +108,9 @@ class CardListPage extends BasePage {
     this._addEscapeKeyListener();
     this._playAudio();
 
-    this._animateCardList().then(() => this._attachInteractionListeners());
+    this._animateCardList().then(() => {
+      this.eventMode = 'passive';
+    });
 
     if (this._ownedCards.some((card) => card.isNew)) {
       this._animateNewCardIndicators();
@@ -207,9 +215,12 @@ class CardListPage extends BasePage {
       hoverView: `${assetPrefix}/card_list/${locale}_back2.png`
     });
     backButton.x = 692;
+    backButton.once('click', () => {
+      this._clickSound.play();
+      this._goBack();
+    });
 
     this.addChild(backButton);
-    this._backButton = backButton;
   }
 
   private _drawCardCounter(): void {
@@ -484,6 +495,7 @@ class CardListPage extends BasePage {
     const leftButton = new HoverButtonContainer(Sprite.from(`${assetPrefix}/card_list/pe_arrow_l.png`));
     leftButton.position.set(408, 565);
     leftButton.eventMode = 'none';
+    leftButton.onclick = (e) => this._onPageClick(e);
 
     const currentPageNumber = new BitmapText({
       text: this._currenPageNum,
@@ -507,6 +519,7 @@ class CardListPage extends BasePage {
 
     const rightButton = new HoverButtonContainer(Sprite.from(`${assetPrefix}/card_list/pe_arrow_r.png`));
     rightButton.position.set(549, 565);
+    rightButton.onclick = (e) => this._onPageClick(e);
 
     this.addChild(leftButton, currentPageNumber, endPageNumber, rightButton);
 
@@ -560,59 +573,6 @@ class CardListPage extends BasePage {
     });
   }
 
-  private _attachInteractionListeners(): void {
-    const totalPages = this._cardTemplates.length / CARDS_PER_PAGE;
-    let isNavigating = false;
-
-    this._backButton.once('click', async () => {
-      this._clickSound.play();
-      await this._goBack();
-    });
-
-    const pageClickCallback = async (event: FederatedEvent) => {
-      if (isNavigating) {
-        return;
-      }
-
-      isNavigating = true;
-
-      const isForward = event.currentTarget === this._rightPageButton;
-
-      this._clickSound.play();
-
-      if (isForward) {
-        if (this._currenPageNum === 1) {
-          this._leftPageButton.setInteractive(true);
-        }
-
-        this._currenPageNum++;
-
-        if (this._currenPageNum >= totalPages) {
-          this._rightPageButton.setInteractive(false);
-        }
-      } else {
-        if (this._currenPageNum === totalPages) {
-          this._rightPageButton.setInteractive(true);
-        }
-
-        this._currenPageNum--;
-
-        if (this._currenPageNum <= 1) {
-          this._leftPageButton.setInteractive(false);
-        }
-      }
-
-      this._currentPageIndicator.text = this._currenPageNum;
-
-      await this._startPagingTransition(isForward);
-
-      isNavigating = false;
-    };
-
-    this._leftPageButton.onclick = pageClickCallback;
-    this._rightPageButton.onclick = pageClickCallback;
-  }
-
   private _addEscapeKeyListener(): void {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.code === 'Escape') {
@@ -621,6 +581,47 @@ class CardListPage extends BasePage {
       }
     };
     window.addEventListener('keydown', onKeyDown);
+  }
+
+  private async _onPageClick(event: FederatedEvent): Promise<void> {
+    if (this.mIsNavigatingPages) {
+      return;
+    }
+
+    this.mIsNavigatingPages = true;
+
+    const isForward = event.currentTarget === this._rightPageButton;
+    const totalPages = this._cardTemplates.length / CARDS_PER_PAGE;
+
+    this._clickSound.play();
+
+    if (isForward) {
+      if (this._currenPageNum === 1) {
+        this._leftPageButton.setInteractive(true);
+      }
+
+      this._currenPageNum++;
+
+      if (this._currenPageNum >= totalPages) {
+        this._rightPageButton.setInteractive(false);
+      }
+    } else {
+      if (this._currenPageNum === totalPages) {
+        this._rightPageButton.setInteractive(true);
+      }
+
+      this._currenPageNum--;
+
+      if (this._currenPageNum <= 1) {
+        this._leftPageButton.setInteractive(false);
+      }
+    }
+
+    this._currentPageIndicator.text = this._currenPageNum;
+
+    await this._startPagingTransition(isForward);
+
+    this.mIsNavigatingPages = false;
   }
 
   private _registerCardClickListener(cardView: Container, index: number): void {
