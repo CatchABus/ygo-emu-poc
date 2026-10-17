@@ -37,43 +37,43 @@ interface CardInfo {
 class CardListPage extends BasePage {
   private readonly _ownedCards: CardInfo[] = [];
 
-  private _cardContainer: Container<Container>;
-  private _cardCounter: BitmapText;
+  private mCardContainer: Container<Container>;
+  private mCardCounter: BitmapText;
 
-  private _currenPageNum: number = 1;
+  private mCurrenPageNum: number = 1;
 
-  private _cardAttributeSheet: Spritesheet;
-  private _cardRaceSheet: Spritesheet;
-  private _newIndicatorSheet: Spritesheet;
+  private mCardAttributeSheet: Spritesheet;
+  private mCardRaceSheet: Spritesheet;
+  private mNewIndicatorSheet: Spritesheet;
 
-  private _hoverCardFilter: AdjustmentFilter;
-  private _hoverCardSprite: Sprite;
+  private mHoverCardFilter: AdjustmentFilter;
+  private mHoverCardSprite: Sprite;
 
-  private _previewCardImage: Sprite;
-  private _previewCardScrollView: ScrollBox;
-  private _previewCardScrollBar: SliderControls;
-  private _previewCardName: Text;
-  private _previewCardDesc1: Text;
-  private _previewCardDesc2: Text;
-  private _previewCardStatsContainer: Container;
-  private _previewCardAttribute: Sprite;
-  private _previewCardRace: Sprite;
-  private _previewCardAtk: Text;
-  private _previewCardDef: Text;
+  private mPreviewCardImage: Sprite;
+  private mPreviewCardScrollView: ScrollBox;
+  private mPreviewCardScrollBar: SliderControls;
+  private mPreviewCardName: Text;
+  private mPreviewCardDesc1: Text;
+  private mPreviewCardDesc2: Text;
+  private mPreviewCardStatsContainer: Container;
+  private mPreviewCardAttribute: Sprite;
+  private mPreviewCardRace: Sprite;
+  private mPreviewCardAtk: Text;
+  private mPreviewCardDef: Text;
   private mPreviewCardId: number = 0;
   private mHoverCardTmpl: CardTemplate = null;
 
-  private _clickSound: Howl;
-  private _track: Howl;
+  private mClickSound: Howl;
+  private mTrack: Howl;
 
-  private _cardTemplates: CardTemplate[];
+  private mCardTemplates: CardTemplate[];
 
-  private _cardCounterUpdateInterval: ReturnType<typeof setInterval>;
+  private mCardCounterUpdateInterval: ReturnType<typeof setInterval>;
   private _newIndicatorsUpdateInterval: ReturnType<typeof setInterval>;
 
-  private _leftPageButton: HoverButtonContainer;
-  private _rightPageButton: HoverButtonContainer;
-  private _currentPageIndicator: BitmapText;
+  private mLeftPageButton: HoverButtonContainer;
+  private mRightPageButton: HoverButtonContainer;
+  private mCurPageIndicator: BitmapText;
 
   private mIsNavigatingPages: boolean = false;
 
@@ -90,12 +90,12 @@ class CardListPage extends BasePage {
 
     const { default: cardData } = await import('../data/cardData.json');
 
-    this._cardTemplates = Array.from(cardData);
-    this._cardTemplates.sort(cardNameComparator);
+    this.mCardTemplates = Array.from(cardData);
+    this.mCardTemplates.sort(cardNameComparator);
 
-    this._cardAttributeSheet = Assets.get('commons/icon_attribute.json');
-    this._cardRaceSheet = Assets.get('commons/icon_race.json');
-    this._newIndicatorSheet = Assets.get(`${assetPrefix}/card_list/new_anime_${locale}.json`);
+    this.mCardAttributeSheet = Assets.get('commons/icon_attribute.json');
+    this.mCardRaceSheet = Assets.get('commons/icon_race.json');
+    this.mNewIndicatorSheet = Assets.get(`${assetPrefix}/card_list/new_anime_${locale}.json`);
   }
 
   async onNavigatingTo(): Promise<void> {
@@ -122,9 +122,9 @@ class CardListPage extends BasePage {
   async onNavigatingFrom(): Promise<void> {
     this.stopAllAnimations();
 
-    if (this._cardCounterUpdateInterval != null) {
-      clearInterval(this._cardCounterUpdateInterval);
-      this._cardCounterUpdateInterval = null;
+    if (this.mCardCounterUpdateInterval != null) {
+      clearInterval(this.mCardCounterUpdateInterval);
+      this.mCardCounterUpdateInterval = null;
     }
 
     if (this._newIndicatorsUpdateInterval != null) {
@@ -132,7 +132,7 @@ class CardListPage extends BasePage {
       this._newIndicatorsUpdateInterval = null;
     }
 
-    this._track.stop();
+    this.mTrack.stop();
   }
 
   onNavigatedFrom(): void | Promise<void> {
@@ -177,10 +177,10 @@ class CardListPage extends BasePage {
     this._drawPagingControls();
     this._drawHoverElements();
 
-    this._clickSound = new Howl({
+    this.mClickSound = new Howl({
       src: 'commons/decide.ogg'
     });
-    this._track = new Howl({
+    this.mTrack = new Howl({
       src: `${assetPrefix}/card_list/m_bag.ogg`,
       loop: true
     });
@@ -222,7 +222,7 @@ class CardListPage extends BasePage {
     });
     backButton.x = 692;
     backButton.once('click', () => {
-      this._clickSound.play();
+      this.mClickSound.play();
       this._goBack();
     });
 
@@ -242,7 +242,7 @@ class CardListPage extends BasePage {
 
     this.addChild(counter);
 
-    this._cardCounter = counter;
+    this.mCardCounter = counter;
   }
 
   private _drawCardPreview(): void {
@@ -255,21 +255,21 @@ class CardListPage extends BasePage {
     const cardDetails = this._generateCardPreviewDetails();
     const scrollBar = this._generateCardPreviewScrollBar();
     const cardStatsContainer = this._generateCardPreviewStatsContent();
-    const scrollBarSlider = this._previewCardScrollBar.slider;
+    const scrollBarSlider = this.mPreviewCardScrollBar.slider;
 
     // Scroll handling
-    this._previewCardScrollView.onScroll.connect((value: number | PointData) => {
+    this.mPreviewCardScrollView.onScroll.connect((value: number | PointData) => {
       const val = typeof value === 'number' ? value : value.y;
       scrollBarSlider.value = -val;
     });
     scrollBarSlider.onUpdate.connect((value: number) => {
-      this._previewCardScrollView.scrollToPosition({
+      this.mPreviewCardScrollView.scrollToPosition({
         x: 0,
         y: value
       });
     });
 
-    this._previewCardImage = cardImage;
+    this.mPreviewCardImage = cardImage;
 
     container.addChild(cardImage, cardDetails, scrollBar, cardStatsContainer);
     this.addChild(container);
@@ -327,10 +327,10 @@ class CardListPage extends BasePage {
     cardDesc1.text = '';
     cardDesc2.text = '';
 
-    this._previewCardScrollView = scrollView;
-    this._previewCardName = cardName;
-    this._previewCardDesc1 = cardDesc1;
-    this._previewCardDesc2 = cardDesc2;
+    this.mPreviewCardScrollView = scrollView;
+    this.mPreviewCardName = cardName;
+    this.mPreviewCardDesc1 = cardDesc1;
+    this.mPreviewCardDesc2 = cardDesc2;
 
     return scrollView;
   }
@@ -375,7 +375,7 @@ class CardListPage extends BasePage {
       bg: sliderBg
     });
 
-    this._previewCardScrollBar = scrollBar;
+    this.mPreviewCardScrollBar = scrollBar;
 
     return scrollBar;
   }
@@ -423,11 +423,11 @@ class CardListPage extends BasePage {
     cardDef.anchor.x = 1;
     cardDef.position.set(158, 2);
 
-    this._previewCardStatsContainer = container;
-    this._previewCardAttribute = cardAttribute;
-    this._previewCardRace = cardRace;
-    this._previewCardAtk = cardAtk;
-    this._previewCardDef = cardDef;
+    this.mPreviewCardStatsContainer = container;
+    this.mPreviewCardAttribute = cardAttribute;
+    this.mPreviewCardRace = cardRace;
+    this.mPreviewCardAtk = cardAtk;
+    this.mPreviewCardDef = cardDef;
 
     container.addChild(line, cardAttribute, cardRace, atkLabel, cardAtk, defLabel, cardDef);
     return container;
@@ -483,11 +483,11 @@ class CardListPage extends BasePage {
 
     this.addChild(container);
 
-    this._cardContainer = container;
+    this.mCardContainer = container;
   }
 
   private _createNewIndicator(): AnimatedSprite {
-    const indicator = new AnimatedSprite(this._newIndicatorSheet.animations.news);
+    const indicator = new AnimatedSprite(this.mNewIndicatorSheet.animations.news);
     indicator.animationSpeed = 0.1;
     indicator.eventMode = 'none';
 
@@ -496,7 +496,7 @@ class CardListPage extends BasePage {
 
   private _drawPagingControls(): void {
     const assetPrefix = client.gameMode;
-    const totalPages = this._cardTemplates.length / CARDS_PER_PAGE;
+    const totalPages = this.mCardTemplates.length / CARDS_PER_PAGE;
 
     const leftButton = new HoverButtonContainer(Sprite.from(`${assetPrefix}/card_list/pe_arrow_l.png`));
     leftButton.position.set(408, 565);
@@ -504,7 +504,7 @@ class CardListPage extends BasePage {
     leftButton.onclick = (e) => this._onPageClick(e);
 
     const currentPageNumber = new BitmapText({
-      text: this._currenPageNum,
+      text: this.mCurrenPageNum,
       style: {
         fontFamily: 'PageNumbers',
         fontSize: 21
@@ -529,21 +529,21 @@ class CardListPage extends BasePage {
 
     this.addChild(leftButton, currentPageNumber, endPageNumber, rightButton);
 
-    this._leftPageButton = leftButton;
-    this._currentPageIndicator = currentPageNumber;
-    this._rightPageButton = rightButton;
+    this.mLeftPageButton = leftButton;
+    this.mCurPageIndicator = currentPageNumber;
+    this.mRightPageButton = rightButton;
   }
 
   private _drawHoverElements(): void {
     const assetPrefix = client.gameMode;
 
-    this._hoverCardSprite = Sprite.from(`${assetPrefix}/card_list/card_border_s.png`);
-    this._hoverCardSprite.visible = false;
-    this._hoverCardSprite.anchor.x = 0.5;
-    this._hoverCardSprite.eventMode = 'none';
-    this.addChild(this._hoverCardSprite);
+    this.mHoverCardSprite = Sprite.from(`${assetPrefix}/card_list/card_border_s.png`);
+    this.mHoverCardSprite.visible = false;
+    this.mHoverCardSprite.anchor.x = 0.5;
+    this.mHoverCardSprite.eventMode = 'none';
+    this.addChild(this.mHoverCardSprite);
 
-    this._hoverCardFilter = new AdjustmentFilter({
+    this.mHoverCardFilter = new AdjustmentFilter({
       brightness: 1.3
     });
   }
@@ -552,19 +552,19 @@ class CardListPage extends BasePage {
     const ownedCount = this._ownedCards.length;
 
     let isPercentageDisplay = true;
-    let value = (ownedCount / this._cardTemplates.length) * 100;
+    let value = (ownedCount / this.mCardTemplates.length) * 100;
 
-    this._cardCounter.text = `${value.toFixed(1)}%`;
+    this.mCardCounter.text = `${value.toFixed(1)}%`;
 
-    this._cardCounterUpdateInterval = setInterval(() => {
+    this.mCardCounterUpdateInterval = setInterval(() => {
       if (isPercentageDisplay) {
         isPercentageDisplay = false;
-        this._cardCounter.text = `${ownedCount}/${this._cardTemplates.length}`;
+        this.mCardCounter.text = `${ownedCount}/${this.mCardTemplates.length}`;
       } else {
         isPercentageDisplay = true;
 
-        value = (ownedCount / this._cardTemplates.length) * 100;
-        this._cardCounter.text = `${value.toFixed(1)}%`;
+        value = (ownedCount / this.mCardTemplates.length) * 100;
+        this.mCardCounter.text = `${value.toFixed(1)}%`;
       }
     }, 3000);
   }
@@ -596,34 +596,34 @@ class CardListPage extends BasePage {
 
     this.mIsNavigatingPages = true;
 
-    const isForward = event.currentTarget === this._rightPageButton;
-    const totalPages = this._cardTemplates.length / CARDS_PER_PAGE;
+    const isForward = event.currentTarget === this.mRightPageButton;
+    const totalPages = this.mCardTemplates.length / CARDS_PER_PAGE;
 
-    this._clickSound.play();
+    this.mClickSound.play();
 
     if (isForward) {
-      if (this._currenPageNum === 1) {
-        this._leftPageButton.setInteractive(true);
+      if (this.mCurrenPageNum === 1) {
+        this.mLeftPageButton.setInteractive(true);
       }
 
-      this._currenPageNum++;
+      this.mCurrenPageNum++;
 
-      if (this._currenPageNum >= totalPages) {
-        this._rightPageButton.setInteractive(false);
+      if (this.mCurrenPageNum >= totalPages) {
+        this.mRightPageButton.setInteractive(false);
       }
     } else {
-      if (this._currenPageNum === totalPages) {
-        this._rightPageButton.setInteractive(true);
+      if (this.mCurrenPageNum === totalPages) {
+        this.mRightPageButton.setInteractive(true);
       }
 
-      this._currenPageNum--;
+      this.mCurrenPageNum--;
 
-      if (this._currenPageNum <= 1) {
-        this._leftPageButton.setInteractive(false);
+      if (this.mCurrenPageNum <= 1) {
+        this.mLeftPageButton.setInteractive(false);
       }
     }
 
-    this._currentPageIndicator.text = this._currenPageNum;
+    this.mCurPageIndicator.text = this.mCurrenPageNum;
 
     await this._startPagingTransition(isForward);
 
@@ -634,9 +634,9 @@ class CardListPage extends BasePage {
     const [cardImage, newIndicator] = cardView.children;
 
     cardImage.onclick = () => {
-      const startDataIndex = (this._currenPageNum - 1) * CARDS_PER_PAGE;
+      const startDataIndex = (this.mCurrenPageNum - 1) * CARDS_PER_PAGE;
       const dataIndex = index + startDataIndex;
-      const cardTemplate = this._cardTemplates[dataIndex];
+      const cardTemplate = this.mCardTemplates[dataIndex];
       const card = this._ownedCards.find((card) => card.templateId === cardTemplate.id);
 
       if (card?.isNew) {
@@ -666,22 +666,22 @@ class CardListPage extends BasePage {
     const [cardImage] = cardView.children;
 
     cardImage.onpointerenter = () => {
-      const startDataIndex = (this._currenPageNum - 1) * CARDS_PER_PAGE;
+      const startDataIndex = (this.mCurrenPageNum - 1) * CARDS_PER_PAGE;
       const dataIndex = index + startDataIndex;
-      const cardTemplate = this._cardTemplates[dataIndex];
+      const cardTemplate = this.mCardTemplates[dataIndex];
 
       if (this.mHoverCardTmpl !== cardTemplate) {
         this.mHoverCardTmpl = cardTemplate;
       }
 
-      cardImage.filters = this._hoverCardFilter;
-      this._hoverCardSprite.visible = true;
-      this._hoverCardSprite.position.set(x + cardView.x, (y + cardView.y) - 4);
+      cardImage.filters = this.mHoverCardFilter;
+      this.mHoverCardSprite.visible = true;
+      this.mHoverCardSprite.position.set(x + cardView.x, (y + cardView.y) - 4);
     };
 
     cardImage.onpointerleave = () => {
       cardImage.filters = null;
-      this._hoverCardSprite.visible = false;
+      this.mHoverCardSprite.visible = false;
     };
   }
 
@@ -711,8 +711,8 @@ class CardListPage extends BasePage {
       name = i18next.t(`cards.${cardId}.name`);
       definition = isMonsterCard ? getCardDefinition(template) : '';
       desc = i18next.t(`cards.${cardId}.desc`);
-      attributeTexture = attributeIndex >= 0 ? this._cardAttributeSheet.textures[`attr-${attributeIndex}`] : null;
-      raceTexture = raceIndex >= 0 ? this._cardRaceSheet.textures[`race-${raceIndex}`] : null;
+      attributeTexture = attributeIndex >= 0 ? this.mCardAttributeSheet.textures[`attr-${attributeIndex}`] : null;
+      raceTexture = raceIndex >= 0 ? this.mCardRaceSheet.textures[`race-${raceIndex}`] : null;
       atk = template.atk.toString();
       def = template.def.toString();
     } else {
@@ -729,49 +729,49 @@ class CardListPage extends BasePage {
 
     if (this.mPreviewCardId !== cardId) {
       this.mPreviewCardId = cardId;
-      this._previewCardImage.texture = Assets.get(cardId ? `cards/images/${cardId}.png` : 'cards/card_backing.png');
-      this._previewCardName.text = name;
+      this.mPreviewCardImage.texture = Assets.get(cardId ? `cards/images/${cardId}.png` : 'cards/card_backing.png');
+      this.mPreviewCardName.text = name;
 
       if (definition) {
-        this._previewCardDesc1.text = definition;
-        this._previewCardDesc2.text = desc;
+        this.mPreviewCardDesc1.text = definition;
+        this.mPreviewCardDesc2.text = desc;
       } else {
-        this._previewCardDesc1.text = desc;
-        this._previewCardDesc2.text = '';
+        this.mPreviewCardDesc1.text = desc;
+        this.mPreviewCardDesc2.text = '';
       }
 
-      this._previewCardAttribute.texture = attributeTexture;
-      this._previewCardRace.texture = raceTexture;
-      this._previewCardAtk.text = atk;
-      this._previewCardDef.text = def;
+      this.mPreviewCardAttribute.texture = attributeTexture;
+      this.mPreviewCardRace.texture = raceTexture;
+      this.mPreviewCardAtk.text = atk;
+      this.mPreviewCardDef.text = def;
 
       if (isMonsterCard) {
-        this._previewCardScrollView.height = CARD_PREVIEW_MONSTER_SCROLL_HEIGHT;
-        this._previewCardStatsContainer.visible = true;
+        this.mPreviewCardScrollView.height = CARD_PREVIEW_MONSTER_SCROLL_HEIGHT;
+        this.mPreviewCardStatsContainer.visible = true;
       } else {
-        this._previewCardScrollView.height = CARD_PREVIEW_SCROLL_HEIGHT;
-        this._previewCardStatsContainer.visible = false;
+        this.mPreviewCardScrollView.height = CARD_PREVIEW_SCROLL_HEIGHT;
+        this.mPreviewCardStatsContainer.visible = false;
       }
     }
 
     // Scrollbar handling
-    const scrollDiff = this._previewCardScrollView.scrollHeight - this._previewCardScrollView.height;
-    const scrollBarSlider = this._previewCardScrollBar.slider;
+    const scrollDiff = this.mPreviewCardScrollView.scrollHeight - this.mPreviewCardScrollView.height;
+    const scrollBarSlider = this.mPreviewCardScrollBar.slider;
 
     scrollBarSlider.value = 0;
     scrollBarSlider.max = Math.max(scrollDiff, 1);
     scrollBarSlider.step = 0.01 * scrollBarSlider.max
-    this._previewCardScrollBar.visible = scrollDiff > 0;
+    this.mPreviewCardScrollBar.visible = scrollDiff > 0;
   }
 
   private _playAudio(): void {
-    this._track.play();
+    this.mTrack.play();
   }
 
   private _animateCardList(): Promise<void[]> {
-    const cardViews = this._cardContainer.children;
+    const cardViews = this.mCardContainer.children;
     const startIndex = CARD_COLUMNS - 1;
-    const cardData = this._cardTemplates.slice((this._currenPageNum - 1) * CARDS_PER_PAGE, (this._currenPageNum - 1) * CARDS_PER_PAGE + CARDS_PER_PAGE);
+    const cardData = this.mCardTemplates.slice((this.mCurrenPageNum - 1) * CARDS_PER_PAGE, (this.mCurrenPageNum - 1) * CARDS_PER_PAGE + CARDS_PER_PAGE);
     const animationPromises: Promise<void>[] = [];
 
     for (let col = startIndex; col >= 0; col--) {
@@ -860,7 +860,7 @@ class CardListPage extends BasePage {
         repeatType: 'reverse',
         duration: 400,
         onUpdate: (value: number) => {
-          for (const cardView of this._cardContainer.children) {
+          for (const cardView of this.mCardContainer.children) {
             const newIndicator = cardView.children[1];
             newIndicator.alpha = value;
           }
@@ -870,9 +870,9 @@ class CardListPage extends BasePage {
   }
 
   private _startPagingTransition(forward: boolean): Promise<void[]> {
-    const cardViews = this._cardContainer.children;
+    const cardViews = this.mCardContainer.children;
     const startIndex = forward ? (CARD_COLUMNS - 1) : 0;
-    const cardTemplates = this._cardTemplates.slice((this._currenPageNum - 1) * CARDS_PER_PAGE, (this._currenPageNum - 1) * CARDS_PER_PAGE + CARDS_PER_PAGE);
+    const cardTemplates = this.mCardTemplates.slice((this.mCurrenPageNum - 1) * CARDS_PER_PAGE, (this.mCurrenPageNum - 1) * CARDS_PER_PAGE + CARDS_PER_PAGE);
     const animationPromises: Promise<void>[] = [];
 
     for (let i = 0; i < CARD_COLUMNS; i++) {
