@@ -122,9 +122,8 @@ class Navigator {
     }
 
     if (oldPage) {
-      this._app.stage.removeChild(oldPage);
-
       if (newPage !== oldPage) {
+        this._app.stage.removeChild(oldPage);
         oldPage.destroy({
           children: true
         });
