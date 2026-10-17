@@ -14,7 +14,7 @@ import { getNavigator } from '../navigation';
 import { ReceivablePacket } from '../network/ReceivablePacket';
 import { SendablePacket } from '../network/SendablePacket';
 import { CardTemplate, getCardDefinition, isMonster } from '../template/CardTemplate';
-import { cardNameComparator, createRect } from '../util/helpers';
+import { cardNameComparator, createRect, onGlobalPointerMoveStop } from '../util/helpers';
 import { BasePage } from './BasePage';
 import MenuPage from './MenuPage';
 import { ORDERED_ATTRIBUTES, ORDERED_RACES } from '../template/CardStats';
@@ -60,7 +60,8 @@ class CardListPage extends BasePage {
   private _previewCardRace: Sprite;
   private _previewCardAtk: Text;
   private _previewCardDef: Text;
-  private _previewCardId: number = 0;
+  private mPreviewCardId: number = 0;
+  private mHoverCardTmpl: CardTemplate = null;
 
   private _clickSound: Howl;
   private _track: Howl;
@@ -109,7 +110,8 @@ class CardListPage extends BasePage {
     this._playAudio();
 
     this._animateCardList().then(() => {
-      this.eventMode = 'passive';
+      this.eventMode = 'static';
+      this._attachInteractionListeners();
     });
 
     if (this._ownedCards.some((card) => card.isNew)) {
@@ -134,6 +136,10 @@ class CardListPage extends BasePage {
   }
 
   onNavigatedFrom(): void | Promise<void> {
+  }
+
+  private _attachInteractionListeners(): void {
+    onGlobalPointerMoveStop(this, () => this._updateCardPreviewIfNeeded());
   }
 
   async _requestPlayerCards(): Promise<void> {
@@ -544,7 +550,7 @@ class CardListPage extends BasePage {
 
   private _startCardCounter(): void {
     const ownedCount = this._ownedCards.length;
-    
+
     let isPercentageDisplay = true;
     let value = (ownedCount / this._cardTemplates.length) * 100;
 
@@ -659,6 +665,33 @@ class CardListPage extends BasePage {
     const { x, y } = cardView.parent;
     const [cardImage] = cardView.children;
 
+    cardImage.onpointerenter = () => {
+      const startDataIndex = (this._currenPageNum - 1) * CARDS_PER_PAGE;
+      const dataIndex = index + startDataIndex;
+      const cardTemplate = this._cardTemplates[dataIndex];
+
+      if (this.mHoverCardTmpl !== cardTemplate) {
+        this.mHoverCardTmpl = cardTemplate;
+      }
+
+      cardImage.filters = this._hoverCardFilter;
+      this._hoverCardSprite.visible = true;
+      this._hoverCardSprite.position.set(x + cardView.x, (y + cardView.y) - 4);
+    };
+
+    cardImage.onpointerleave = () => {
+      cardImage.filters = null;
+      this._hoverCardSprite.visible = false;
+    };
+  }
+
+  private _updateCardPreviewIfNeeded() {
+    const template = this.mHoverCardTmpl;
+
+    if (!template || template.id === this.mPreviewCardId) {
+      return;
+    }
+
     let isMonsterCard: boolean;
     let cardId: number;
     let name: string;
@@ -669,82 +702,66 @@ class CardListPage extends BasePage {
     let atk: string;
     let def: string;
 
-    cardImage.onpointerenter = () => {
-      const startDataIndex = (this._currenPageNum - 1) * CARDS_PER_PAGE;
-      const dataIndex = index + startDataIndex;
-      const cardTemplate = this._cardTemplates[dataIndex];
+    if (this._ownedCards.some((card) => card.templateId === template.id)) {
+      const attributeIndex = ORDERED_ATTRIBUTES.indexOf(template.attribute);
+      const raceIndex = ORDERED_RACES.indexOf(template.race);
+      isMonsterCard = isMonster(template);
 
+      cardId = template.id;
+      name = i18next.t(`cards.${cardId}.name`);
+      definition = isMonsterCard ? getCardDefinition(template) : '';
+      desc = i18next.t(`cards.${cardId}.desc`);
+      attributeTexture = attributeIndex >= 0 ? this._cardAttributeSheet.textures[`attr-${attributeIndex}`] : null;
+      raceTexture = raceIndex >= 0 ? this._cardRaceSheet.textures[`race-${raceIndex}`] : null;
+      atk = template.atk.toString();
+      def = template.def.toString();
+    } else {
+      isMonsterCard = false;
+      cardId = 0;
+      name = '';
+      definition = '';
+      desc = '';
+      attributeTexture = null;
+      raceTexture = null;
+      atk = '';
+      def = '';
+    }
 
-      if (cardTemplate && this._ownedCards.some((card) => card.templateId === cardTemplate.id)) {
-        const attributeIndex = ORDERED_ATTRIBUTES.indexOf(cardTemplate.attribute);
-        const raceIndex = ORDERED_RACES.indexOf(cardTemplate.race);
-        isMonsterCard = isMonster(cardTemplate);
+    if (this.mPreviewCardId !== cardId) {
+      this.mPreviewCardId = cardId;
+      this._previewCardImage.texture = Assets.get(cardId ? `cards/images/${cardId}.png` : 'cards/card_backing.png');
+      this._previewCardName.text = name;
 
-        cardId = cardTemplate.id;
-        name = i18next.t(`cards.${cardId}.name`);
-        definition = isMonsterCard ? getCardDefinition(cardTemplate) : '';
-        desc = i18next.t(`cards.${cardId}.desc`);
-        attributeTexture = attributeIndex >= 0 ? this._cardAttributeSheet.textures[`attr-${attributeIndex}`] : null;
-        raceTexture = raceIndex >= 0 ? this._cardRaceSheet.textures[`race-${raceIndex}`] : null;
-        atk = cardTemplate.atk.toString();
-        def = cardTemplate.def.toString();
+      if (definition) {
+        this._previewCardDesc1.text = definition;
+        this._previewCardDesc2.text = desc;
       } else {
-        isMonsterCard = false;
-        cardId = 0;
-        name = '';
-        definition = '';
-        desc = '';
-        attributeTexture = null;
-        raceTexture = null;
-        atk = '';
-        def = '';
+        this._previewCardDesc1.text = desc;
+        this._previewCardDesc2.text = '';
       }
 
-      cardImage.filters = this._hoverCardFilter;
-      this._hoverCardSprite.visible = true;
-      this._hoverCardSprite.position.set(x + cardView.x, (y + cardView.y) - 4);
+      this._previewCardAttribute.texture = attributeTexture;
+      this._previewCardRace.texture = raceTexture;
+      this._previewCardAtk.text = atk;
+      this._previewCardDef.text = def;
 
-      if (this._previewCardId !== cardId) {
-        this._previewCardId = cardId;
-        this._previewCardImage.texture = Assets.get(cardId ? `cards/images/${cardId}.png` : 'cards/card_backing.png');
-        this._previewCardName.text = name;
-
-        if (definition) {
-          this._previewCardDesc1.text = definition;
-          this._previewCardDesc2.text = desc;
-        } else {
-          this._previewCardDesc1.text = desc;
-          this._previewCardDesc2.text = '';
-        }
-
-        this._previewCardAttribute.texture = attributeTexture;
-        this._previewCardRace.texture = raceTexture;
-        this._previewCardAtk.text = atk;
-        this._previewCardDef.text = def;
-
-        if (isMonsterCard) {
-          this._previewCardScrollView.height = CARD_PREVIEW_MONSTER_SCROLL_HEIGHT;
-          this._previewCardStatsContainer.visible = true;
-        } else {
-          this._previewCardScrollView.height = CARD_PREVIEW_SCROLL_HEIGHT;
-          this._previewCardStatsContainer.visible = false;
-        }
+      if (isMonsterCard) {
+        this._previewCardScrollView.height = CARD_PREVIEW_MONSTER_SCROLL_HEIGHT;
+        this._previewCardStatsContainer.visible = true;
+      } else {
+        this._previewCardScrollView.height = CARD_PREVIEW_SCROLL_HEIGHT;
+        this._previewCardStatsContainer.visible = false;
       }
+    }
 
-      // Scrollbar handling
-      const scrollDiff = this._previewCardScrollView.scrollHeight - this._previewCardScrollView.height;
-      const scrollBarSlider = this._previewCardScrollBar.slider;
+    // Scrollbar handling
+    const scrollDiff = this._previewCardScrollView.scrollHeight - this._previewCardScrollView.height;
+    const scrollBarSlider = this._previewCardScrollBar.slider;
 
-      scrollBarSlider.value = 0;
-      scrollBarSlider.max = Math.max(scrollDiff, 1);
-      scrollBarSlider.step = 0.01 * scrollBarSlider.max
-      this._previewCardScrollBar.visible = scrollDiff > 0;
-    };
-
-    cardImage.onpointerleave = () => {
-      cardImage.filters = null;
-      this._hoverCardSprite.visible = false;
-    };
+    scrollBarSlider.value = 0;
+    scrollBarSlider.max = Math.max(scrollDiff, 1);
+    scrollBarSlider.step = 0.01 * scrollBarSlider.max
+    this._previewCardScrollBar.visible = scrollDiff > 0;
   }
 
   private _playAudio(): void {

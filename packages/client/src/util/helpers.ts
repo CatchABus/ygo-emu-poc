@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import { CardTemplate } from '../template/CardTemplate';
-import { ColorSource, Graphics, groupD8, Rectangle, Texture, TextureSourceLike } from 'pixi.js';
+import { ColorSource, Container, FederatedEventHandler, FederatedPointerEvent, Graphics, groupD8, Rectangle, Texture, TextureSourceLike } from 'pixi.js';
 import { client } from '../client';
 
 const SCREEN_WIDTH = parseFloat(import.meta.env.YGO_WINDOW_WIDTH);
@@ -86,6 +86,26 @@ function setCursorImage(mode: string, imagePath: string): void {
   client.getApplication().renderer.events.cursorStyles[mode] = `url('${imagePath}') ${CURSOR_X} ${CURSOR_Y}, auto`;
 }
 
+function onGlobalPointerMoveStop(container: Container, handler: FederatedEventHandler<FederatedPointerEvent>): void {
+  let moveStopTimeout: number = null;
+
+  container.onglobalpointermove = (event) => {
+    if (moveStopTimeout != null) {
+      const temp = moveStopTimeout;
+
+      moveStopTimeout = null;
+      clearTimeout(temp);
+    }
+
+    moveStopTimeout = setTimeout(() => {
+      if (!container.destroyed) {
+        handler(event);
+      }
+      moveStopTimeout = null;
+    }, 250);
+  };
+}
+
 export {
   SCREEN_WIDTH,
   SCREEN_HEIGHT,
@@ -96,5 +116,6 @@ export {
   createRect,
   getRequestProtocol,
   rotateTexture,
-  setCursorImage
+  setCursorImage,
+  onGlobalPointerMoveStop
 };
