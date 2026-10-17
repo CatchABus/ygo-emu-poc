@@ -27,6 +27,7 @@ const CARD_HEIGHT = 72;
 const DUMMY_TEXT = 'DUMMY'; // Texts must have a width or scroll box will complain at first
 const CARD_PREVIEW_SCROLL_HEIGHT = 200;
 const CARD_PREVIEW_MONSTER_SCROLL_HEIGHT = 183;
+const CARD_PREVIEW_TXT_WRAP_WIDTH = 150;
 
 interface CardInfo {
   id: number;
@@ -286,7 +287,7 @@ class CardListPage extends BasePage {
         padding: 1,
         fontWeight: 'bold',
         wordWrap: true,
-        wordWrapWidth: 150
+        wordWrapWidth: CARD_PREVIEW_TXT_WRAP_WIDTH
       }
     });
 
@@ -296,7 +297,7 @@ class CardListPage extends BasePage {
         fontSize: 11,
         lineHeight: 18,
         wordWrap: true,
-        wordWrapWidth: 150
+        wordWrapWidth: CARD_PREVIEW_TXT_WRAP_WIDTH
       }
     });
 
@@ -306,7 +307,7 @@ class CardListPage extends BasePage {
         fontSize: 11,
         lineHeight: 18,
         wordWrap: true,
-        wordWrapWidth: 150
+        wordWrapWidth: CARD_PREVIEW_TXT_WRAP_WIDTH
       }
     });
 
@@ -682,6 +683,7 @@ class CardListPage extends BasePage {
     cardImage.onpointerleave = () => {
       cardImage.filters = null;
       this.mHoverCardSprite.visible = false;
+      this.mHoverCardTmpl = null;
     };
   }
 
@@ -734,10 +736,12 @@ class CardListPage extends BasePage {
 
       if (definition) {
         this.mPreviewCardDesc1.text = definition;
+        this.mPreviewCardDesc1.scale.y = 1;
         this.mPreviewCardDesc2.text = desc;
       } else {
-        this.mPreviewCardDesc1.text = desc;
-        this.mPreviewCardDesc2.text = '';
+        this.mPreviewCardDesc1.text = '';
+        this.mPreviewCardDesc1.scale.y = 0;
+        this.mPreviewCardDesc2.text = desc;
       }
 
       this.mPreviewCardAttribute.texture = attributeTexture;
