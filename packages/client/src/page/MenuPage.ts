@@ -1,6 +1,7 @@
 import { FancyButton } from '@pixi/ui';
 import { Howl } from 'howler';
 import * as log from 'loglevel';
+import { DropShadowFilter } from 'pixi-filters';
 import { AnimatedSprite, Assets, Container, FederatedPointerEvent, Graphics, Sprite, Spritesheet } from 'pixi.js';
 import { client } from '../client';
 import { CircleOpenFilter } from '../filter/CircleOpenFilter';
@@ -82,6 +83,11 @@ class MenuPage extends BasePage {
 
     this.mShinyEffectSprite.x = 560 + this.mShinyEffectSprite.width;
     this.mShinyEffectSprite.anchor.set(1, 0);
+    this.mShinyEffectSprite.filters = new DropShadowFilter({
+      alpha: 1,
+      color: '#FFFFFF',
+      shadowOnly: true
+    });
     this.mShinyEffectSprite.mask = shinyEffectMask;
 
     logoBoundsMask.rect(0, 0, this.mLogoSprite.width, this.mLogoSprite.height);
