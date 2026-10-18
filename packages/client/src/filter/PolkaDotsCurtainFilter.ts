@@ -40,7 +40,7 @@ class PolkaDotsCurtainFilter extends Filter {
       }
     });
 
-    this.resources.uniformWrapper.uniforms.uResolution ={
+    this.resources.uniformWrapper.uniforms.uResolution = {
       x: this.resolution,
       y: this.resolution
     };
