@@ -34,10 +34,16 @@ class PolkaDotsCurtainFilter extends Filter {
       resources: {
         uniformWrapper: {
           dots: { value: 20, type: 'f32' },
-          progress: { value: 0, type: 'f32' }
+          progress: { value: 0, type: 'f32' },
+          uResolution: { value: { x: 1, y: 1 }, type: 'vec2<f32>' }
         },
       }
     });
+
+    this.resources.uniformWrapper.uniforms.uResolution ={
+      x: this.resolution,
+      y: this.resolution
+    };
   }
 }
 

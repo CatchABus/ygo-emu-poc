@@ -39,13 +39,19 @@ class CircleOpenFilter extends Filter {
       resources: {
         uniformWrapper: {
           opening: { value: 0, type: 'i32' },
-          center: { value: { x: 0.5, y: 0.5}, type: 'vec2<f32>' },
+          center: { value: { x: 0.5, y: 0.5 }, type: 'vec2<f32>' },
           smoothness: { value: 0.0, type: 'f32' },
           scale: { value: 1.0, type: 'f32' },
-          progress: { value: 0, type: 'f32' }
+          progress: { value: 0, type: 'f32' },
+          uResolution: { value: { x: 1, y: 1 }, type: 'vec2<f32>' }
         },
       }
     });
+
+    this.resources.uniformWrapper.uniforms.uResolution ={
+      x: this.resolution,
+      y: this.resolution
+    };
   }
 }
 

@@ -39,7 +39,7 @@ class CrossHatchFilter extends Filter {
       }),
       resources: {
         uniformWrapper: {
-          center: { value: { x: 0.5, y: 0.5}, type: 'vec2<f32>' },
+          center: { value: { x: 0.5, y: 0.5 }, type: 'vec2<f32>' },
           threshold: { value: 3.0, type: 'f32' },
           fadeEdge: { value: 0.1, type: 'f32' },
           progress: { value: 0, type: 'f32' }
