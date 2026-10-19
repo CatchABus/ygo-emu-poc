@@ -97,12 +97,16 @@ function onGlobalPointerMoveStop(container: Container, handler: FederatedEventHa
       clearTimeout(temp);
     }
 
-    moveStopTimeout = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       if (!container.destroyed) {
         handler(event);
       }
-      moveStopTimeout = null;
+
+      if (timeoutId === moveStopTimeout) {
+        moveStopTimeout = null;
+      }
     }, 250);
+    moveStopTimeout = timeoutId;
   };
 }
 
