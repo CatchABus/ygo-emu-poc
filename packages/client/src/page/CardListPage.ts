@@ -36,7 +36,8 @@ interface CardInfo {
 }
 
 class CardListPage extends BasePage {
-  private readonly _ownedCards: CardInfo[] = [];
+  private readonly mOwnedCards: CardInfo[] = [];
+  private readonly mNewCardTmplIds: number[] = [];
 
   private mCardContainer: Container<Container>;
   private mCardCounter: BitmapText;
@@ -70,17 +71,20 @@ class CardListPage extends BasePage {
   private mCardTemplates: CardTemplate[];
 
   private mCardCounterUpdateInterval: ReturnType<typeof setInterval>;
-  private _newIndicatorsUpdateInterval: ReturnType<typeof setInterval>;
+  private mNewIndiUpdateInterval: ReturnType<typeof setInterval>;
 
   private mLeftPageButton: HoverButtonContainer;
   private mRightPageButton: HoverButtonContainer;
   private mCurPageIndicator: BitmapText;
 
   private mIsNavigatingPages: boolean = false;
+  private mEscapeKeyCb: (event: KeyboardEvent) => void;
+
+  private mIsTransitionCompleted: boolean;
 
   constructor() {
     super();
-    this.eventMode = 'none';
+    this.eventMode = 'static';
   }
 
   async preload(): Promise<void> {
@@ -100,6 +104,8 @@ class CardListPage extends BasePage {
   }
 
   async onNavigatingTo(): Promise<void> {
+    this.mIsTransitionCompleted = false;
+
     await this._init();
     await this._requestPlayerCards();
 
@@ -107,15 +113,15 @@ class CardListPage extends BasePage {
   }
 
   async onNavigatedTo(): Promise<void> {
+    onGlobalPointerMoveStop(this, () => this._updateCardPreviewIfNeeded());
     this._addEscapeKeyListener();
     this._playAudio();
 
     this._animateCardList().then(() => {
-      this.eventMode = 'static';
-      this._attachInteractionListeners();
+      this.mIsTransitionCompleted = true;
     });
 
-    if (this._ownedCards.some((card) => card.isNew)) {
+    if (this.mOwnedCards.some((card) => card.isNew)) {
       this._animateNewCardIndicators();
     }
   }
@@ -128,22 +134,27 @@ class CardListPage extends BasePage {
       this.mCardCounterUpdateInterval = null;
     }
 
-    if (this._newIndicatorsUpdateInterval != null) {
-      clearInterval(this._newIndicatorsUpdateInterval);
-      this._newIndicatorsUpdateInterval = null;
+    if (this.mNewIndiUpdateInterval != null) {
+      clearInterval(this.mNewIndiUpdateInterval);
+      this.mNewIndiUpdateInterval = null;
     }
 
+    window.removeEventListener('keydown', this.mEscapeKeyCb);
     this.mTrack.stop();
   }
 
   onNavigatedFrom(): void | Promise<void> {
   }
 
-  private _attachInteractionListeners(): void {
-    onGlobalPointerMoveStop(this, () => this._updateCardPreviewIfNeeded());
-  }
-
   async _requestPlayerCards(): Promise<void> {
+    if (this.mOwnedCards.length > 0) {
+      this.mOwnedCards.splice(0);
+    }
+
+    if (this.mNewCardTmplIds.length > 0) {
+      this.mNewCardTmplIds.splice(0);
+    }
+    
     try {
       const responseBuffer = await client.getSocket().emitWithAck('cardListRequest', new ArrayBuffer(0));
       const packet = new ReceivablePacket(responseBuffer);
@@ -154,7 +165,11 @@ class CardListPage extends BasePage {
         const cardTemplateId = packet.readInt32();
         const isNew = !!packet.readInt8();
 
-        this._ownedCards.push({
+        if (isNew) {
+          this.mNewCardTmplIds.push(cardTemplateId);
+        }
+
+        this.mOwnedCards.push({
           id: cardId,
           templateId: cardTemplateId,
           isNew
@@ -221,11 +236,16 @@ class CardListPage extends BasePage {
       defaultView: `${assetPrefix}/card_list/${locale}_back1.png`,
       hoverView: `${assetPrefix}/card_list/${locale}_back2.png`
     });
+    const clickCb = () => {
+      if (this.mIsTransitionCompleted) {
+        backButton.off('click', clickCb);
+        this.mClickSound.play();
+        this._goBack();
+      }
+    };
+
     backButton.x = 692;
-    backButton.once('click', () => {
-      this.mClickSound.play();
-      this._goBack();
-    });
+    backButton.on('click', clickCb);
 
     this.addChild(backButton);
   }
@@ -550,7 +570,7 @@ class CardListPage extends BasePage {
   }
 
   private _startCardCounter(): void {
-    const ownedCount = this._ownedCards.length;
+    const ownedCount = this.mOwnedCards.length;
 
     let isPercentageDisplay = true;
     let value = (ownedCount / this.mCardTemplates.length) * 100;
@@ -581,17 +601,17 @@ class CardListPage extends BasePage {
   }
 
   private _addEscapeKeyListener(): void {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.code === 'Escape') {
-        window.removeEventListener('keydown', onKeyDown);
+    this.mEscapeKeyCb = (event: KeyboardEvent) => {
+      if (this.mIsTransitionCompleted && event.code === 'Escape') {
+        window.removeEventListener('keydown', this.mEscapeKeyCb);
         this._goBack();
       }
     };
-    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keydown', this.mEscapeKeyCb);
   }
 
   private async _onPageClick(event: FederatedEvent): Promise<void> {
-    if (this.mIsNavigatingPages) {
+    if (!this.mIsTransitionCompleted || this.mIsNavigatingPages) {
       return;
     }
 
@@ -635,14 +655,20 @@ class CardListPage extends BasePage {
     const [cardImage, newIndicator] = cardView.children;
 
     cardImage.onclick = () => {
+      if (this.mNewCardTmplIds.length == 0) {
+        return;
+      }
+
       const startDataIndex = (this.mCurrenPageNum - 1) * CARDS_PER_PAGE;
       const dataIndex = index + startDataIndex;
       const cardTemplate = this.mCardTemplates[dataIndex];
-      const card = this._ownedCards.find((card) => card.templateId === cardTemplate.id);
+      const card = this.mOwnedCards.find((card) => card.templateId === cardTemplate.id);
+      const newIdx = this.mNewCardTmplIds.indexOf(card.templateId);
 
-      if (card?.isNew) {
+      if (newIdx > -1) {
         const sp = new SendablePacket();
 
+        this.mNewCardTmplIds.splice(newIdx, 1);
         sp.writeInt32(card.id);
 
         try {
@@ -650,12 +676,14 @@ class CardListPage extends BasePage {
           card.isNew = false;
           newIndicator.visible = false;
 
-          const hasNewCards = this._ownedCards.some((card) => card.isNew);
-          if (!hasNewCards && this._newIndicatorsUpdateInterval != null) {
-            clearInterval(this._newIndicatorsUpdateInterval);
-            this._newIndicatorsUpdateInterval = null;
+          if (this.mNewCardTmplIds.length == 0 && this.mNewIndiUpdateInterval != null) {
+            clearInterval(this.mNewIndiUpdateInterval);
+            this.mNewIndiUpdateInterval = null;
           }
         } catch (err) {
+          // Re-add in case of failure
+          card.isNew = true;
+          this.mNewCardTmplIds.push(card.templateId);
           log.error(err instanceof Error ? err.message : err);
         }
       }
@@ -704,7 +732,7 @@ class CardListPage extends BasePage {
     let atk: string;
     let def: string;
 
-    if (this._ownedCards.some((card) => card.templateId === template.id)) {
+    if (this.mOwnedCards.some((card) => card.templateId === template.id)) {
       const attributeIndex = ORDERED_ATTRIBUTES.indexOf(template.attribute);
       const raceIndex = ORDERED_RACES.indexOf(template.race);
       isMonsterCard = isMonster(template);
@@ -804,7 +832,7 @@ class CardListPage extends BasePage {
         if (cardView) {
           const [cardImage, newIndicator] = cardView.children;
           const cardTemplate = cardData[i];
-          const card = this._ownedCards.find((card) => card.templateId === cardTemplate.id);
+          const card = this.mOwnedCards.find((card) => card.templateId === cardTemplate.id);
 
           let textureSource: string;
           let isNew: boolean;
@@ -851,12 +879,12 @@ class CardListPage extends BasePage {
   }
 
   private _animateNewCardIndicators(): void {
-    if (this._newIndicatorsUpdateInterval != null) {
-      clearInterval(this._newIndicatorsUpdateInterval);
-      this._newIndicatorsUpdateInterval = null;
+    if (this.mNewIndiUpdateInterval != null) {
+      clearInterval(this.mNewIndiUpdateInterval);
+      this.mNewIndiUpdateInterval = null;
     }
 
-    this._newIndicatorsUpdateInterval = setInterval(() => {
+    this.mNewIndiUpdateInterval = setInterval(() => {
       this.animate({
         from: 1,
         to: 0,
@@ -921,7 +949,7 @@ class CardListPage extends BasePage {
             onRepeat: () => {
               const [cardImage, newIndicator] = cardView.children;
               const cardTemplate = cardTemplates[j];
-              const card = this._ownedCards.find((card) => card.templateId === cardTemplate.id);
+              const card = this.mOwnedCards.find((card) => card.templateId === cardTemplate.id);
 
               let textureSource: string;
               let isNew: boolean;
