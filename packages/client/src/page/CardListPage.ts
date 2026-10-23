@@ -78,7 +78,12 @@ class CardListPage extends BasePage {
   private mCurPageIndicator: BitmapText;
 
   private mIsNavigatingPages: boolean = false;
-  private mEscapeKeyCb: (event: KeyboardEvent) => void;
+  private readonly mEscapeKeyCb = (event: KeyboardEvent) => {
+    if (this.mIsTransitionCompleted && event.code === 'Escape') {
+      window.removeEventListener('keydown', this.mEscapeKeyCb);
+      this._goBack();
+    }
+  };
 
   private mIsTransitionCompleted: boolean;
 
@@ -114,7 +119,7 @@ class CardListPage extends BasePage {
 
   async onNavigatedTo(): Promise<void> {
     onGlobalPointerMoveStop(this, () => this._updateCardPreviewIfNeeded());
-    this._addEscapeKeyListener();
+    window.addEventListener('keydown', this.mEscapeKeyCb);
     this._playAudio();
 
     this._animateCardList().then(() => {
@@ -600,16 +605,6 @@ class CardListPage extends BasePage {
     });
   }
 
-  private _addEscapeKeyListener(): void {
-    this.mEscapeKeyCb = (event: KeyboardEvent) => {
-      if (this.mIsTransitionCompleted && event.code === 'Escape') {
-        window.removeEventListener('keydown', this.mEscapeKeyCb);
-        this._goBack();
-      }
-    };
-    window.addEventListener('keydown', this.mEscapeKeyCb);
-  }
-
   private async _onPageClick(event: FederatedEvent): Promise<void> {
     if (!this.mIsTransitionCompleted || this.mIsNavigatingPages) {
       return;
@@ -663,8 +658,12 @@ class CardListPage extends BasePage {
       const dataIndex = index + startDataIndex;
       const cardTemplate = this.mCardTemplates[dataIndex];
       const card = this.mOwnedCards.find((card) => card.templateId === cardTemplate.id);
-      const newIdx = this.mNewCardTmplIds.indexOf(card.templateId);
 
+      if (card == null) {
+        return;
+      }
+
+      const newIdx = this.mNewCardTmplIds.indexOf(card.templateId);
       if (newIdx > -1) {
         const sp = new SendablePacket();
 
