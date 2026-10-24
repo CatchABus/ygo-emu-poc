@@ -2,6 +2,7 @@ import { FancyButton, Slider } from '@pixi/ui';
 import { Howl } from 'howler';
 import i18next from 'i18next';
 import * as log from 'loglevel';
+import { AdjustmentFilter } from 'pixi-filters';
 import { AnimatedSprite, Assets, BitmapText, Container, FederatedPointerEvent, Graphics, groupD8, Sprite, Spritesheet, Text, Texture, TextureSourceLike } from 'pixi.js';
 import { client } from '../client';
 import { SliderControls } from '../components/SliderControls';
@@ -83,6 +84,10 @@ class DeckConstruction extends BasePage {
   private mClickSound: Howl;
   private mBagOpenSound: Howl;
   private mTrack: Howl;
+
+  private mHoverCardSprite: Sprite;
+  private mHoverCardFilter: AdjustmentFilter;
+  private mHoverCardTmpl: CardTemplate = null;
 
   private mCardTemplates: ReadonlyArray<CardTemplate>;
   private mBagFilterLabelSheet: Spritesheet;
@@ -181,6 +186,7 @@ class DeckConstruction extends BasePage {
 
     this._drawBag();
     this._drawBagScrollbar();
+    this._drawHoverElements();
 
     this.mClickSound = new Howl({
       src: 'commons/decide.ogg'
@@ -195,6 +201,10 @@ class DeckConstruction extends BasePage {
   }
 
   async _requestCardInventory(): Promise<void> {
+    if (this.mCardSlotDataset.length > 0) {
+      this.mCardSlotDataset.splice(0);
+    }
+
     try {
       const responseBuffer = await client.getSocket().emitWithAck('cardInventoryRequest', new ArrayBuffer(0));
       const packet = new ReceivablePacket(responseBuffer);
@@ -313,7 +323,6 @@ class DeckConstruction extends BasePage {
         }
       } else {
         // Cleanup section
-
         cardImage.texture = null;
         cardCount.text = '';
         cardLimit.texture = null;
@@ -335,6 +344,30 @@ class DeckConstruction extends BasePage {
         starIcon.visible = false;
       }
     }
+  }
+
+  private _registerCardHoverListener(cardView: Container, index: number): void {
+    const { x, y } = cardView.parent;
+    const [cardImage] = cardView.children;
+
+    cardImage.onpointerenter = () => {
+      const cardSlotDataset = this.mFilterCardSlotDataset;
+      const slotData = cardSlotDataset[this.mCurBagIdx + index];
+
+      if (this.mHoverCardTmpl !== slotData.template) {
+        this.mHoverCardTmpl = slotData.template;
+      }
+
+      cardImage.filters = this.mHoverCardFilter;
+      this.mHoverCardSprite.visible = true;
+      this.mHoverCardSprite.position.set(x + cardView.x, (y + cardView.y) - 4);
+    };
+
+    cardImage.onpointerleave = () => {
+      cardImage.filters = null;
+      this.mHoverCardSprite.visible = false;
+      this.mHoverCardTmpl = null;
+    };
   }
 
   private _playAudio(): void {
@@ -497,7 +530,11 @@ class DeckConstruction extends BasePage {
 
     for (let i = 0; i < BAG_SLOTS; i++) {
       const slot = this._createBagSlot();
+      const cardInfo = slot.children[0];
+
       slot.y = i * 55;
+
+      this._registerCardHoverListener(cardInfo, i);
       container.addChild(slot);
     }
 
@@ -510,6 +547,7 @@ class DeckConstruction extends BasePage {
     const cardInfo = new Container();
 
     const cardImage = Sprite.from('cards/card_backing.png');
+    cardImage.eventMode = 'static';
     cardImage.setSize(35, 50);
 
     const cardCount = new BitmapText({
@@ -734,11 +772,29 @@ class DeckConstruction extends BasePage {
     this.addChild(scrollBar);
   }
 
+  private _drawHoverElements(): void {
+    const assetPrefix = client.gameMode;
+    const hoverSprite = Sprite.from(`${assetPrefix}/card_list/card_border_s.png`);
+
+    hoverSprite.visible = false;
+    hoverSprite.anchor.x = 0.5;
+    hoverSprite.eventMode = 'none';
+
+    this.addChild(hoverSprite);
+
+    this.mHoverCardSprite = hoverSprite;
+    this.mHoverCardFilter = new AdjustmentFilter({
+      brightness: 1.3
+    });
+  }
+
   private async _goBack(): Promise<void> {
     await getNavigator().navigate({
       createPage: () => new MenuPage(),
       transition: {
-        filter: new CrossHatchFilter(),
+        filters: [
+          new CrossHatchFilter()
+        ],
         duration: 1500
       }
     });
