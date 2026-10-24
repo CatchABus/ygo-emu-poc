@@ -599,7 +599,9 @@ class CardListPage extends BasePage {
     await getNavigator().navigate({
       createPage: () => new MenuPage(),
       transition: {
-        filter: new CrossHatchFilter(),
+        filters: [
+          new CrossHatchFilter()
+        ],
         duration: 1500
       }
     });

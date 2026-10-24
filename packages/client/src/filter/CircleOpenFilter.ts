@@ -1,5 +1,6 @@
 import { Filter, GlProgram } from 'pixi.js';
 import transitionVertex from './transition.vert?raw';
+import { ITransitionFilter } from './ITransitionFilter';
 
 // author: gre
 // license: MIT
@@ -29,7 +30,7 @@ void main(){
 }
 `;
 
-class CircleOpenFilter extends Filter {
+class CircleOpenFilter extends Filter implements ITransitionFilter {
   constructor() {
     super({
       glProgram: GlProgram.from({
@@ -52,6 +53,14 @@ class CircleOpenFilter extends Filter {
       x: this.resolution,
       y: this.resolution
     };
+  }
+
+  get progress(): number {
+    return this.resources.uniformWrapper.uniforms.progress;
+  }
+
+  set progress(val: number) {
+    this.resources.uniformWrapper.uniforms.progress = val;
   }
 }
 

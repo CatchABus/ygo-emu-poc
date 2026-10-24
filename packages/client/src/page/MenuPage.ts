@@ -258,7 +258,7 @@ class MenuPage extends BasePage {
     await getNavigator().navigate({
       createPage: () => new DeckConstruction(),
       transition: {
-        filter,
+        filters: [filter],
         duration: 1000
       }
     });
@@ -271,7 +271,7 @@ class MenuPage extends BasePage {
     await getNavigator().navigate({
       createPage: () => new CardListPage(),
       transition: {
-        filter,
+        filters: [filter],
         duration: 1000
       }
     });
@@ -309,7 +309,7 @@ class MenuPage extends BasePage {
         await getNavigator().navigate({
           createPage: () => new LoginPage(),
           transition: {
-            filter: new FadeColorFilter(),
+            filters: [new FadeColorFilter()],
             duration: 2000
           }
         });

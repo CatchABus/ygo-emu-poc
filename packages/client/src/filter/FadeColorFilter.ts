@@ -1,5 +1,6 @@
 import { Filter, GlProgram } from 'pixi.js';
 import transitionVertex from './transition.vert?raw';
+import { ITransitionFilter } from './ITransitionFilter';
 
 // author: gre
 // license: MIT
@@ -26,7 +27,7 @@ void main(){
 }
 `;
 
-class FadeColorFilter extends Filter {
+class FadeColorFilter extends Filter implements ITransitionFilter {
   constructor() {
     super({
       glProgram: GlProgram.from({
@@ -41,6 +42,14 @@ class FadeColorFilter extends Filter {
         },
       }
     });
+  }
+
+  get progress(): number {
+    return this.resources.uniformWrapper.uniforms.progress;
+  }
+
+  set progress(val: number) {
+    this.resources.uniformWrapper.uniforms.progress = val;
   }
 }
 

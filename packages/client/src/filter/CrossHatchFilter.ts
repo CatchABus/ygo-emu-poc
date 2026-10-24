@@ -1,5 +1,6 @@
 import { Filter, GlProgram } from 'pixi.js';
 import transitionVertex from './transition.vert?raw';
+import { ITransitionFilter } from './ITransitionFilter';
 
 // Author: pthrasher
 // adapted by gre from https://gist.github.com/pthrasher/04fd9a7de4012cbb03f6
@@ -30,7 +31,7 @@ void main() {
 }
 `;
 
-class CrossHatchFilter extends Filter {
+class CrossHatchFilter extends Filter implements ITransitionFilter {
   constructor() {
     super({
       glProgram: GlProgram.from({
@@ -46,6 +47,14 @@ class CrossHatchFilter extends Filter {
         },
       }
     });
+  }
+
+  get progress(): number {
+    return this.resources.uniformWrapper.uniforms.progress;
+  }
+
+  set progress(val: number) {
+    this.resources.uniformWrapper.uniforms.progress = val;
   }
 }
 

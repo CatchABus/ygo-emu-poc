@@ -1,11 +1,12 @@
-import { Application, ColorSource, Container, Filter, Graphics } from 'pixi.js';
+import { Application, ColorSource, Container, Graphics } from 'pixi.js';
 import { animate } from '../animation';
 import { BasePage } from '../page/BasePage';
+import { ITransitionFilter } from '../filter/ITransitionFilter';
 
 type PageConstructor = new () => BasePage;
 
 interface TransitionOptions {
-    filter: Filter;
+    filters: ITransitionFilter[];
     duration: number;
 }
 
@@ -60,9 +61,9 @@ class Navigator {
   }
 
   private _startPageTransition(view: Container, transitionOptions: TransitionOptions): Promise<void> {
-    const { duration, filter } = transitionOptions;
+    const { duration, filters } = transitionOptions;
 
-    view.filters = filter;
+    view.filters = filters;
 
     return new Promise((resolve) => {
       animate({
@@ -70,7 +71,9 @@ class Navigator {
         to: 1,
         duration,
         onUpdate: (value: number) => {
-          filter.resources.uniformWrapper.uniforms.progress = value;
+          for (const f of filters) {
+            f.progress = value;
+          }
         },
         onComplete: resolve
       })
@@ -113,7 +116,7 @@ class Navigator {
       if (oldPage) {
         this._app.stage.addChildAt(newPage, this._app.stage.getChildIndex(oldPage));
 
-        if (options.transition?.filter) {
+        if (Array.isArray(options.transition?.filters) && options.transition.filters.length > 0) {
           await this._startPageTransition(oldPage, options.transition);
         }
       } else {
@@ -230,7 +233,7 @@ class Navigator {
       createPage: () => null,
       transition: {
         duration: 300,
-        filter: null
+        filters: null
       }
     };
   }
