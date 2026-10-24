@@ -38,6 +38,12 @@ interface CardInfo {
 class CardListPage extends BasePage {
   private readonly mOwnedCards: CardInfo[] = [];
   private readonly mNewCardTmplIds: number[] = [];
+  private readonly mEscapeKeyCb = (event: KeyboardEvent) => {
+    if (this.mIsInitialized && event.code === 'Escape') {
+      window.removeEventListener('keydown', this.mEscapeKeyCb);
+      this._goBack();
+    }
+  };
 
   private mCardContainer: Container<Container>;
   private mCardCounter: BitmapText;
@@ -78,14 +84,7 @@ class CardListPage extends BasePage {
   private mCurPageIndicator: BitmapText;
 
   private mIsNavigatingPages: boolean = false;
-  private readonly mEscapeKeyCb = (event: KeyboardEvent) => {
-    if (this.mIsTransitionCompleted && event.code === 'Escape') {
-      window.removeEventListener('keydown', this.mEscapeKeyCb);
-      this._goBack();
-    }
-  };
-
-  private mIsTransitionCompleted: boolean;
+  private mIsInitialized: boolean;
 
   constructor() {
     super();
@@ -109,7 +108,7 @@ class CardListPage extends BasePage {
   }
 
   async onNavigatingTo(): Promise<void> {
-    this.mIsTransitionCompleted = false;
+    this.mIsInitialized = false;
 
     await this._init();
     await this._requestPlayerCards();
@@ -123,15 +122,16 @@ class CardListPage extends BasePage {
     this._playAudio();
 
     this._animateCardList().then(() => {
-      this.mIsTransitionCompleted = true;
+      this.mIsInitialized = true;
     });
 
-    if (this.mOwnedCards.some((card) => card.isNew)) {
+    if (this.mNewCardTmplIds.length > 0) {
       this._animateNewCardIndicators();
     }
   }
 
   async onNavigatingFrom(): Promise<void> {
+    this.mIsInitialized = false;
     this.stopAllAnimations();
 
     if (this.mCardCounterUpdateInterval != null) {
@@ -242,7 +242,7 @@ class CardListPage extends BasePage {
       hoverView: `${assetPrefix}/card_list/${locale}_back2.png`
     });
     const clickCb = () => {
-      if (this.mIsTransitionCompleted) {
+      if (this.mIsInitialized) {
         backButton.off('click', clickCb);
         this.mClickSound.play();
         this._goBack();
@@ -608,7 +608,7 @@ class CardListPage extends BasePage {
   }
 
   private async _onPageClick(event: FederatedEvent): Promise<void> {
-    if (!this.mIsTransitionCompleted || this.mIsNavigatingPages) {
+    if (!this.mIsInitialized || this.mIsNavigatingPages) {
       return;
     }
 
@@ -652,7 +652,7 @@ class CardListPage extends BasePage {
     const [cardImage, newIndicator] = cardView.children;
 
     cardImage.onclick = () => {
-      if (this.mNewCardTmplIds.length == 0) {
+      if (!this.mIsInitialized || this.mNewCardTmplIds.length == 0) {
         return;
       }
 
