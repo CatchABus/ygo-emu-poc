@@ -1,4 +1,4 @@
-import { Input } from '@pixi/ui';
+import { FancyButton, Input } from '@pixi/ui';
 import { Howl } from 'howler';
 import i18next from 'i18next';
 import * as log from 'loglevel';
@@ -105,7 +105,7 @@ class LoginPage extends BasePage {
         </input>
         <fancyButton x={FORM_WIDTH / 2} y={92} text={i18next.t('login.submit_button')} padding={4} anchorX={0.5} defaultView={createRect(0, 0, 100, 30, 'rgb(0, 180, 216)', 8)}
           hoverView={createRect(0, 0, 100, 30, 'rgb(77, 225, 255)', 8)} pressedView={createRect(0, 0, 100, 30, 'rgb(0, 180, 216)', 8)}
-          onUpSignal={() => this._attemptLogin()}></fancyButton>
+          afterCreate={(btn: FancyButton) => btn.onUp.connect(() => this._attemptLogin())}></fancyButton>
       </container>
     );
   }
@@ -122,7 +122,7 @@ class LoginPage extends BasePage {
         }}></text>
         <fancyButton x={FORM_WIDTH / 2} y={92} text={i18next.t('login.submit_button')} padding={4} anchorX={0.5} defaultView={createRect(0, 0, 100, 30, 'rgb(0, 180, 216)', 8)}
           hoverView={createRect(0, 0, 100, 30, 'rgb(77, 225, 255)', 8)} pressedView={createRect(0, 0, 100, 30, 'rgb(0, 180, 216)', 8)}
-          onUpSignal={() => this._reconnect()}></fancyButton>
+          afterCreate={(btn: FancyButton) => btn.onUp.connect(() => this._reconnect())}></fancyButton>
       </container>
     );
   }

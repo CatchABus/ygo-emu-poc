@@ -1,4 +1,3 @@
-import { FancyButton, Input } from '@pixi/ui';
-import { AnimatedSprite, Container, Graphics, Sprite, Text } from 'pixi.js';
+import { AnimatedSprite, Container, Graphics, Sprite } from 'pixi.js';
 
-export type PixiElement = Container | Graphics | Sprite | AnimatedSprite | Text | Input | FancyButton;
+export type PixiElement = Container | Graphics | Sprite | AnimatedSprite;

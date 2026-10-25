@@ -5,8 +5,6 @@ import { FancyButton, Input } from '@pixi/ui';
 import { ReadableAtom } from 'nanostores';
 import { ContainerProps } from './jsxElements';
 
-const SIGNAL_SUFFIX = 'Signal';
-
 const registry: Record<string, new (...args) => PixiElement> = {
   'container': Container,
   'graphics': Graphics,
@@ -55,7 +53,6 @@ export function jsx(elementType: string | typeof Fragment, props: ContainerProps
   let element: PixiElement;
 
   if (props) {
-    let signalProps: Record<string, any>;
     let storeProps: Record<string, ReadableAtom>;
     let children: ContainerChild | ContainerChild[];
 
@@ -68,24 +65,14 @@ export function jsx(elementType: string | typeof Fragment, props: ContainerProps
 
     for (const key in props) {
       const val = props[key];
-      const signalIdx = key.indexOf(SIGNAL_SUFFIX);
 
-      // Special handling for pixi ui signal listeners
-      if (signalIdx > -1) {
-        if (!signalProps) {
-          signalProps = {};
+      // Nanostores handling
+      if (val && typeof val === 'object' && 'set' in val && 'subscribe' in val) {
+        if (!storeProps) {
+          storeProps = {};
         }
-        signalProps[key.substring(0, signalIdx)] = val;
+        storeProps[key] = val;
         delete props[key];
-      } else {
-        // Nanostores handling
-        if (val && typeof val === 'object' && 'set' in val && 'subscribe' in val) {
-          if (!storeProps) {
-            storeProps = {};
-          }
-          storeProps[key] = val;
-          delete props[key];
-        }
       }
     }
 
@@ -95,20 +82,10 @@ export function jsx(elementType: string | typeof Fragment, props: ContainerProps
       props.afterCreate(element);
     }
 
-    // Pixi UI signal listeners
-    if (signalProps) {
-      for (const key in signalProps) {
-        if (typeof signalProps[key] === 'function' && element[key]) {
-          element[key].connect(signalProps[key]);
-        }
-      }
-    }
-
     // Nanostores reactivity
     if (storeProps) {
       for (const key in storeProps) {
         const storeVal = storeProps[key];
-
         const unsubscribe = storeVal.subscribe((newVal) => {
           element[key] = newVal;
         });
