@@ -39,7 +39,7 @@ class CardListPage extends BasePage {
   private readonly mOwnedCards: CardInfo[] = [];
   private readonly mNewCardTmplIds: number[] = [];
   private readonly mEscapeKeyCb = (event: KeyboardEvent) => {
-    if (this.mIsInitialized && event.code === 'Escape') {
+    if (event.code === 'Escape') {
       window.removeEventListener('keydown', this.mEscapeKeyCb);
       this._goBack();
     }
@@ -84,7 +84,6 @@ class CardListPage extends BasePage {
   private mCurPageIndicator: BitmapText;
 
   private mIsNavigatingPages: boolean = false;
-  private mIsInitialized: boolean;
 
   constructor() {
     super();
@@ -108,7 +107,7 @@ class CardListPage extends BasePage {
   }
 
   async onNavigatingTo(): Promise<void> {
-    this.mIsInitialized = false;
+    this.setPageInteraction(false);
 
     await this._init();
     await this._requestPlayerCards();
@@ -118,11 +117,11 @@ class CardListPage extends BasePage {
 
   async onNavigatedTo(): Promise<void> {
     onGlobalPointerMoveStop(this, () => this._updateCardPreviewIfNeeded());
-    window.addEventListener('keydown', this.mEscapeKeyCb);
     this._playAudio();
 
     this._animateCardList().then(() => {
-      this.mIsInitialized = true;
+      this._attachInteractionListeners();
+      this.setPageInteraction(true);
     });
 
     if (this.mNewCardTmplIds.length > 0) {
@@ -131,7 +130,7 @@ class CardListPage extends BasePage {
   }
 
   async onNavigatingFrom(): Promise<void> {
-    this.mIsInitialized = false;
+    this.setPageInteraction(false);
     this.stopAllAnimations();
 
     if (this.mCardCounterUpdateInterval != null) {
@@ -199,6 +198,10 @@ class CardListPage extends BasePage {
     });
   }
 
+  private _attachInteractionListeners(): void {
+    window.addEventListener('keydown', this.mEscapeKeyCb);
+  }
+
   private _drawTitle(): void {
     const assetPrefix = client.gameMode;
     const locale = getCurrentLocale();
@@ -233,16 +236,12 @@ class CardListPage extends BasePage {
       defaultView: `${assetPrefix}/card_list/${locale}_back1.png`,
       hoverView: `${assetPrefix}/card_list/${locale}_back2.png`
     });
-    const clickCb = () => {
-      if (this.mIsInitialized) {
-        backButton.off('click', clickCb);
-        this.mClickSound.play();
-        this._goBack();
-      }
-    };
 
     backButton.x = 692;
-    backButton.on('click', clickCb);
+    backButton.once('click', () => {
+      this.mClickSound.play();
+      this._goBack();
+    });
 
     this.addChild(backButton);
   }
@@ -600,7 +599,7 @@ class CardListPage extends BasePage {
   }
 
   private async _onPageClick(event: FederatedEvent): Promise<void> {
-    if (!this.mIsInitialized || this.mIsNavigatingPages) {
+    if (this.mIsNavigatingPages) {
       return;
     }
 
@@ -644,7 +643,7 @@ class CardListPage extends BasePage {
     const [cardImage, newIndicator] = cardView.children;
 
     cardImage.onclick = () => {
-      if (!this.mIsInitialized || this.mNewCardTmplIds.length == 0) {
+      if (this.mNewCardTmplIds.length == 0) {
         return;
       }
 

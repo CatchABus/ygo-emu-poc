@@ -1,10 +1,13 @@
-import { Container, ContainerChild, ContainerOptions } from 'pixi.js';
-import { AnimationWrapper, animate } from '../animation';
+import { Atom } from 'nanostores';
+import { Container, ContainerChild, ContainerOptions, DestroyOptions } from 'pixi.js';
 import { AnimationOptions } from 'popmotion';
+import { animate, AnimationWrapper } from '../animation';
+import { client } from '../client';
 import { createRect, SCREEN_HEIGHT, SCREEN_WIDTH } from '../util/helpers';
 
 abstract class BasePage extends Container {
   private readonly mRunningAnimations: AnimationWrapper[] = [];
+  private mUnbindCbs: Array<() => void>;
 
   constructor(options?: ContainerOptions<ContainerChild>, fitsWindow: boolean = true) {
     super(options);
@@ -14,8 +17,28 @@ abstract class BasePage extends Container {
     }
   }
 
+  override destroy(options?: DestroyOptions): void {
+    const unbindCbs = this.mUnbindCbs;
+
+    super.destroy(options);
+
+    if (Array.isArray(unbindCbs)) {
+      for (const cb of unbindCbs) {
+        cb();
+      }
+      unbindCbs.splice(0);
+    }
+  }
+
   resize(width: number, height: number): void {
     this.setSize(width, height);
+  }
+
+  subscribeStore<T>(atom: Atom<T>, listener: (value: T, oldValue?: T) => void): void {
+    if (!this.mUnbindCbs) {
+      this.mUnbindCbs = [];
+    }
+    this.mUnbindCbs.push(atom.subscribe(listener));
   }
 
   animate<T>(options: AnimationOptions<T>): AnimationWrapper {
@@ -58,6 +81,13 @@ abstract class BasePage extends Container {
     }
   }
 
+  setPageInteraction(val: boolean): void {
+    const { features: eventFeatures } = client.getApplication().renderer.events;
+
+    eventFeatures.click = val;
+    eventFeatures.wheel = val;
+  }
+
   abstract preload(): void | Promise<void>;
   abstract onNavigatedFrom(): void | Promise<void>;
   abstract onNavigatedTo(): void | Promise<void>;
@@ -68,3 +98,4 @@ abstract class BasePage extends Container {
 export {
   BasePage
 };
+

@@ -44,15 +44,21 @@ class MenuPage extends BasePage {
   }
 
   async onNavigatingTo(): Promise<void> {
+    this.setPageInteraction(false);
     await this._init();
   }
 
   async onNavigatedTo(): Promise<void> {
     await this._playAudio();
-    this._runAllAnimations().then(() => this._attachButtonListeners());
+    
+    this._runAllAnimations().then(() => {
+      this._attachButtonListeners();
+      this.setPageInteraction(true);
+    });
   }
 
   async onNavigatingFrom(): Promise<void> {
+    this.setPageInteraction(false);
     this.stopAllAnimations();
 
     await getNavigator().closeModal();

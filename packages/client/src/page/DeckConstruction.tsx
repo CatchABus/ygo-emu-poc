@@ -68,7 +68,12 @@ enum SortBy {
 
 class DeckConstruction extends BasePage {
   private readonly mCardSlotDataset: CardSlot[] = [];
-  private readonly mPointerMoveHandlers: Set<(event: FederatedPointerEvent) => void> = new Set();
+  private readonly mEscapeKeyCb = (event: KeyboardEvent) => {
+    if (event.code === 'Escape') {
+      window.removeEventListener('keydown', this.mEscapeKeyCb);
+      this._goBack();
+    }
+  };
 
   private mFilterCardSlotDataset: CardSlot[];
 
@@ -108,7 +113,7 @@ class DeckConstruction extends BasePage {
 
   constructor() {
     super();
-    this.eventMode = 'none';
+    this.eventMode = 'static';
   }
 
   async preload(): Promise<void> {
@@ -131,6 +136,8 @@ class DeckConstruction extends BasePage {
   }
 
   async onNavigatingTo(): Promise<void> {
+    this.setPageInteraction(false);
+
     await this._init();
     await this._requestCardInventory();
 
@@ -141,10 +148,10 @@ class DeckConstruction extends BasePage {
   async onNavigatedTo(): Promise<void> {
     const hasNewCards = this.mCardSlotDataset.some((slotData) => slotData.isNew);
 
-    this.eventMode = 'static';
-
     this._playAudio();
     this._attachInteractionListeners();
+
+    this.setPageInteraction(true);
 
     if (hasNewCards) {
       this._animateNewCardIndicators();
@@ -152,6 +159,8 @@ class DeckConstruction extends BasePage {
   }
 
   async onNavigatingFrom(): Promise<void> {
+    this.setPageInteraction(false);
+
     this.stopAllAnimations();
 
     if (this.mNewIndisUpdateInterval != null) {
@@ -159,6 +168,7 @@ class DeckConstruction extends BasePage {
       this.mNewIndisUpdateInterval = null;
     }
 
+    window.removeEventListener('keydown', this.mEscapeKeyCb);
     this.mTrack.stop();
   }
 
@@ -201,10 +211,6 @@ class DeckConstruction extends BasePage {
   }
 
   async _requestCardInventory(): Promise<void> {
-    if (this.mCardSlotDataset.length > 0) {
-      this.mCardSlotDataset.splice(0);
-    }
-
     try {
       const responseBuffer = await client.getSocket().emitWithAck('cardInventoryRequest', new ArrayBuffer(0));
       const packet = new ReceivablePacket(responseBuffer);
@@ -445,8 +451,6 @@ class DeckConstruction extends BasePage {
     });
     bagSortButton.position.set(114, 8);
     bagSortButton.onclick = (event: FederatedPointerEvent) => this._onCardBagSortClick(event);
-
-    this.mPointerMoveHandlers.add((event: FederatedPointerEvent) => this._toggleBagFilterLabelVisibility(event));
 
     this.mBagFilterLabel = filterLabel;
     this.mBagSortButton = bagSortButton;
@@ -809,19 +813,8 @@ class DeckConstruction extends BasePage {
       }
     };
 
-    this.onglobalpointermove = (event: FederatedPointerEvent) => {
-      for (const handler of this.mPointerMoveHandlers) {
-        handler(event);
-      }
-    };
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.code === 'Escape') {
-        window.removeEventListener('keydown', onKeyDown);
-        this._goBack();
-      }
-    };
-    window.addEventListener('keydown', onKeyDown);
+    this.onglobalpointermove = (event: FederatedPointerEvent) => this._toggleBagFilterLabelVisibility(event);
+    window.addEventListener('keydown', this.mEscapeKeyCb);
   }
 
   private async _onBagButtonClick(): Promise<void> {
