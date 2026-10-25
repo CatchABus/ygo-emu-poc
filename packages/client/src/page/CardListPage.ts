@@ -152,14 +152,6 @@ class CardListPage extends BasePage {
   }
 
   async _requestPlayerCards(): Promise<void> {
-    if (this.mOwnedCards.length > 0) {
-      this.mOwnedCards.splice(0);
-    }
-
-    if (this.mNewCardTmplIds.length > 0) {
-      this.mNewCardTmplIds.splice(0);
-    }
-    
     try {
       const responseBuffer = await client.getSocket().emitWithAck('cardListRequest', new ArrayBuffer(0));
       const packet = new ReceivablePacket(responseBuffer);

@@ -37,7 +37,7 @@ async function startApp() {
   // can then insert into the DOM
   appElement.appendChild(app.canvas);
 
-  const navigator = await setupNavigator(app, LoginPage);
+  const navigator = await setupNavigator(LoginPage);
 
   setCursorImage('default', '/commons/cursor00.png');
   setCursorImage('pointer', '/commons/cursor01.png');
@@ -55,11 +55,21 @@ async function startApp() {
     globalThis.__PIXI_APP__ = app;
     globalThis.__onLiveSync = (newModule) => {
       const currentPage = getNavigator().currentPage;
-      const newPage = newModule.default && currentPage && currentPage.constructor.name === newModule.default.name ? new newModule.default() : currentPage;
+      let cl;
 
-      if (newPage) {
+      if (currentPage) {
+        if (newModule.default && currentPage.constructor.name === newModule.default.name) {
+          cl = newModule.default;
+        } else {
+          cl = currentPage.constructor;
+        }
+      } else {
+        cl = null;
+      }
+
+      if (cl) {
         getNavigator().navigate({
-          createPage: () => newPage
+          createPage: () => new cl()
         });
       }
     }

@@ -1,7 +1,9 @@
-import { Application, ColorSource, Container, Graphics } from 'pixi.js';
+import { ColorSource, Container, Graphics } from 'pixi.js';
 import { animate } from '../animation';
 import { BasePage } from '../page/BasePage';
 import { ITransitionFilter } from '../filter/ITransitionFilter';
+import log from 'loglevel';
+import { client } from '../client';
 
 type PageConstructor = new () => BasePage;
 
@@ -35,17 +37,15 @@ class Navigator {
 
   private _isNavigating: boolean = false;
 
-  private readonly _app: Application;
   private readonly _modalContainer: Container;
   private readonly _navigationQueue: Array<() => Promise<void>>;
 
-  constructor(app: Application) {
-    this._app = app;
+  constructor() {
     this._navigationQueue = [];
     this._modalContainer = new Container();
     this._modalContainer.zIndex = 800;
 
-    app.stage.addChild(this._modalContainer);
+    client.getApplication().stage.addChild(this._modalContainer);
   }
 
   get currentPage(): BasePage {
@@ -86,11 +86,18 @@ class Navigator {
       return;
     }
 
-    this._isNavigating = true;
-        
-    const { width, height } = this._app.renderer;
     const newPage = options.createPage();
     const oldPage = this._currentPage;
+
+    if (newPage && newPage === oldPage) {
+      log.error('Navigation failed. Cannot navigate to the same page twice!');
+      return;
+    }
+
+    this._isNavigating = true;
+
+    const app = client.getApplication();
+    const { width, height } = app.renderer;
 
     options = {
       ...this._getPageDefaultOptions(),
@@ -114,24 +121,21 @@ class Navigator {
       newPage.setSize(width, height);
 
       if (oldPage) {
-        this._app.stage.addChildAt(newPage, this._app.stage.getChildIndex(oldPage));
+        app.stage.addChildAt(newPage, app.stage.getChildIndex(oldPage));
 
         if (Array.isArray(options.transition?.filters) && options.transition.filters.length > 0) {
           await this._startPageTransition(oldPage, options.transition);
         }
       } else {
-        this._app.stage.addChild(newPage);
+        app.stage.addChild(newPage);
       }
     }
 
     if (oldPage) {
-      if (newPage !== oldPage) {
-        this._app.stage.removeChild(oldPage);
-        oldPage.destroy({
-          children: true
-        });
-      }
-
+      app.stage.removeChild(oldPage);
+      oldPage.destroy({
+        children: true
+      });
       await oldPage.onNavigatedFrom();
     }
 
@@ -162,10 +166,12 @@ class Navigator {
     this._currentModal.eventMode = 'static';
 
     if (this._currentModal) {
+      const { width, height } = client.getApplication().renderer;
+
       this._currentModalOptions = options;
 
       options = {
-        ...this._getModalDefaultOptions(),
+        ...this._getModalDefaultOptions(width, height),
         ...options
       };
 
@@ -177,7 +183,7 @@ class Navigator {
       }
 
       if (options.backdropColor || options.closeOnClickOutside) {
-        this._addModalBackdrop(options);
+        this._addModalBackdrop(width, height, options);
       }
 
       this._modalContainer.addChild(this._currentModal);
@@ -210,8 +216,7 @@ class Navigator {
     }
   }
 
-  private _addModalBackdrop(options: ModalOptions) {
-    const { width, height } = this._app.renderer;
+  private _addModalBackdrop(width: number, height: number, options: ModalOptions) {
     const graphic = new Graphics();
     graphic.eventMode = 'static';
 
@@ -238,8 +243,7 @@ class Navigator {
     };
   }
 
-  private _getModalDefaultOptions(): ModalOptions {
-    const { width, height } = this._app.renderer;
+  private _getModalDefaultOptions(width: number, height: number): ModalOptions {
     const centerX = width / 2;
     const centerY = height / 2;
 
@@ -251,7 +255,7 @@ class Navigator {
   }
 }
 
-async function setupNavigator(app: Application, defaultPage: PageConstructor): Promise<Navigator> {
+async function setupNavigator(defaultPage: PageConstructor): Promise<Navigator> {
   if (_navigator) {
     throw new Error('Navigator is already initialized');
   }
@@ -260,7 +264,7 @@ async function setupNavigator(app: Application, defaultPage: PageConstructor): P
     throw new Error(`Cannot initialize navigator without a default page: ${defaultPage}`);
   }
 
-  _navigator = new Navigator(app);
+  _navigator = new Navigator();
   await _navigator.navigate({
     createPage: () => new defaultPage()
   });
