@@ -6,7 +6,7 @@
     "build": "tsc",
     "postbuild": "node postbuild.mjs",
     "start": "node index.js  --env-file .env",
-    "dev": "tsc-watch --onSuccess \"node --watch --env-file=.env --env-file=.env.development dist/index.js\"",
+    "dev": "tsc-watch --onSuccess \"node --env-file=.env --env-file=.env.development dist/index.js\"",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
   },
