@@ -1,4 +1,4 @@
-const fileRegex = /\.(ts)$/
+const fileRegex = /\.(ts|tsx)$/
 
 export default function hmrPlugin() {
   return {
