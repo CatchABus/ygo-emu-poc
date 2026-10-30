@@ -31,7 +31,6 @@ const CARD_PREVIEW_TXT_WRAP_WIDTH = 150;
 
 interface CardInfo {
   id: number;
-  templateId: number;
   isNew: boolean;
 }
 
@@ -158,16 +157,14 @@ class CardListPage extends BasePage {
 
       for (let i = 0; i < length; i++) {
         const cardId = packet.readInt32();
-        const cardTemplateId = packet.readInt32();
         const isNew = !!packet.readInt8();
 
         if (isNew) {
-          this.mNewCardTmplIds.push(cardTemplateId);
+          this.mNewCardTmplIds.push(cardId);
         }
 
         this.mOwnedCards.push({
           id: cardId,
-          templateId: cardTemplateId,
           isNew
         });
       }
@@ -653,13 +650,13 @@ class CardListPage extends BasePage {
       const startDataIndex = (this.mCurrenPageNum - 1) * CARDS_PER_PAGE;
       const dataIndex = index + startDataIndex;
       const cardTemplate = this.mCardTemplates[dataIndex];
-      const card = this.mOwnedCards.find((card) => card.templateId === cardTemplate.id);
+      const card = this.mOwnedCards.find((card) => card.id === cardTemplate.id);
 
       if (card == null) {
         return;
       }
 
-      const newIdx = this.mNewCardTmplIds.indexOf(card.templateId);
+      const newIdx = this.mNewCardTmplIds.indexOf(card.id);
       if (newIdx > -1) {
         const sp = new SendablePacket();
 
@@ -678,7 +675,7 @@ class CardListPage extends BasePage {
         } catch (err) {
           // Re-add in case of failure
           card.isNew = true;
-          this.mNewCardTmplIds.push(card.templateId);
+          this.mNewCardTmplIds.push(card.id);
           log.error(err instanceof Error ? err.message : err);
         }
       }
@@ -727,7 +724,7 @@ class CardListPage extends BasePage {
     let atk: string;
     let def: string;
 
-    if (this.mOwnedCards.some((card) => card.templateId === template.id)) {
+    if (this.mOwnedCards.some((card) => card.id === template.id)) {
       const attributeIndex = ORDERED_ATTRIBUTES.indexOf(template.attribute);
       const raceIndex = ORDERED_RACES.indexOf(template.race);
       isMonsterCard = isMonster(template);
@@ -827,13 +824,13 @@ class CardListPage extends BasePage {
         if (cardView) {
           const [cardImage, newIndicator] = cardView.children;
           const cardTemplate = cardData[i];
-          const card = this.mOwnedCards.find((card) => card.templateId === cardTemplate.id);
+          const card = this.mOwnedCards.find((card) => card.id === cardTemplate.id);
 
           let textureSource: string;
           let isNew: boolean;
 
           if (card) {
-            textureSource = `cards/images/${card.templateId}.png`;
+            textureSource = `cards/images/${card.id}.png`;
             isNew = card.isNew;
           } else {
             textureSource = 'cards/card_backing.png';
@@ -944,13 +941,13 @@ class CardListPage extends BasePage {
             onRepeat: () => {
               const [cardImage, newIndicator] = cardView.children;
               const cardTemplate = cardTemplates[j];
-              const card = this.mOwnedCards.find((card) => card.templateId === cardTemplate.id);
+              const card = this.mOwnedCards.find((card) => card.id === cardTemplate.id);
 
               let textureSource: string;
               let isNew: boolean;
 
               if (card) {
-                textureSource = `cards/images/${card.templateId}.png`;
+                textureSource = `cards/images/${card.id}.png`;
                 isNew = card.isNew;
               } else {
                 textureSource = 'cards/card_backing.png';

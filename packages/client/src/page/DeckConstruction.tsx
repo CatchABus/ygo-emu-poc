@@ -217,22 +217,21 @@ class DeckConstruction extends BasePage {
       const length = packet.readInt32();
 
       for (let i = 0; i < length; i++) {
-        const id = packet.readInt32();
-        const templateId = packet.readInt32();
-        const template = this.mCardTemplates.find((template) => template.id === templateId);
+        const cardId = packet.readInt32();
+        const template = this.mCardTemplates.find((template) => template.id === cardId);
 
         if (!template) {
-          log.warn(`Failed to find card template for ID ${templateId}!`);
+          log.warn(`Failed to find card template for ID ${cardId}!`);
           continue;
         }
 
         const isNew = !!packet.readInt8();
         if (isNew) {
-          this.mNewCardTmplIds.push(templateId);
+          this.mNewCardTmplIds.push(cardId);
         }
 
         this.mCardSlotDataset.push({
-          id,
+          id: cardId,
           template,
           isNew: isNew,
           count: packet.readInt32(),
