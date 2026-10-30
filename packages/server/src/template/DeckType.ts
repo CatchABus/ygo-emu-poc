@@ -1,7 +1,7 @@
 enum DeckType {
-  NORMAL = 'NORMAL',
-  EXTRA = 'EXTRA',
-  FUSION = 'FUSION'
+  NORMAL = 0,
+  EXTRA = 1,
+  FUSION = 2
 }
 
 export {

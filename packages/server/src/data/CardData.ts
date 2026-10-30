@@ -8,14 +8,14 @@ const DIR = 'static';
 let instance: CardDataImpl = null;
 
 class CardDataImpl extends AbstractData {
-  private readonly _templates: Map<number, CardTemplate>;
-  private readonly _deckCardLimits: Map<number, number>;
+  private readonly mTemplates: Map<number, CardTemplate>;
+  private readonly mDeckCardLimits: Map<number, number>;
 
   constructor() {
     super();
 
-    this._templates = new Map();
-    this._deckCardLimits = new Map();
+    this.mTemplates = new Map();
+    this.mDeckCardLimits = new Map();
   }
 
   public override load(): void {
@@ -25,7 +25,7 @@ class CardDataImpl extends AbstractData {
 
       for (const data of cardDataset) {
         const template = new CardTemplate(data);
-        this._templates.set(template.id, template);
+        this.mTemplates.set(template.id, template);
       }
     } catch (err) {
       log.error(err);
@@ -36,7 +36,7 @@ class CardDataImpl extends AbstractData {
       const deckCardLimitData: Array<{ id: number, deckLimit: number }> = JSON.parse(fileContent);
 
       for (const data of deckCardLimitData) {
-        const template = this._templates.has(data.id) ? this._templates.get(data.id) : null;
+        const template = this.mTemplates.has(data.id) ? this.mTemplates.get(data.id) : null;
         if (template != null) {
           template.deckLimit = data.deckLimit;
         }
@@ -45,20 +45,20 @@ class CardDataImpl extends AbstractData {
       log.error(err);
     }
 
-    log.info(`Loaded ${this._templates.size} card templates`);
-    log.info(`Loaded ${this._deckCardLimits.size} forbidden card limits`);
+    log.info(`Loaded ${this.mTemplates.size} card templates`);
+    log.info(`Loaded ${this.mDeckCardLimits.size} forbidden card limits`);
   }
 
   getTemplates(): Array<[number, CardTemplate]> {
-    return Array.from(this._templates);
+    return Array.from(this.mTemplates);
   }
 
   getTemplateById(id: number): CardTemplate {
-    return this._templates.get(id);
+    return this.mTemplates.get(id);
   }
 
   getDeckCardLimit(id: number): number {
-    return this._deckCardLimits.has(id) ? this._deckCardLimits.get(id) : -1;
+    return this.mDeckCardLimits.has(id) ? this.mDeckCardLimits.get(id) : -1;
   }
 }
 

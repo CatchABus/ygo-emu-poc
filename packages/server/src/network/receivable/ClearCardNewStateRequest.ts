@@ -2,19 +2,19 @@ import * as log from 'loglevel';
 import { AbstractReceivablePacket } from './AbstractReceivablePacket';
 
 class ClearCardNewStateRequest extends AbstractReceivablePacket {
-  private _cardId: number;
+  private mCardId: number;
 
   read(): boolean {
     if (this.getBufferSize() !== 4) {
       return false;
     }
     
-    this._cardId = this.readInt32();
+    this.mCardId = this.readInt32();
     return true;
   }
 
   async run(): Promise<void> {
-    if (this._cardId < 1) {
+    if (this.mCardId < 1) {
       return;
     }
 
@@ -25,11 +25,11 @@ class ClearCardNewStateRequest extends AbstractReceivablePacket {
 
     const cards = player.getAllCards();
 
-    if (cards.has(this._cardId)) {
-      const card = cards.get(this._cardId);
+    if (cards.has(this.mCardId)) {
+      const card = cards.get(this.mCardId);
 
       if (!card.isNew) {
-        log.warn(`Client ${this.client.getAccountName()} attempted to clear new state for an old card! Card ID: ${this._cardId}`);
+        log.warn(`Client ${this.client.getAccountName()} attempted to clear new state for an old card! Card ID: ${this.mCardId}`);
         return;
       }
 
@@ -41,7 +41,7 @@ class ClearCardNewStateRequest extends AbstractReceivablePacket {
         log.error(err);
       }
 
-      log.debug(`New card ${this._cardId} has become stale`);
+      log.debug(`New card ${this.mCardId} has become stale`);
     } else {
       log.warn(`Client ${this.client.getAccountName()} attempted to clear new state for a card ID that doesn't own!`);
     }

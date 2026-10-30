@@ -8,8 +8,8 @@ class PlayerDeckSlot extends BaseEntity {
   @PrimaryColumn({ type: 'bigint' })
   cardId: number;
 
-  @PrimaryColumn({ type: 'varchar', length: 25 })
-  type: string;
+  @PrimaryColumn({ type: 'tinyint', unsigned: true })
+  type: number;
 }
 
 export {

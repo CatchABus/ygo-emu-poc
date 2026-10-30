@@ -31,10 +31,8 @@ class Player extends BaseEntity {
   })
   account: Promise<Account>;
 
-  private _currentDeck: PlayerDeck;
-
-  private readonly _cards = new Map<number, PlayerCard>();
-  private readonly _decks = new Map<string, PlayerDeck>();
+  private readonly mCards = new Map<number, PlayerCard>();
+  private readonly mDecks: PlayerDeck[] = [];
 
   static async restoreOrCreate(accountId: number): Promise<Player> {
     let player: Player;
@@ -83,7 +81,7 @@ class Player extends BaseEntity {
 
         await card.save();
 
-        this._cards.set(card.id, card);
+        this.mCards.set(card.templateId, card);
       }
     } catch (err) {
       log.error(err);
@@ -99,19 +97,17 @@ class Player extends BaseEntity {
       await deck.save();
 
       // Create deck slots
-      for (const [, card] of this._cards) {
+      for (const [, card] of this.mCards) {
         await deck.createSlot(card, card.template.isFusionMonster ? DeckType.FUSION : DeckType.NORMAL);
       }
 
       deck.owner = this;
-      this._decks.set(deck.name, deck);
+      this.mDecks.push(deck);
 
       await this.save();
 
-      this._currentDeck = deck;
-
       if (this.curDeckIndex !== 0) {
-        log.warn(`Incorrect active deck index '${this.curDeckIndex} for player '${this.id}'`)
+        log.warn(`Incorrect active deck index '${this.curDeckIndex} for player '${this.id}'`);
       }
     } catch (err) {
       log.error(err);
@@ -126,7 +122,7 @@ class Player extends BaseEntity {
 
       if (cards.length) {
         for (const card of cards) {
-          this._cards.set(card.id, card);
+          this.mCards.set(card.templateId, card);
         }
       } else {
         await this._createStarterCards();
@@ -155,12 +151,12 @@ class Player extends BaseEntity {
           deck.owner = this;
           deck.restore();
 
-          this._decks.set(deck.name, deck);
+          this.mDecks.push(deck);
+        }
 
-          // Set current deck
-          if (this.curDeckIndex === i) {
-            this._currentDeck = deck;
-          }
+        if (decksLen <= this.curDeckIndex) {
+          log.warn(`Could not find any deck at index '${this.curDeckIndex} for player '${this.id}'. Switching to first deck...`);
+          this.curDeckIndex = 0;
         }
       } else {
         await this._createStarterDeck();
@@ -171,15 +167,15 @@ class Player extends BaseEntity {
   }
 
   getAllCards(): Map<number, PlayerCard> {
-    return this._cards;
+    return this.mCards;
   }
 
-  get currentDeck(): PlayerDeck {
-    return this._currentDeck;
+  getCurrentDeck(): PlayerDeck {
+    return this.mDecks[this.curDeckIndex];
   }
 
-  get decks(): Map<string, PlayerDeck> {
-    return this._decks;
+  getDecks(): PlayerDeck[] {
+    return this.mDecks;
   }
 }
 

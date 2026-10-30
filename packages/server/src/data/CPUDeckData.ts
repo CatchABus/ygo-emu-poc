@@ -8,7 +8,7 @@ const FILE_EXT = '.deck.json';
 let instance: CPUDeckDataImpl = null;
 
 class CPUDeckDataImpl extends AbstractData {
-  private readonly _decks: Map<string, number[]> = Object.freeze(new Map());
+  private readonly mDecks: Map<string, number[]> = Object.freeze(new Map());
 
   public override load(): void {
     try {
@@ -20,18 +20,18 @@ class CPUDeckDataImpl extends AbstractData {
 
         if (isDeckFile) {
           const content = fs.readFileSync(`${FOLDER_PATH}/${fileName}`, 'utf8');
-          this._decks.set(fileName.substring(0, extIndex), Object.freeze(JSON.parse(content)));
+          this.mDecks.set(fileName.substring(0, extIndex), Object.freeze(JSON.parse(content)));
         }
       }
 
-      log.info(`Loaded ${this._decks.size} CPU decks`);
+      log.info(`Loaded ${this.mDecks.size} CPU decks`);
     } catch (err) {
       log.error(err);
     }
   }
 
   public getDecks(): Map<string, number[]> {
-    return this._decks;
+    return this.mDecks;
   }
 }
 

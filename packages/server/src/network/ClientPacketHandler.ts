@@ -5,6 +5,7 @@ import type { AbstractReceivablePacket } from './receivable/AbstractReceivablePa
 import { CardInventoryRequest } from './receivable/CardInventoryRequest';
 import { CardListRequest } from './receivable/CardListRequest';
 import { ClearCardNewStateRequest } from './receivable/ClearCardNewStateRequest';
+import { PlayerDeckRequest } from './receivable/PlayerDeckRequest';
 import { PlayerOptionsRequest } from './receivable/PlayerOptionsRequest';
 import { PlayerOptionsUpdateRequest } from './receivable/PlayerOptionsUpdateRequest';
 
@@ -12,6 +13,7 @@ const PACKET_EVENT_MAP: Record<keyof ClientToServerEvents, typeof AbstractReceiv
   'cardInventoryRequest': CardInventoryRequest,
   'cardListRequest': CardListRequest,
   'clearCardNewStateRequest': ClearCardNewStateRequest,
+  'PlayerDeckRequest': PlayerDeckRequest,
   'playerOptionsRequest': PlayerOptionsRequest,
   'playerOptionsUpdateRequest': PlayerOptionsUpdateRequest
 };
@@ -26,20 +28,20 @@ for (const key in PACKET_EVENT_MAP) {
 }
 
 class ClientPacketHandler {
-  private readonly _socket: ClientSocket;
-  private readonly _onAnyCb: (eventName: string, ..._args) => void;
-  private readonly _onPacketCbs = new Map<keyof ClientToServerEvents, (buffer: Buffer, callback?: AcknowledgementCallback) => void>();
+  private readonly mSocket: ClientSocket;
+  private readonly mOnAnyCb: (eventName: string, ..._args) => void;
+  private readonly mOnPacketCbs = new Map<keyof ClientToServerEvents, (buffer: Buffer, callback?: AcknowledgementCallback) => void>();
 
   constructor(client: GameClient) {
-    this._socket = client.getSocket();
-    this._onAnyCb = (eventName: keyof ClientToServerEvents, ..._args) => {
+    this.mSocket = client.getSocket();
+    this.mOnAnyCb = (eventName: keyof ClientToServerEvents, ..._args) => {
       if (!(eventName in PACKET_EVENT_MAP)) {
         log.warn(`Unknown incoming packet '${eventName}'`);
       }
     };
 
     for (const key in PACKET_EVENT_MAP) {
-      this._onPacketCbs.set(key as keyof ClientToServerEvents, async (buffer: Buffer, callback?: AcknowledgementCallback) => {
+      this.mOnPacketCbs.set(key as keyof ClientToServerEvents, async (buffer: Buffer, callback?: AcknowledgementCallback) => {
         const packet = new PACKET_EVENT_MAP[key](client, buffer);
         const responseBuffer = await packet.handle() as Buffer;
 
@@ -51,24 +53,25 @@ class ClientPacketHandler {
   }
 
   public register(): void {
-    for (const [key, value] of this._onPacketCbs) {
-      this._socket.on(key, value);
+    for (const [key, value] of this.mOnPacketCbs) {
+      this.mSocket.on(key, value);
     }
 
     // Unknown packet handling
-    this._socket.onAny(this._onAnyCb);
+    this.mSocket.onAny(this.mOnAnyCb);
   }
 
   public unregister(): void {
-    for (const [key, value] of this._onPacketCbs) {
-      this._socket.off(key, value);
+    for (const [key, value] of this.mOnPacketCbs) {
+      this.mSocket.off(key, value);
     }
 
     // Unknown packet handling
-    this._socket.offAny(this._onAnyCb);
+    this.mSocket.offAny(this.mOnAnyCb);
   }
 }
 
 export {
   ClientPacketHandler
 };
+

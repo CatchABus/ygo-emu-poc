@@ -15,52 +15,52 @@ function SendableEventName(value: keyof ServerToClientEvents) {
 }
 
 abstract class AbstractSendablePacket {
-  private _buffer: Buffer;
-  private _currentOffset: number = 0;
+  private mBuffer: Buffer;
+  private mCurOffset: number = 0;
 
   public eventName: string;
 
   constructor(..._args) {
-    this._buffer = Buffer.alloc(MAX_BYTE_LENGTH);
+    this.mBuffer = Buffer.alloc(MAX_BYTE_LENGTH);
   }
 
   get buffer(): Buffer {
-    if (this._currentOffset !== this._buffer.byteLength) {
+    if (this.mCurOffset !== this.mBuffer.byteLength) {
       this._resizeBuffer();
     }
 
-    return this._buffer;
+    return this.mBuffer;
   }
 
   reset(): void {
-    if (this._currentOffset !== 0) {
-      this._currentOffset = 0;
+    if (this.mCurOffset !== 0) {
+      this.mCurOffset = 0;
       this._resizeBuffer();
     }
   }
 
   writeFloat(value: number): void {
-    this._currentOffset = this._buffer.writeFloatBE(value, this._currentOffset);
+    this.mCurOffset = this.mBuffer.writeFloatBE(value, this.mCurOffset);
   }
 
   writeInt8(value: number): void {
-    this._currentOffset = this._buffer.writeInt8(value, this._currentOffset);
+    this.mCurOffset = this.mBuffer.writeInt8(value, this.mCurOffset);
   }
 
   writeInt16(value: number): void {
-    this._currentOffset = this._buffer.writeInt16BE(value, this._currentOffset);
+    this.mCurOffset = this.mBuffer.writeInt16BE(value, this.mCurOffset);
   }
 
   writeInt32(value: number): void {
-    this._currentOffset = this._buffer.writeInt32BE(value, this._currentOffset);
+    this.mCurOffset = this.mBuffer.writeInt32BE(value, this.mCurOffset);
   }
 
   writeBigInt64(value: bigint): void {
-    this._currentOffset = this._buffer.writeBigInt64BE(value, this._currentOffset);
+    this.mCurOffset = this.mBuffer.writeBigInt64BE(value, this.mCurOffset);
   }
 
   writeString(value: string): void {
-    this._currentOffset += this._buffer.write(value + '\0', this._currentOffset);
+    this.mCurOffset += this.mBuffer.write(value + '\0', this.mCurOffset);
   }
 
   writeToBuffer(): void {
@@ -72,10 +72,10 @@ abstract class AbstractSendablePacket {
   }
 
   private _resizeBuffer(): void {
-    const newBuffer: Buffer = Buffer.alloc(this._currentOffset);
+    const newBuffer: Buffer = Buffer.alloc(this.mCurOffset);
 
-    this._buffer.copy(newBuffer, 0, 0, this._currentOffset);
-    this._buffer = newBuffer;
+    this.mBuffer.copy(newBuffer, 0, 0, this.mCurOffset);
+    this.mBuffer = newBuffer;
   }
 
   protected abstract write(): void;

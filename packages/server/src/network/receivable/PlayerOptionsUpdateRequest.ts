@@ -2,18 +2,18 @@ import log from 'loglevel';
 import { AbstractReceivablePacket } from './AbstractReceivablePacket';
 
 class PlayerOptionsUpdateRequest extends AbstractReceivablePacket {
-  private _volume: number;
-  private _forbiddenCardsEnabled: boolean;
-  private _fullScreenEnabled: boolean;
+  private mVolume: number;
+  private mForbiddenCardsEnabled: boolean;
+  private mFullScreenEnabled: boolean;
 
   read(): boolean {
     if (this.getBufferSize() !== 6) {
       return false;
     }
     
-    this._volume = this.readFloat();
-    this._forbiddenCardsEnabled = !!this.readInt8();
-    this._fullScreenEnabled = !!this.readInt8();
+    this.mVolume = this.readFloat();
+    this.mForbiddenCardsEnabled = !!this.readInt8();
+    this.mFullScreenEnabled = !!this.readInt8();
     return true;
   }
 
@@ -23,9 +23,9 @@ class PlayerOptionsUpdateRequest extends AbstractReceivablePacket {
       return null;
     }
 
-    player.volume = this._volume;
-    player.forbiddenCardsEnabled = this._forbiddenCardsEnabled;
-    player.fullScreenEnabled = this._fullScreenEnabled;
+    player.volume = this.mVolume;
+    player.forbiddenCardsEnabled = this.mForbiddenCardsEnabled;
+    player.fullScreenEnabled = this.mFullScreenEnabled;
 
     try {
       await player.save();

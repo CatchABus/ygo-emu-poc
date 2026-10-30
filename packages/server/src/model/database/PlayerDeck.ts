@@ -18,18 +18,16 @@ class PlayerDeck extends BaseEntity {
 
   public static DEFAULT_DECK_NAME = 'default';
 
-  private _owner: Player;
+  private mOwner: Player;
 
-  private readonly _slots: PlayerDeckSlot[] = [];
-  private readonly _extraSlots: PlayerDeckSlot[] = [];
-  private readonly _fusionSlots: PlayerDeckSlot[] = [];
+  private readonly mSlots: PlayerDeckSlot[] = [];
 
   public async createSlot(card: PlayerCard, type: DeckType): Promise<void> {
     try {
       const deckSlot = new PlayerDeckSlot();
 
       deckSlot.deckId = this.id;
-      deckSlot.cardId = card.id;
+      deckSlot.cardId = card.templateId;
       deckSlot.type = type;
       await deckSlot.save();
     } catch (err) {
@@ -39,23 +37,6 @@ class PlayerDeck extends BaseEntity {
 
   public async restore(): Promise<void> {
     await this._restoreSlots();
-  }
-
-  private _appendSlot(slot: PlayerDeckSlot): void {
-    switch (slot.type) {
-      case DeckType.NORMAL:
-        this._slots.push(slot);
-        break;
-      case DeckType.EXTRA:
-        this._extraSlots.push(slot);
-        break;
-      case DeckType.FUSION:
-        this._fusionSlots.push(slot);
-        break;
-      default:
-        log.warn(`Invalid deck slot type ${slot.type} for card ${slot.cardId} in deck ${this.id}`);
-        break;
-    }
   }
 
   private async _restoreSlots(): Promise<void> {
@@ -72,7 +53,7 @@ class PlayerDeck extends BaseEntity {
 
       for (const slot of deckSlots) {
         if (cards.has(slot.cardId)) {
-          this._appendSlot(slot);
+          this.mSlots.push(slot);
         } else {
           log.warn(`Deck ${this.id} that belongs to player ${this.owner.id} contains a card ID without ownership: ${slot.cardId}`);
         }
@@ -83,23 +64,15 @@ class PlayerDeck extends BaseEntity {
   }
 
   get owner(): Player {
-    return this._owner;
+    return this.mOwner;
   }
 
   set owner(val: Player) {
-    this._owner = val;
+    this.mOwner = val;
   }
 
-  get slots(): PlayerDeckSlot[] {
-    return this._slots;
-  }
-
-  get extraSlots(): PlayerDeckSlot[] {
-    return this._extraSlots;
-  }
-
-  get fusionSlots(): PlayerDeckSlot[] {
-    return this._fusionSlots;
+  getSlots(): PlayerDeckSlot[] {
+    return this.mSlots;
   }
 }
 

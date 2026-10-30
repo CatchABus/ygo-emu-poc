@@ -14,45 +14,45 @@ enum ClientState {
 type ClientSocket = Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
 
 class GameClient {
-  private readonly _sessionId: string;
-  private readonly _accountName: string;
+  private readonly mSessionId: string;
+  private readonly mAccountName: string;
 
-  private _socket: ClientSocket;
-  private _state: ClientState = ClientState.AUTHENTICATED;
-  private _player: Player;
-  private _packetHandler: ClientPacketHandler;
+  private mSocket: ClientSocket;
+  private mState: ClientState = ClientState.AUTHENTICATED;
+  private mPlayer: Player;
+  private mPacketHandler: ClientPacketHandler;
 
   constructor(accountName: string) {
-    this._sessionId = randomUUID();
-    this._accountName = accountName;
+    this.mSessionId = randomUUID();
+    this.mAccountName = accountName;
   }
 
   get state(): ClientState {
-    return this._state;
+    return this.mState;
   }
 
   set state(val: ClientState) {
-    this._state = val;
+    this.mState = val;
   }
 
   get player(): Player {
-    return this._player;
+    return this.mPlayer;
   }
 
   set player(val: Player) {
-    this._player = val;
+    this.mPlayer = val;
   }
 
   getSessionId(): string {
-    return this._sessionId;
+    return this.mSessionId;
   }
 
   getAccountName(): string {
-    return this._accountName;
+    return this.mAccountName;
   }
 
   getSocket(): ClientSocket {
-    return this._socket;
+    return this.mSocket;
   }
 
   getPacketContent(sp: AbstractSendablePacket): Buffer {
@@ -61,38 +61,38 @@ class GameClient {
   }
 
   sendPacket(sp: AbstractSendablePacket): void {
-    const socket = this._socket;
+    const socket = this.mSocket;
     if (socket) {
       socket.emit(sp.eventName as keyof ServerToClientEvents, this.getPacketContent(sp));
     }
   }
 
   broadcastToOthers(sp: AbstractSendablePacket): void {
-    const socket = this._socket;
+    const socket = this.mSocket;
     if (socket) {
       socket.broadcast.emit(sp.eventName as keyof ServerToClientEvents, this.getPacketContent(sp));
     }
   }
 
   connect(socket: ClientSocket): void {
-    this._socket = socket;
+    this.mSocket = socket;
     socket.data.gameClient = this;
 
-    this._packetHandler = new ClientPacketHandler(this);
-    this._packetHandler.register();
+    this.mPacketHandler = new ClientPacketHandler(this);
+    this.mPacketHandler.register();
   }
 
   async close(): Promise<void> {
-    const socket = this._socket;
+    const socket = this.mSocket;
     const player = this.player;
 
     if (player) {
       await player.save();
     }
 
-    if (this._packetHandler) {
-      this._packetHandler.unregister();
-      this._packetHandler = null;
+    if (this.mPacketHandler) {
+      this.mPacketHandler.unregister();
+      this.mPacketHandler = null;
     }
 
     if (socket) {

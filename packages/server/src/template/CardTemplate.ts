@@ -2,53 +2,53 @@ import { CardAttribute, CardRace, CardType } from './CardStats';
 
 
 class CardTemplate {
-  private readonly _id: number;
-  private readonly _type: CardType;
-  private readonly _atk: number;
-  private readonly _def: number;
-  private readonly _level: number;
-  private readonly _race: CardRace;
-  private readonly _attribute: CardAttribute;
-  //private readonly _category: number;
-  private _deckLimit: number;
+  private readonly mId: number;
+  private readonly mType: CardType;
+  private readonly mAtk: number;
+  private readonly mDef: number;
+  private readonly mLevel: number;
+  private readonly mRace: CardRace;
+  private readonly mAttr: CardAttribute;
+  //private readonly mCat: number;
+  private mDeckLimit: number;
 
   constructor(stats: any) {
-    this._id = stats.id;
-    this._type = stats.type;
-    this._atk = stats.atk;
-    this._def = stats.def;
-    this._level = stats.level;
-    this._race = stats.race;
-    this._attribute = stats.attribute;
-    //this._category = stats.category;
+    this.mId = stats.id;
+    this.mType = stats.type;
+    this.mAtk = stats.atk;
+    this.mDef = stats.def;
+    this.mLevel = stats.level;
+    this.mRace = stats.race;
+    this.mAttr = stats.attribute;
+    //this.mCat = stats.category;
   }
 
   get id(): number {
-    return this._id;
+    return this.mId;
   }
 
   get type(): CardType {
-    return this._type;
+    return this.mType;
   }
 
   get atkPoints(): number {
-    return this._atk;
+    return this.mAtk;
   }
 
   get defPoints(): number {
-    return this._def;
+    return this.mDef;
   }
 
   get level(): number {
-    return this._level;
+    return this.mLevel;
   }
 
   get race(): CardRace {
-    return this._race;
+    return this.mRace;
   }
 
   get attribute(): CardAttribute {
-    return this._attribute;
+    return this.mAttr;
   }
 
   get isMonster(): boolean {
@@ -56,11 +56,11 @@ class CardTemplate {
   }
 
   get deckLimit(): number {
-    return this._deckLimit;
+    return this.mDeckLimit;
   }
 
   set deckLimit(val: number) {
-    this._deckLimit = val;
+    this.mDeckLimit = val;
   }
 
   get isFusionMonster(): boolean {

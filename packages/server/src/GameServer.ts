@@ -16,8 +16,8 @@ const secure: boolean = !!(process.env.HTTPS_KEY_PATH && process.env.HTTPS_CERT_
 let instance: GameServerImpl = null;
 
 class GameServerImpl {
-  private _server: Server;
-  private _httpServer: HttpServer | HttpSecureServer;
+  private mServer: Server;
+  private mHttpServer: HttpServer | HttpSecureServer;
 
   constructor() {
     this.start();
@@ -31,20 +31,20 @@ class GameServerImpl {
     CPUDeckData.getInstance().load();
     await AppDataSource.getInstance().initialize();
 
-    this._httpServer = secure ? createSecureServer(httpHandler) : createServer(httpHandler);
+    this.mHttpServer = secure ? createSecureServer(httpHandler) : createServer(httpHandler);
   
-    this._server = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(this._httpServer, {
+    this.mServer = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(this.mHttpServer, {
       allowRequest: onHandshakeRequest,
       cors: {
         origin: process.env.CORS_ORIGIN,
         credentials: true
       }
     });
-    this._server.on('connection', onConnection);
+    this.mServer.on('connection', onConnection);
   
     this.addShutDownListeners();
   
-    this._httpServer.listen(PORT, () => {
+    this.mHttpServer.listen(PORT, () => {
       log.info(`Game server listening on port: ${PORT}`);
     });
   }
@@ -66,23 +66,23 @@ class GameServerImpl {
       log.error(err);
     }
 
-    if (this._server) {
-      await this._server.close();
-      this._server = null;
+    if (this.mServer) {
+      await this.mServer.close();
+      this.mServer = null;
     }
 
-    if (this._httpServer) {
-      this._httpServer.close((err?: Error) => {
+    if (this.mHttpServer) {
+      this.mHttpServer.close((err?: Error) => {
         log.error('Failed to shut down http server. Reason: ' + err);
       });
-      this._httpServer = null;
+      this.mHttpServer = null;
     }
 
     log.error('Game Server was shut down successfully!');
   }
 
   getServer(): Server {
-    return this._server;
+    return this.mServer;
   }
 }
 

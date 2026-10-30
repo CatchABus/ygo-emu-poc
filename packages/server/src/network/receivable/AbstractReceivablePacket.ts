@@ -5,73 +5,73 @@ import { AbstractSendablePacket } from '../sendable/AbstractSendablePacket';
 abstract class AbstractReceivablePacket {
   declare eventName: string;
   
-  private readonly _client?: GameClient;
-  private readonly _buffer?: Buffer;
+  private readonly mClient?: GameClient;
+  private readonly mBuffer?: Buffer;
 
-  private _currentOffset: number = 0;
+  private mCurOffset: number = 0;
 
   constructor(client: GameClient, buffer: Buffer) {
-    this._client = client;
-    this._buffer = buffer;
+    this.mClient = client;
+    this.mBuffer = buffer;
   }
 
   get client(): GameClient {
-    return this._client;
+    return this.mClient;
   }
 
   getBufferSize() {
-    return this._buffer.length;
+    return this.mBuffer.length;
   }
 
   readFloat(): number {
-    const value: number = this._buffer.readFloatBE(this._currentOffset);
-    this._currentOffset += 4;
+    const value: number = this.mBuffer.readFloatBE(this.mCurOffset);
+    this.mCurOffset += 4;
 
     return value;
   }
 
   readInt8(): number {
-    const value: number = this._buffer.readInt8(this._currentOffset);
-    this._currentOffset++;
+    const value: number = this.mBuffer.readInt8(this.mCurOffset);
+    this.mCurOffset++;
 
     return value;
   }
 
   readInt16(): number {
-    const value: number = this._buffer.readInt16BE(this._currentOffset);
-    this._currentOffset += 2;
+    const value: number = this.mBuffer.readInt16BE(this.mCurOffset);
+    this.mCurOffset += 2;
 
     return value;
   }
 
   readInt32(): number {
-    const value: number = this._buffer.readInt32BE(this._currentOffset);
-    this._currentOffset += 4;
+    const value: number = this.mBuffer.readInt32BE(this.mCurOffset);
+    this.mCurOffset += 4;
 
     return value;
   }
 
   readBigInt64(): bigint {
-    const value: bigint = this._buffer.readBigInt64BE(this._currentOffset);
-    this._currentOffset += 8;
+    const value: bigint = this.mBuffer.readBigInt64BE(this.mCurOffset);
+    this.mCurOffset += 8;
 
     return value;
   }
 
   readString(): string {
-    const bufferLength = this._buffer.length;
-    let endOffset: number = this._currentOffset;
+    const bufferLen = this.mBuffer.length;
+    let endOffset: number = this.mCurOffset;
 
-    for (let i = this._currentOffset; i < bufferLength; i++) {
-      if (this._buffer.readUInt8(i) === 0) {
+    for (let i = this.mCurOffset; i < bufferLen; i++) {
+      if (this.mBuffer.readUInt8(i) === 0) {
         break;
       }
 
       endOffset++;
     }
 
-    const value: string = this._buffer.toString('utf8', this._currentOffset, endOffset);
-    this._currentOffset = (endOffset + 1);
+    const value: string = this.mBuffer.toString('utf8', this.mCurOffset, endOffset);
+    this.mCurOffset = (endOffset + 1);
 
     return value;
   }

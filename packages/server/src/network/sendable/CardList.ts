@@ -3,18 +3,17 @@ import { AbstractSendablePacket, SendableEventName } from './AbstractSendablePac
 
 @SendableEventName('cardListResponse')
 class CardList extends AbstractSendablePacket {
-  private _cards: Map<number, PlayerCard>;
+  private mCards: Map<number, PlayerCard>;
 
   constructor(cards: Map<number, PlayerCard>) {
     super();
-    this._cards = cards;
+    this.mCards = cards;
   }
 
   write(): void {
-    this.writeInt32(this._cards.size);
+    this.writeInt32(this.mCards.size);
 
-    for (const [, card] of this._cards) {
-      this.writeInt32(card.id);
+    for (const [, card] of this.mCards) {
       this.writeInt32(card.templateId);
       this.writeInt8(Number(card.isNew));
     }
