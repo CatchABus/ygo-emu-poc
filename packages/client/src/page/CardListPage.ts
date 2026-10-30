@@ -484,11 +484,11 @@ class CardListPage extends BasePage {
         cardView.pivot.set(CARD_WIDTH / 2, CARD_HEIGHT * 0.45);
         cardView.scale.x = 0;
 
+        cardSprite.label = 'cardImage';
         cardSprite.setSize(CARD_WIDTH, CARD_HEIGHT);
         cardSprite.eventMode = 'static';
 
         newIndicator.position.set(7, 26);
-        newIndicator.visible = false;
 
         cardView.addChild(cardSprite, newIndicator);
         container.addChild(cardView);
@@ -505,8 +505,10 @@ class CardListPage extends BasePage {
 
   private _createNewIndicator(): AnimatedSprite {
     const indicator = new AnimatedSprite(this.mNewIndicatorSheet.animations.news);
+    indicator.label = 'newIndicator';
     indicator.animationSpeed = 0.1;
     indicator.eventMode = 'none';
+    indicator.visible = false;
 
     return indicator;
   }
@@ -640,7 +642,8 @@ class CardListPage extends BasePage {
   }
 
   private _registerCardClickListener(cardView: Container, index: number): void {
-    const [cardImage, newIndicator] = cardView.children;
+    const cardImage = cardView.getChildByLabel('cardImage');
+    const newIndicator = cardView.getChildByLabel('newIndicator');
 
     cardImage.onclick = () => {
       if (this.mNewCardTmplIds.length == 0) {
@@ -668,7 +671,7 @@ class CardListPage extends BasePage {
           card.isNew = false;
           newIndicator.visible = false;
 
-          if (this.mNewCardTmplIds.length == 0 && this.mNewIndiUpdateInterval != null) {
+          if (this.mNewCardTmplIds.length === 0 && this.mNewIndiUpdateInterval != null) {
             clearInterval(this.mNewIndiUpdateInterval);
             this.mNewIndiUpdateInterval = null;
           }
@@ -684,7 +687,7 @@ class CardListPage extends BasePage {
 
   private _registerCardHoverListener(cardView: Container, index: number): void {
     const { x, y } = cardView.parent;
-    const [cardImage] = cardView.children;
+    const cardImage = cardView.getChildByLabel('cardImage');
 
     cardImage.onpointerenter = () => {
       const startDataIndex = (this.mCurrenPageNum - 1) * CARDS_PER_PAGE;

@@ -10,6 +10,7 @@ import { CrossHatchFilter } from '../filter/CrossHatchFilter';
 import { getCurrentLocale } from '../i18n';
 import { getNavigator } from '../navigation';
 import { ReceivablePacket } from '../network/ReceivablePacket';
+import { SendablePacket } from '../network/SendablePacket';
 import { CardType, ORDERED_CARD_TYPES, ORDERED_RACES } from '../template/CardStats';
 import { CardTemplate, getCardAttributeIndex, getSpellTrapType, isMonster } from '../template/CardTemplate';
 import { createRect, rotateTexture } from '../util/helpers';
@@ -68,6 +69,7 @@ enum SortBy {
 
 class DeckConstruction extends BasePage {
   private readonly mCardSlotDataset: CardSlot[] = [];
+  private readonly mNewCardTmplIds: number[] = [];
   private readonly mEscapeKeyCb = (event: KeyboardEvent) => {
     if (event.code === 'Escape') {
       window.removeEventListener('keydown', this.mEscapeKeyCb);
@@ -109,7 +111,7 @@ class DeckConstruction extends BasePage {
   private mBagFilterBy: FilterBy = FilterBy.ALL;
   private mBagSortBy: SortBy = SortBy.NAME;
 
-  private mNewIndisUpdateInterval: ReturnType<typeof setInterval>;
+  private mNewIndiUpdateInterval: ReturnType<typeof setInterval>;
 
   constructor() {
     super();
@@ -146,14 +148,12 @@ class DeckConstruction extends BasePage {
   }
 
   async onNavigatedTo(): Promise<void> {
-    const hasNewCards = this.mCardSlotDataset.some((slotData) => slotData.isNew);
-
     this._playAudio();
     this._attachInteractionListeners();
 
     this.setPageInteraction(true);
 
-    if (hasNewCards) {
+    if (this.mNewCardTmplIds.length > 0) {
       this._animateNewCardIndicators();
     }
   }
@@ -163,9 +163,9 @@ class DeckConstruction extends BasePage {
 
     this.stopAllAnimations();
 
-    if (this.mNewIndisUpdateInterval != null) {
-      clearInterval(this.mNewIndisUpdateInterval);
-      this.mNewIndisUpdateInterval = null;
+    if (this.mNewIndiUpdateInterval != null) {
+      clearInterval(this.mNewIndiUpdateInterval);
+      this.mNewIndiUpdateInterval = null;
     }
 
     window.removeEventListener('keydown', this.mEscapeKeyCb);
@@ -226,10 +226,15 @@ class DeckConstruction extends BasePage {
           continue;
         }
 
+        const isNew = !!packet.readInt8();
+        if (isNew) {
+          this.mNewCardTmplIds.push(templateId);
+        }
+
         this.mCardSlotDataset.push({
           id,
           template,
-          isNew: !!packet.readInt8(),
+          isNew: isNew,
           count: packet.readInt32(),
           deckLimit: packet.readInt8()
         });
@@ -278,7 +283,10 @@ class DeckConstruction extends BasePage {
       const basicDetails = slot.children[1] as Container<BitmapText>;
       const advancedDetails = slot.children[2];
 
-      const [cardImage, cardCount, cardLimit, newIndicator] = cardInfo.children as [Sprite, BitmapText, Sprite, AnimatedSprite];
+      const cardImage = cardInfo.getChildByLabel('cardImage') as Sprite;
+      const cardCount =  cardInfo.getChildByLabel('cardCount') as BitmapText;
+      const cardLimit = cardInfo.getChildByLabel('cardLimit') as Sprite;
+      const newIndi = cardInfo.getChildByLabel('newIndicator') as AnimatedSprite;
       const [basicAtkPoints, basicDefPoints] = basicDetails.children;
       const [cardName, advancedAtkPoints, divider, advancedDefPoints, cardAttribute, cardType, starIcon, starCount] = advancedDetails.children as [Text, BitmapText, BitmapText, BitmapText, Sprite, Sprite, Sprite, BitmapText];
 
@@ -295,11 +303,11 @@ class DeckConstruction extends BasePage {
         cardAttribute.texture = attributeIndex >= 0 ? this.mCardAttributeSheet.textures[`attr-${attributeIndex}`] : null;
 
         if (slotData.isNew) {
-          newIndicator.visible = true;
-          newIndicator.play();
+          newIndi.visible = true;
+          newIndi.play();
         } else {
-          newIndicator.gotoAndStop(0);
-          newIndicator.visible = false;
+          newIndi.gotoAndStop(0);
+          newIndi.visible = false;
         }
 
         if (isMonster(slotData.template)) {
@@ -335,8 +343,8 @@ class DeckConstruction extends BasePage {
         cardName.text = '';
         cardAttribute.texture = null;
 
-        newIndicator.gotoAndStop(0);
-        newIndicator.visible = false;
+        newIndi.gotoAndStop(0);
+        newIndi.visible = false;
 
         advancedAtkPoints.text = '';
         basicAtkPoints.text = '';
@@ -352,9 +360,47 @@ class DeckConstruction extends BasePage {
     }
   }
 
+  private _registerCardClickListener(cardView: Container, index: number): void {
+    const cardImage = cardView.getChildByLabel('cardImage');
+    const newIndicator = cardView.getChildByLabel('newIndicator');
+
+    cardImage.onclick = () => {
+      if (this.mNewCardTmplIds.length == 0) {
+        return;
+      }
+
+      const cardSlotDataset = this.mFilterCardSlotDataset;
+      const slotData = cardSlotDataset[this.mCurBagIdx + index];
+
+      const newIdx = this.mNewCardTmplIds.indexOf(slotData.template.id);
+      if (newIdx > -1) {
+        const sp = new SendablePacket();
+
+        this.mNewCardTmplIds.splice(newIdx, 1);
+        sp.writeInt32(slotData.id);
+
+        try {
+          client.getSocket().emit('clearCardNewStateRequest', sp.buffer);
+          slotData.isNew = false;
+          newIndicator.visible = false;
+
+          if (this.mNewCardTmplIds.length === 0 && this.mNewIndiUpdateInterval != null) {
+            clearInterval(this.mNewIndiUpdateInterval);
+            this.mNewIndiUpdateInterval = null;
+          }
+        } catch (err) {
+          // Re-add in case of failure
+          slotData.isNew = true;
+          this.mNewCardTmplIds.push(slotData.template.id);
+          log.error(err instanceof Error ? err.message : err);
+        }
+      }
+    };
+  }
+
   private _registerCardHoverListener(cardView: Container, index: number): void {
     const { x, y } = cardView.parent;
-    const [cardImage] = cardView.children;
+    const cardImage = cardView.getChildByLabel('cardImage');
 
     cardImage.onpointerenter = () => {
       const cardSlotDataset = this.mFilterCardSlotDataset;
@@ -538,6 +584,7 @@ class DeckConstruction extends BasePage {
 
       slot.y = i * 55;
 
+      this._registerCardClickListener(cardInfo, i);
       this._registerCardHoverListener(cardInfo, i);
       container.addChild(slot);
     }
@@ -547,10 +594,10 @@ class DeckConstruction extends BasePage {
 
   private _createBagSlot(): Container {
     const slot = new Container();
-
     const cardInfo = new Container();
 
     const cardImage = Sprite.from('cards/card_backing.png');
+    cardImage.label = 'cardImage';
     cardImage.eventMode = 'static';
     cardImage.setSize(35, 50);
 
@@ -560,18 +607,18 @@ class DeckConstruction extends BasePage {
         fontFamily: 'BagCardCount'
       },
     });
+    cardCount.label = 'cardCount';
     cardCount.eventMode = 'none';
     cardCount.anchor.x = 1;
     cardCount.position.set(34, 35);
 
     const cardLimit = new Sprite();
+    cardLimit.label = 'cardLimit';
     cardLimit.eventMode = 'none';
     cardLimit.anchor.set(0.5, 0.5);
     cardLimit.position.set(7, 7);
 
     const newIndicator = this._createNewIndicator();
-    newIndicator.visible = false;
-    newIndicator.eventMode = 'none';
     newIndicator.position.set(-1, 16);
 
     const basicDetails = this._createBagSlotBasicDetails();
@@ -716,8 +763,10 @@ class DeckConstruction extends BasePage {
 
   private _createNewIndicator(): AnimatedSprite {
     const indicator = new AnimatedSprite(this.mNewIndiSheet.animations.news);
+    indicator.label = 'newIndicator';
     indicator.animationSpeed = 0.1;
     indicator.eventMode = 'none';
+    indicator.visible = false;
 
     return indicator;
   }
@@ -887,12 +936,12 @@ class DeckConstruction extends BasePage {
   }
 
   private _animateNewCardIndicators(): void {
-    if (this.mNewIndisUpdateInterval != null) {
-      clearInterval(this.mNewIndisUpdateInterval);
-      this.mNewIndisUpdateInterval = null;
+    if (this.mNewIndiUpdateInterval != null) {
+      clearInterval(this.mNewIndiUpdateInterval);
+      this.mNewIndiUpdateInterval = null;
     }
 
-    this.mNewIndisUpdateInterval = setInterval(() => {
+    this.mNewIndiUpdateInterval = setInterval(() => {
       this.animate({
         from: 1,
         to: 0,
